@@ -1,8 +1,16 @@
-package Message
+package helper
 
 import (
 	"encoding/json"
 	"fmt"
+)
+
+const (
+	ConnHostName  = "fa19-cs425-g73-%02d.cs.illinois.edu"
+	ConnType      = "udp"
+	ConnPort      = "8888"
+	ConnlocalHost = "localhost"
+	TimeOut       = 1
 )
 
 type Message struct {
@@ -30,6 +38,13 @@ func MsgToJSON(message Message) []byte {
 }
 
 func JSONToMsg(b []byte) Message {
+	var m Message
+	err := json.Unmarshal(b, &m)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return m
+}
 	var m Message
 	err := json.Unmarshal(b, &m)
 	if err != nil {
