@@ -15,7 +15,15 @@ func getIPAddressFromID(ID string) string {
 	return strings.Split(ID, "+")[0]
 }
 
-func getClientInfo() int {
+func getHostName() string {
+	// Get client info(host name, ID, log file name)
+	cmd := exec.Command("hostname")
+	hName, _ := cmd.Output()
+	hostName := string(hName)
+	return hostName
+}
+
+func getVMNumber() int {
 	// Get client info(host name, ID, log file name)
 	cmd := exec.Command("hostname")
 	hName, _ := cmd.Output()

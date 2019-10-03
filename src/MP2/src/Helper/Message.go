@@ -13,8 +13,15 @@ const (
 	TimeOut       = 1
 )
 
+const (
+	HeartbeatMsg = "Heartbeat"
+	JoinMsg      = "Join"
+	LeaveMsg     = "Leave"
+	IntroduceMsg = "Introduce"
+)
+
 type Message struct {
-	MessageType string
+	MessageType string //Heartbeat, Join, Leave, Introduce,(IntroduceAck?) 
 	NodeID      string
 	Content     []string
 }
