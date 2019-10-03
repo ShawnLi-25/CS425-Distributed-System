@@ -17,7 +17,7 @@ const (
 
 func GetMonitorList(membershipList []string, localHostName string) {
 	var monitorList []string 
-	monitorIdxList := int{-1, 1, 2}
+	monitorIdxList := [3]int{-1, 1, 2}
 	memListLen := len(membershipList)
 	
 	if memListLen >= 4 {
@@ -26,7 +26,7 @@ func GetMonitorList(membershipList []string, localHostName string) {
 			if strings.Contains(membershipList[i], localHostName) {
 				localIdx := i
 				for _,v := range monitorIdxList {
-					append(monitorList, membershipList[(i + v + memListLen) % memListLen])	
+					monitorList = append(monitorList, membershipList[(i + v + memListLen) % memListLen])	
 				}
 				break
 			}
@@ -34,7 +34,7 @@ func GetMonitorList(membershipList []string, localHostName string) {
 	} else {
 		for i:= 0; i < memListLen; i++ {
 			if !(strings.Contains(membershipList[i], localHostName)) {
-				append(monitorList, membershipList[i])	
+				monitorList = append(monitorList, membershipList[i])	
 			}
 		}
 
