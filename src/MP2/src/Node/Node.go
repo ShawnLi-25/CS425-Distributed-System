@@ -7,20 +7,28 @@ import (
 )
 
 type Node struct {
-	Sender     node.Sender
-	Listener   node.Listener
-	Introducer node.Introducer
-	Updater    node.Updater
+	MemList      []string
+	InGroup      bool
+	Sender       node.Sender
+	Listener     node.Listener
+	Updater      node.Updater
 }
 
-func CreateIntroducerNode() Node{
-
+func CreateNewNode() Node{
+	var newMemList []string
+	newSender     := NewSender()
+	newListener   := NewListener()
+	newIntroducer := NewIntroducer()
+	newUpdater    := NewUpdater()
+	newNode := Node {
+		MemList : newMemList
+		Sender  : newSender
+		Listener: newListener
+		Updater : newUpdater
+		InGroup : false
+	}
+	return newNode
 }
-
-func CreateNonIntroducerNode() Node{
-
-}
-
 
 
 //Called from main.go when the command is "JOIN\n"
@@ -30,13 +38,15 @@ func RunNode(isIntroducer bool) {
 	var	upQryChan := make(chan UpdateQuery)
 	var memListChan = make(chan []string)
 
+	node := CreateNewNode()
 	if(!isIntroducer){
-		node = CreateNonIntroducerNode()
-		RunNonIntroducerNode(node)
+		//false for non-intro, true for intro
+		go NodeListen(&node,false) 
 	} else {
-		node = CreateIntroducerNode()
-		RunIntroducerNode(node)
+		go NodeListen(&node,true)
 	}
+	go NodeSend(&node)
+	go NodeUpdate(&node)
 }
 
 //Called from main.go when the command is "LEAVE\n"

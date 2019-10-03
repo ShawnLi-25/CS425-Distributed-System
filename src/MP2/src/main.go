@@ -25,13 +25,13 @@ func main() {
 		cmd, _ = reader.ReadString('\n')
 
 		switch cmd{
-			case "JOIN\n":
+			case "JOIN\n"://TODO if node is already in group??
 				fmt.Println("Join the group")
-				node.RunNode(isIntroducer)
+				go node.RunNode(isIntroducer)
 				continue
-			case "LEAVE\n":
+			case "LEAVE\n"://TODO if node is not in group??
 				fmt.Println("Leave the group")
-				node.StopNode()
+				go node.StopNode()
 				break nodeProcess
 			default:
 				fmt.Println("Don't support this command")
