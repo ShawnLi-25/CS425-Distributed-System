@@ -47,6 +47,11 @@ func CreateID() string {
 	// fmt.Println(localTime.Format(time.RFC3339))
 	return hostName + ":" + msg.ConnPort + "+" + localTime.Format("20060102150405")
 }
+	for {
+		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress)
+		if err != nil {
+			log.Println(err.Error())
+			os.Exit(1)
 		}
 		conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
 		if err != nil {
@@ -61,6 +66,7 @@ func CreateID() string {
 		}
 
 		log.Print("===LeaveMsg Sent to: " + string(monitorID) + "\n" + "===Msg is" + string(msg))
+	}
 }
 
 func (s *Sender) SendJoinMsg(monitorAddress string, monitorID string, localID string) {
