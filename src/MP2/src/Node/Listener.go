@@ -33,7 +33,7 @@ func NewListener(port string) Listener{
 
 //ListenMsg: Listen to Heartbeat or Leave Msg
 func (l *Listener) ListenMsg() {
-
+	
 }
 
 //ListenJoinMsg: Listen to Join Msg (Introducer-only)

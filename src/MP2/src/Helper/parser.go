@@ -16,11 +16,11 @@ const (
 )
 
 
-func getIPAddressFromID(ID string) string {
+func GetIPAddressFromID(ID string) string {
 	return strings.Split(ID, "+")[0]
 }
 
-func getHostName() string {
+func GetHostName() string {
 	// Get client info(host name, ID, log file name)
 	cmd := exec.Command("hostname")
 	hName, _ := cmd.Output()
@@ -28,7 +28,7 @@ func getHostName() string {
 	return hostName
 }
 
-func getVMNumber() int {
+func GetVMNumber() int {
 	// Get client info(host name, ID, log file name)
 	cmd := exec.Command("hostname")
 	hName, _ := cmd.Output()
@@ -44,6 +44,6 @@ func getVMNumber() int {
 }
 
 func IsIntroducer() bool {
-	hostName := getHostName()
+	hostName := GetHostName()
 	return hostName == IntroducerAddress
 }
