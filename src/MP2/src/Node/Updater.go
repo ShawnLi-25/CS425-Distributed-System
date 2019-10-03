@@ -5,6 +5,8 @@ import (
 	"sort"
 )
 
+var membershipList []string
+
 type Updater struct{}
 
 type UpdateQuery struct {
@@ -12,24 +14,22 @@ type UpdateQuery struct {
 	ID        string
 }
 
-//Open a go routine for this function, whenever needs update, build a channel
-func UpdateMembershipList(ch chan UpdateQuery) {
-	var membershipList []string
+//Open a go routine for this function, whenever needs update, build a channel; output will be 
+func UpdateMembershipList() {
+
 	for {
+		
 		select {
-		case updateQuery := <-ch:
+		case updateQuery:=<-upQryChan:
 			if updateQuery.queryType == 0 {
-				var resChann = make(chan []string)
-				resChann <- membershipList
+				memListChan <- membershipList
 			} else if updateQuery.queryType == 1 {
 				membershipList = AddNewNode(updateQuery.ID, membershipList)
 				SortMembershipList(membershipList)
-				var resChann = make(chan []string)
-				resChann <- []string{}
+				memListChan <- membershipList
 			} else if updateQuery.queryType == 2 {
 				membershipList = DeleteNode(updateQuery.ID, membershipList)
-				var resChann = make(chan []string)
-				resChann <- []string{}
+				memListChan <- membershipList
 			}
 		}
 	}

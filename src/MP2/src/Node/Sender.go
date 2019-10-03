@@ -1,16 +1,35 @@
 package node
 
 import (
-	msg "MP2/src/helper"
+	msg "./Helper"
 	"log"
 	"net"
 	"os"
 	"os/exec"
 	"time"
+	"strings"
 )
 
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
+
+
+func (s *Sender) NodeSend() {
+	var membershipList []string
+	var monitorList []string
+	var localIdx int
+	localHostName := msg.GetHostName()
+
+	for {
+		upQryChan<-UpdateQuery{0,""}
+		membershipList <- memListChan
+
+		monitorList = msg.GetMonitorList(membershipList, localHostName)
+		
+		
+		
+	}
+}
 
 func (s *Sender) SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, localID, []string{})
@@ -39,24 +58,11 @@ func (s *Sender) SendHeartbeat(monitorAddress string, monitorID string, localID 
 	}
 }
 
-<<<<<<< HEAD
-func CreateID() string {
-	cmd := exec.Command("hostname")
-	hName, _ := cmd.Output()
-	hostName := string(hName)
-	localTime := time.Now()
-	// fmt.Println(localTime.Format(time.RFC3339))
-	return hostName + ":" + msg.ConnPort + "+" + localTime.Format("20060102150405")
-}
-	for {
-		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress)
-=======
 func (s *Sender) SendLeaveMsg(monitorAddress string, monitorID string, localID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress)
->>>>>>> 0c5c0ef2530c7e1e7db1ac6bdca82f38a05d1317
 		if err != nil {
 			log.Println(err.Error())
 			os.Exit(1)
@@ -102,7 +108,7 @@ func (s *Sender) SendJoinMsg(introducerAddress string, localID string) {
 }
 
 func CreateID() string {
-	hostName := msg.getHostName()
+	hostName := msg.GetHostName()
 	localTime := time.Now()
 	// fmt.Println(localTime.Format(time.RFC3339))
 	return hostName + ":" + msg.ConnPort + "+" + localTime.Format("20060102150405")

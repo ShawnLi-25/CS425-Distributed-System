@@ -27,6 +27,9 @@ func CreateNonIntroducerNode() Node{
 //Create new node and run the node until LEAVE or crash
 func RunNode(isIntroducer bool) {
 	var node Node
+	var	upQryChan := make(chan UpdateQuery)
+	var memListChan = make(chan []string)
+
 	if(!isIntroducer){
 		node = CreateNonIntroducerNode()
 		RunNonIntroducerNode(node)
