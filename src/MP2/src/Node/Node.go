@@ -1,7 +1,7 @@
 package node
 
 import (
-	"MP2/src/node"
+	//"MP2/src/node"
 	"log"
 	"net"
 )
