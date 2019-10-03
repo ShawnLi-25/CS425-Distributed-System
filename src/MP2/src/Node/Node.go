@@ -8,6 +8,7 @@ import (
 
 type Node struct {
 	MemList      []string
+	InGroup      bool
 	Sender       node.Sender
 	Listener     node.Listener
 	Updater      node.Updater
@@ -24,6 +25,7 @@ func CreateNewNode() Node{
 		Sender  : newSender
 		Listener: newListener
 		Updater : newUpdater
+		InGroup : false
 	}
 	return newNode
 }
