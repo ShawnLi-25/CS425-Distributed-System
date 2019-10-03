@@ -3,7 +3,7 @@ package main
 import (
 	//node "MP2/src/node"
 	"fmt"
-
+	"./Helper"
 	// "flag"
 	//"log"
 	"os"
@@ -29,7 +29,7 @@ func main() {
 
 	// flag.Parse()
 	
-	isIntroducer := 
+	isIntroducer := helper.isIntroducer()
 
 	reader := bufio.NewReader(os.Stdin)
 	
@@ -40,7 +40,11 @@ func main() {
 
 		switch cmd{
 			case "JOIN\n":
-				fmt.Println("Join the group")
+				if (isIntroducer) {
+					fmt.Println("Join the group as Introducer")
+				} else {
+					fmt.Println("Join the group")
+				}
 				continue
 			case "LEAVE\n":
 				fmt.Println("Leave the group")

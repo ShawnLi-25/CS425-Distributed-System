@@ -1,18 +1,18 @@
 package helper
 
 import (
-	"bufio"
-	"fmt"
-	"io"
-	"log"
-	"os"
+	//"bufio"
+	//"fmt"
+	//"io"
+	//"log"
+	//"os"
 	"os/exec"
 	"strconv"
 	"strings"
 )
 
 const (
-	Introducer := "cs425-fa19-
+	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 
 
@@ -41,4 +41,9 @@ func getVMNumber() int {
 		machineNO, _ = strconv.Atoi(hostName[15:17])
 	}
 	return machineNO
+}
+
+func isIntroducer() bool {
+	hostName := getHostName()
+	return hostName == IntroducerAddress
 }

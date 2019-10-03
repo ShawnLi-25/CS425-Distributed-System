@@ -52,10 +52,3 @@ func JSONToMsg(b []byte) Message {
 	}
 	return m
 }
-	var m Message
-	err := json.Unmarshal(b, &m)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return m
-}
