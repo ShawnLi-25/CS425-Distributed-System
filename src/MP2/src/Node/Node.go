@@ -7,44 +7,40 @@ import (
 )
 
 type Node struct {
-	MemList    []string
-	Sender     node.Sender
-	Listener   node.Listener
-	Introducer node.Introducer
-	Updater    node.Updater
+	MemList      []string
+	Sender       node.Sender
+	Listener     node.Listener
+	Updater      node.Updater
 }
 
-func CreateIntroducerNode() Node{
+func CreateNewNode() Node{
+	var newMemList []string
 	newSender     := NewSender()
 	newListener   := NewListener()
 	newIntroducer := NewIntroducer()
 	newUpdater    := NewUpdater()
-	
+	newNode := Node {
+		MemList : newMemList
+		Sender  : newSender
+		Listener: newListener
+		Updater : newUpdater
+	}
+	return newNode
 }
 
-func CreateNonIntroducerNode() Node{
-
-}
-
-func RunNonIntroducerNode(node) {
-
-}
-
-func RunIntroducerNode(node) {
-
-}
 
 //Called from main.go when the command is "JOIN\n"
 //Create new node and run the node until LEAVE or crash
 func RunNode(isIntroducer bool) {
-	var node Node
+	node := CreateNewNode()
 	if(!isIntroducer){
-		node = CreateNonIntroducerNode()
-		RunNonIntroducerNode(node)
+		//false for non-intro, true for intro
+		go NodeListen(&node,false) 
 	} else {
-		node = CreateIntroducerNode()
-		RunIntroducerNode(node)
+		go NodeListen(&node,true)
 	}
+	go NodeSend(&node)
+	go NodeUpdate(&node)
 }
 
 //Called from main.go when the command is "LEAVE\n"
