@@ -4,6 +4,7 @@ import (
 	//node "MP2/src/node"
 	"fmt"
 	"./Helper"
+	"./Node"
 	// "flag"
 	//"log"
 	"os"
@@ -40,14 +41,12 @@ func main() {
 
 		switch cmd{
 			case "JOIN\n":
-				if (isIntroducer) {
-					fmt.Println("Join the group as Introducer")
-				} else {
-					fmt.Println("Join the group")
-				}
+				fmt.Println("Join the group")
+				node.RunNode(isIntroducer)
 				continue
 			case "LEAVE\n":
 				fmt.Println("Leave the group")
+				node.StopNode()
 				break nodeProcess
 			default:
 				fmt.Println("Don't support this command")

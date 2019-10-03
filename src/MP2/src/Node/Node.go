@@ -13,11 +13,16 @@ type Node struct {
 	node.Updater
 }
 
-func NodeBehavior() {
-	/**
-	Check if this server is introducer (hard core to VM01)
-	Execute different logic
-	**/
+
+//Called from main.go when the command is "JOIN\n"
+//Create new node and run the node until LEAVE or crash
+func RunNode(isIntroducer bool) {
+	if(!isIntroducer){
+	} else {
+	}
 }
-	**/	
+
+//Called from main.go when the command is "LEAVE\n"
+//Delete the Node
+func StopNode() {
 }
