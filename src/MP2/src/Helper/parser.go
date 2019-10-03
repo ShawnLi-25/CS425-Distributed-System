@@ -2,7 +2,7 @@ package helper
 
 import (
 	//"bufio"
-	//"fmt"
+	"fmt"
 	//"io"
 	//"log"
 	//"os"
@@ -43,7 +43,7 @@ func getVMNumber() int {
 	return machineNO
 }
 
-func isIntroducer() bool {
+func IsIntroducer() bool {
 	hostName := getHostName()
 	return hostName == IntroducerAddress
 }

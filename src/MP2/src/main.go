@@ -29,7 +29,7 @@ func main() {
 
 	// flag.Parse()
 	
-	isIntroducer := helper.isIntroducer()
+	isIntroducer := helper.IsIntroducer()
 
 	reader := bufio.NewReader(os.Stdin)
 	
