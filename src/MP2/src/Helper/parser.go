@@ -11,6 +11,11 @@ import (
 	"strings"
 )
 
+const (
+	Introducer := "cs425-fa19-
+)
+
+
 func getIPAddressFromID(ID string) string {
 	return strings.Split(ID, "+")[0]
 }
