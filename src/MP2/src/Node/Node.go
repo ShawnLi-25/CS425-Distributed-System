@@ -7,6 +7,7 @@ import (
 )
 
 type Node struct {
+	MemList    []string
 	Sender     node.Sender
 	Listener   node.Listener
 	Introducer node.Introducer
@@ -14,14 +15,24 @@ type Node struct {
 }
 
 func CreateIntroducerNode() Node{
-
+	newSender     := NewSender()
+	newListener   := NewListener()
+	newIntroducer := NewIntroducer()
+	newUpdater    := NewUpdater()
+	
 }
 
 func CreateNonIntroducerNode() Node{
 
 }
 
+func RunNonIntroducerNode(node) {
 
+}
+
+func RunIntroducerNode(node) {
+
+}
 
 //Called from main.go when the command is "JOIN\n"
 //Create new node and run the node until LEAVE or crash
