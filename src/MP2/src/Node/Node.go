@@ -51,11 +51,13 @@ func RunNode(isIntroducer bool) {
 
 	// curNode = CreateNewNode()
 	if !isIntroducer {
+		fmt.Println("Node: I'm not Introducer")
 		//Firstly, send Join Msg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
 		//false for non-intro, true for intro
 		go curNode.Listener.NodeListen()
 	} else {
+		fmt.Println("Node: I'm the Introducer")
 		go curNode.Introducer.NodeHandleJoin()
 		go curNode.Listener.NodeListen()
 	}
