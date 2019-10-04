@@ -26,13 +26,13 @@ func handleListenMsg(conn *net.UDPConn){
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	msg.PrintMsg(receivedMsg)
 	switch msg.MessageType {
-		case HeartbeatMsg:
+		case msg.HeartbeatMsg:
 			fmt.Println("===Receive Heartbeat===")
-		case JoinMsg:
+		case msg.JoinMsg:
 			fmt.Println("===Receive JoinMsg===")
-		case FailMsg:
+		case msg.FailMsg:
 			fmt.Println("===Receive FailMsg===")
-		case LeaveMsg:
+		case msg.LeaveMsg:
 			fmt.Println("===Receive LeaveMsg===")
 		default:
 			fmt.Println("Can't recognize the msg")
