@@ -149,6 +149,31 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
+func SendIntroduceMsg(ln net.*UDPConn, newNodeID string) {
+	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{joinMsg.NodeID})
+	introducePkg := msg.MsgToJSON(introduceMsg)
+
+	monitorList = msg.GetMonitorList(MembershipList, LocalAddress)
+
+	for _, member := range monitorList {
+		if member == LocalID {
+			continue
+		}
+
+		memberAddress := msg.GetIPAddressFromID(member)
+
+		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
+		if wErr != nil {
+			log.Println(wErr.Error())
+		}
+	}
+
+}
 
 // func CreateID() string {
 // 	hostName := msg.GetHostName()

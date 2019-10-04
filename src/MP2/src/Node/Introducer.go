@@ -38,28 +38,7 @@ func (i *Introducer) NodeHandleJoin() {
 			fmt.Println("JoinMsg Received from Node... Address: " + joinAddr.IP.String())
 
 			//Send Introduce Message to Other node
-			// SendIntroduceMsg()
-
-			introduceMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, []string{joinMsg.NodeID})
-			introducePkg := msg.MsgToJSON(introduceMsg)
-
-			for _, member := range MembershipList {
-				if member == LocalID {
-					continue
-				}
-
-				memberAddress := msg.GetIPAddressFromID(member)
-
-				udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
-				if err != nil {
-					log.Println(err.Error())
-				}
-
-				_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
-				if wErr != nil {
-					log.Println(wErr.Error())
-				}
-			}
+			SendIntroduceMsg(ln, joinMsg.NodeID)
 
 			//Add new node to introducer's merbership list
 			UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
@@ -89,9 +68,4 @@ func (i *Introducer) NodeHandleJoin() {
 
 // func SendJoinAckMsg(addr *net.UDPAddr) {
 
-<<<<<<< HEAD
 // }
-=======
-	log.Print("===JoinAck Sent to " + "\n" + "===Msg is" + string(msg))
-}
->>>>>>> a8f6b9405dbbb63210d047fb3bcada8ceec8c040
