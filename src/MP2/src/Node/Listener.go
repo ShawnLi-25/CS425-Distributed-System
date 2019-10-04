@@ -25,7 +25,7 @@ func handleListenMsg(conn *net.UDPConn){
 
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	msg.PrintMsg(receivedMsg)
-	switch msg.MessageType {
+	switch receivedMsg.MessageType {
 		case msg.HeartbeatMsg:
 			fmt.Println("===Receive Heartbeat===")
 		case msg.JoinMsg:
