@@ -82,29 +82,29 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	conn.Close()
 }
 
-func SendLeaveMsg(ln *net.UDPConn, failNodeID string) {
-	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
-	leavePkg := msg.MsgToJSON(leaveMsg)
+// func SendLeaveMsg(ln *net.UDPConn, failNodeID string) {
+// 	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
+// 	leavePkg := msg.MsgToJSON(leaveMsg)
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.ConnPort)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-	conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-	defer conn.Close()
+// 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.ConnPort)
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 		os.Exit(1)
+// 	}
+// 	conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 		os.Exit(1)
+// 	}
+// 	defer conn.Close()
 
-	msg, err := conn.Write(leavePkg)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-	fmt.Print("LeaveMsg Sent to: " + string(monitorID) + "\nMsg is" + string(msg))
-}
+// 	msg, err := conn.Write(leavePkg)
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 		os.Exit(1)
+// 	}
+// 	fmt.Print("LeaveMsg Sent to: " + string(monitorID) + "\nMsg is" + string(msg))
+// }
 
 func SendJoinMsg(introducerAddress string) bool{
 	joinMsg := msg.NewMessage(msg.JoinMsg, LocalID, []string{})
