@@ -23,7 +23,7 @@ func handleListenMsg(conn *net.UDPConn){
 
 	fmt.Println("Recieve Msg from UDP client: %s", msgAddr)
 
-	receivedMsg := msg.Message(masBuf[:n])
+	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	msg.PrintMsg(receivedMsg)
 	switch msg.MessageType {
 		case HeartbeatMsg:
