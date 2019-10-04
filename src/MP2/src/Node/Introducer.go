@@ -33,6 +33,10 @@ func handleUDPConnection(ln *net.UDPConn) {
 		//Send full membershiplist to new join node
 		// SendJoinAckMsg(addr)
 
+		for _, str := range newMembershipList {
+			fmt.Println("Introducer: Current Membership List is: " + str)
+		}
+		
 		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, newMembershipList)
 		joinAckPkg := msg.MsgToJSON(joinAckMsg)
 
@@ -40,8 +44,8 @@ func handleUDPConnection(ln *net.UDPConn) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-
-		log.Println("JoinAck Sent to New Node:" + joinMsg.NodeID)
+		fmt.Printf("Introducer: JoinAckMsg Sent to %s, the message type is: %s...: ", joinAddr, joinAckMsg.MessageType)
+		log.Println("Introducer: JoinAck Sent to New Node:" + joinMsg.NodeID)
 	}
 }
 

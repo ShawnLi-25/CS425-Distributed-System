@@ -141,7 +141,8 @@ func SendJoinMsg(introducerAddress string) bool{
 	}
 	
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
-	fmt.Println("Sender: JoinAckMsg Received from Introducer...: " + joinAckMsg.MessageType)
+	
+	fmt.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content
