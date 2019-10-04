@@ -141,7 +141,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	}
 	
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
-	fmt.Println("Sender: JoinAckMsg Received from Introducer...")
+	fmt.Println("Sender: JoinAckMsg Received from Introducer...: " + joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content
@@ -153,7 +153,7 @@ func SendJoinMsg(introducerAddress string) bool{
 		}
 		return true
 	} else {
-		log.Println("Received Wrong Ack...")
+		log.Println("Sender: Received Wrong Ack...")
 		return false
 	}
 	return true
