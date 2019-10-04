@@ -8,12 +8,11 @@ import (
 	msg "../Helper"
 )
 
-
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
 }
 
-func handleListenMsg(conn *net.UDPConn){
+func handleListenMsg(conn *net.UDPConn) {
 	msgBuf := make([]byte, 124)
 
 	n, msgAddr, err := conn.ReadFromUDP(msgBuf)
@@ -25,25 +24,27 @@ func handleListenMsg(conn *net.UDPConn){
 
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	msg.PrintMsg(receivedMsg)
+
 	switch receivedMsg.MessageType {
-		case msg.HeartbeatMsg:
-			fmt.Println("===Receive Heartbeat===")
-		case msg.JoinMsg:
-			fmt.Println("===Receive JoinMsg===")
-		case msg.FailMsg:
-			fmt.Println("===Receive FailMsg===")
-		case msg.LeaveMsg:
-			fmt.Println("===Receive LeaveMsg===")
-		case msg.IntroduceMsg:
-			fmt.Println("===Receive IntroduceMsg===")
-		default:
-			fmt.Println("Can't recognize the msg")
+	case msg.HeartbeatMsg:
+		fmt.Println("===Receive Heartbeat===")
+		SendIntroduceMsg(conn, receivedMsg.NodeID)
+	case msg.JoinMsg:
+		fmt.Println("===Receive JoinMsg===")
+	case msg.FailMsg:
+		fmt.Println("===Receive FailMsg===")
+	case msg.LeaveMsg:
+		fmt.Println("===Receive LeaveMsg===")
+	case msg.IntroduceMsg:
+		fmt.Println("===Receive IntroduceMsg===")
+	default:
+		fmt.Println("Can't recognize the msg")
 	}
 }
 
 func (l *Listener) NodeListen() {
 	fmt.Println("Initialize new listener...")
-	udpAddr,err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +56,7 @@ func (l *Listener) NodeListen() {
 
 	fmt.Printf("Listen on port %s\n", msg.ConnPort)
 	defer ln.Close()
-	
+
 	for {
 		handleListenMsg(ln)
 	}
