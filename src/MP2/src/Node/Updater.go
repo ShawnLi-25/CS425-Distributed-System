@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"log"
 	"sort"
 )
@@ -23,6 +24,9 @@ func (u *Updater) UpdateMembershipList() {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
 				MemListChan <- MembershipList
+				for _, str := range MembershipList {
+					fmt.Println("Updater: Current Membership List is: " + str)
+				}
 			} else if updateQuery.queryType == 1 {
 				MembershipList = AddNewNode(updateQuery.ID, MembershipList)
 				SortMembershipList(MembershipList)

@@ -42,19 +42,20 @@ func CreateNewNode() *Node {
 //in seperate goroutines
 func RunNode(isIntroducer bool) {
 	LocalID = msg.CreateID()
+	fmt.Println("Node: Local ID is: " + LocalID)
 	LocalAddress = msg.GetHostName()
-
-	go curNode.Updater.UpdateMembershipList()
+	fmt.Println("Node: Local Address is: " + LocalAddress)
 
 	//Firstly, send Join Msg to Introducer
 	curNode.Sender.NodeSend(msg.JoinMsg)
 
 	// curNode = CreateNewNode()
 	if !isIntroducer {
+		go curNode.Updater.UpdateMembershipList()
 		//false for non-intro, true for intro
-		go curNode.Introducer.NodeHandleJoin()
 		go curNode.Listener.NodeListen()
 	} else {
+		go curNode.Introducer.NodeHandleJoin()
 		go curNode.Listener.NodeListen()
 	}
 
