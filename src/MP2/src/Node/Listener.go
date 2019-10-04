@@ -110,7 +110,3 @@ func ListenHeartbeat() {
 	}
 }
 
-//Listen to Msg (Introducer-only)
-func ListenMsg() {
-
-}
