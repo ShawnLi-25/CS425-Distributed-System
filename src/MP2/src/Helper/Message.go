@@ -17,11 +17,11 @@ const (
 
 const (
 	HeartbeatMsg = "Heartbeat"
-	JoinMsg      = "Join"
+	JoinMsg      = "Join" //Content is empty
 	LeaveMsg     = "Leave"
 	FailMsg      = "Fail"
-	IntroduceMsg = "Introduce"
-	JoinAckMsg   = "JoinAck"
+	IntroduceMsg = "Introduce" // Content will include new-join node's ID
+	JoinAckMsg   = "JoinAck"   // Content will include full membership list
 )
 
 type Message struct {

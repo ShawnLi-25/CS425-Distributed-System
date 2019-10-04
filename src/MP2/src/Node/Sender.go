@@ -48,7 +48,7 @@ func (s *Sender) NodeSend(msgType string) {
 
 }
 
-func (s *Sender) SendHeartbeat(monitorAddress string, monitorID string, localID string) {
+func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, localID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
 
@@ -75,7 +75,7 @@ func (s *Sender) SendHeartbeat(monitorAddress string, monitorID string, localID 
 	}
 }
 
-func (s *Sender) SendLeaveMsg(monitorAddress string, monitorID string, localID string) {
+func SendLeaveMsg(monitorAddress string, monitorID string, localID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 
@@ -99,7 +99,7 @@ func (s *Sender) SendLeaveMsg(monitorAddress string, monitorID string, localID s
 	log.Print("===LeaveMsg Sent to Introducer" + "\n" + "===Msg is" + string(msg))
 }
 
-func (s *Sender) SendJoinMsg(introducerAddress string) bool{
+func SendJoinMsg(introducerAddress string) bool{
 	joinMsg := msg.NewMessage(msg.JoinMsg, LocalID, []string{})
 	joinPkg := msg.MsgToJSON(joinMsg)
 
@@ -140,7 +140,7 @@ func (s *Sender) SendJoinMsg(introducerAddress string) bool{
 		
 		//Copy the current membership list locally 
 		for _, member := range curMembershipList {
-			UpQryChan <- UpdateQuery{, member}
+			UpQryChan <- UpdateQuery{1, member}
 			<- MemListChan
 		}
 		return true
