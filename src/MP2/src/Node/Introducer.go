@@ -18,30 +18,6 @@ func handleUDPConnection(conn *net.UDPConn){
 	if err != nil {
 		log.Println(err.Error())
 	}
-<<<<<<< HEAD
-	fmt.Println("Start Listening for New-Join Node...")
-	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-	defer ln.Close()
-
-	for {
-		joinBuf := make([]byte, 128)
-		n, joinAddr, err := ln.ReadFromUDP(joinBuf)
-		if err != nil {
-			log.Println(err.Error())
-		}
-
-		joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
-
-		if joinMsg.MessageType == msg.JoinMsg {
-			fmt.Println("JoinMsg Received from Node... Address: " + joinAddr.IP.String())
-
-			//Send Introduce Message to Other node
-			SendIntroduceMsg(ln, joinMsg.NodeID)
-=======
 
 	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
 
@@ -49,27 +25,7 @@ func handleUDPConnection(conn *net.UDPConn){
 		fmt.Println("JoinMsg Received from Node... Address: " + joinAddr.IP.String())
 
 		//Send Introduce Message to Other node
-		// SendIntroduceMsg()
-
-		introduceMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, []string{joinMsg.NodeID})
-		introducePkg := msg.MsgToJSON(introduceMsg)
-
-		for _, member := range MembershipList {
-			if member == LocalID {
-				continue
-			}
-			memberAddress := msg.GetIPAddressFromID(member)
->>>>>>> 4c882ff832057081423a7d87c214e79412c85e17
-
-			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
-			if err != nil {
-				log.Println(err.Error())
-			}
-			_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
-			if wErr != nil {
-				log.Println(wErr.Error())
-			}
-		}
+		SendIntroduceMsg(ln, msg.NodeID)
 
 		//Add new node to introducer's merbership list
 		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
