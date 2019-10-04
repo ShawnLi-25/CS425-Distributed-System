@@ -8,6 +8,11 @@ import (
 	msg "../Helper"
 )
 
+const (
+	port := "8888"
+)
+
+
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
 	Connection net.PacketConn
