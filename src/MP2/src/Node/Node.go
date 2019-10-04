@@ -4,9 +4,9 @@ import (
 	msg "../Helper"
 )
 
-var curNode = CreateNewNode()
-var UpQryChan = make(chan UpdateQuery)
-var MemListChan = make(chan []string)
+var curNode Node = CreateNewNode()
+var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
+var MemListChan chan []string = make(chan []string)
 var LocalAddress string
 var LocalID string
 

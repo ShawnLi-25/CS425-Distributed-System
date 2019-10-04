@@ -8,10 +8,6 @@ import (
 	msg "../Helper"
 )
 
-const (
-	port := "8888"
-)
-
 
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
@@ -20,7 +16,7 @@ type Listener struct {
 
 func (l *Listener) NodeListen(port string) Listener {
 	fmt.Println("Initialize new listener...")
-	con, err := net.ListenPacket(msg.ConnType, ":"+port)
+	con, err := net.ListenPacket(msg.ConnType, ":"+msg.ConnPort)
 	if err != nil {
 		log.Fatal(err)
 	}
