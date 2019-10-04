@@ -31,7 +31,7 @@ func (s *Sender) NodeSend(msgType string) {
 		}
 	} else if msgType == msg.HeartbeatMsg {
 		UpQryChan <- UpdateQuery{0, ""}
-		membershipList :=<- MemListChan
+		membershipList =<- MemListChan
 
 		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
@@ -41,7 +41,7 @@ func (s *Sender) NodeSend(msgType string) {
 		}
 	} else if msgType == msg.LeaveMsg {
 		UpQryChan <- UpdateQuery{0, ""}
-		membershipList :=<- MemListChan
+		membershipList =<- MemListChan
 
 		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
