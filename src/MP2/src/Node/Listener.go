@@ -12,6 +12,32 @@ import (
 type Listener struct {
 }
 
+
+func (l *Listener) NodeListen() {
+
+	fmt.Println("MSGListener:Initialize new listener...")
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("MSGListener:Listen on port %s\n", msg.ConnPort)
+	defer ln.Close()
+	/*
+	Goroutine for Heartbeat
+	*/
+	go ListenHeartbeat()
+	for {
+		HandleListenMsg(ln)
+	}
+	
+}
+
 func HandleListenMsg(conn *net.UDPConn) {
 	msgBuf := make([]byte, 128)
 
@@ -26,26 +52,24 @@ func HandleListenMsg(conn *net.UDPConn) {
 	msg.PrintMsg(receivedMsg)
 
 	switch receivedMsg.MessageType {
-	case msg.HeartbeatMsg:
-		fmt.Println("===Receive Heartbeat===")
-		SendIntroduceMsg(conn, receivedMsg.NodeID)
-	case msg.JoinMsg:
-		fmt.Println("===Receive JoinMsg===")
+	// case msg.HeartbeatMsg:
+	// 	fmt.Println("===Receive Heartbeat===")
+	// case msg.JoinMsg:
+		// fmt.Println("===Receive JoinMsg===")
 	case msg.FailMsg:
+		SendFailMsg(conn, receivedMsg.NodeID)
 		fmt.Println("===Receive FailMsg===")
 	case msg.LeaveMsg:
+		SendLeaveMsg(conn, receivedMsg.NodeID)
 		fmt.Println("===Receive LeaveMsg===")
 	case msg.IntroduceMsg:
 		fmt.Println("===Receive IntroduceMsg===")
+		SendIntroduceMsg(conn, receivedMsg.NodeID)
 	default:
 		fmt.Println("Listener:Can't recognize the msg")
 	}
 }
 
-func (l *Listener) NodeListen() {
-	go ListenHeartbeat()
-	go ListenMsg()
-}
 
 //Listen to Heartbeat and Check timeout
 func ListenHeartbeat() {
@@ -88,21 +112,5 @@ func ListenHeartbeat() {
 
 //Listen to Msg (Introducer-only)
 func ListenMsg() {
-	fmt.Println("MSGListener:Initialize new listener...")
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("MSGListener:Listen on port %s\n", msg.ConnPort)
-	defer ln.Close()
-	for {
-		HandleListenMsg(ln)
-	}
-	
 }

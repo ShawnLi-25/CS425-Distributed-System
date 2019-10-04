@@ -58,7 +58,7 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, localID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress)
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
@@ -86,7 +86,7 @@ func SendLeaveMsg(monitorAddress string, monitorID string, localID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress)
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.ConnPort)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)

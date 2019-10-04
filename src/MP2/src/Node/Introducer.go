@@ -12,44 +12,6 @@ import (
 // Introducer is a type that implements the SendFullListToNewNode(), SendIntroduceMsg() "method"
 type Introducer struct{}
 
-func handleUDPConnection(ln *net.UDPConn) {
-	joinBuf := make([]byte, 1024)
-	n, joinAddr, err := ln.ReadFromUDP(joinBuf)
-	if err != nil {
-		log.Println(err.Error())
-	}
-
-	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
-
-	if joinMsg.MessageType == msg.JoinMsg {
-		fmt.Println("Introducer: JoinMsg Received from Node... Address: " + joinAddr.IP.String())
-
-		//Send Introduce Message to Other node
-		SendIntroduceMsg(ln, joinMsg.NodeID)
-
-		//Add new node to introducer's merbership list
-		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
-		newMembershipList := <-MemListChan
-
-		/*
-		Send full membershiplist to new join node
-		*/
-		
-		// for _, str := range newMembershipList {
-		// 	fmt.Println("Introducer: Current Membership List is: " + str)
-		// }
-
-		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, newMembershipList)
-		joinAckPkg := msg.MsgToJSON(joinAckMsg)
-
-		_, err := ln.WriteToUDP(joinAckPkg, joinAddr)
-		if err != nil {
-			log.Println(err.Error())
-		}
-		// fmt.Printf("Introducer: JoinAckMsg Sent to %s, the message type is: %s...: ", joinAddr, joinAckMsg.MessageType)
-		log.Println("Introducer: JoinAck Sent to New Node:" + joinMsg.NodeID)
-	}
-}
 
 func (i *Introducer) NodeHandleJoin() {
 	UpQryChan <- UpdateQuery{1, LocalID}
@@ -72,6 +34,46 @@ func (i *Introducer) NodeHandleJoin() {
 		handleUDPConnection(ln)
 	}
 }
+
+func handleUDPConnection(ln *net.UDPConn) {
+	joinBuf := make([]byte, 1024)
+	n, joinAddr, err := ln.ReadFromUDP(joinBuf)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
+
+	if joinMsg.MessageType == msg.JoinMsg {
+		fmt.Println("Introducer: JoinMsg Received from Node... Address: " + joinAddr.IP.String())
+
+		//Send Introduce Message to Other node
+		SendIntroduceMsg(ln, joinMsg.NodeID)
+
+		//Add new node to introducer's merbership list
+		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
+		newMembershipList := <-MemListChan
+
+		/*
+		Send full membershiplist to new join node
+		*/
+
+		// for _, str := range newMembershipList {
+		// 	fmt.Println("Introducer: Current Membership List is: " + str)
+		// }
+
+		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, newMembershipList)
+		joinAckPkg := msg.MsgToJSON(joinAckMsg)
+
+		_, err := ln.WriteToUDP(joinAckPkg, joinAddr)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		// fmt.Printf("Introducer: JoinAckMsg Sent to %s, the message type is: %s...: ", joinAddr, joinAckMsg.MessageType)
+		log.Println("Introducer: JoinAck Sent to New Node:" + joinMsg.NodeID)
+	}
+}
+
 
 // func SendIntroduceMsg() {
 
