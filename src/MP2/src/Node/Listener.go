@@ -13,16 +13,50 @@ import (
 type Listener struct {
 }
 
-func (l *Listener) NodeListen(port string) {
-	fmt.Println("Initialize new listener...")
-	con, err := net.ListenPacket(msg.ConnType, ":"+port)
+func handleListenMsg(conn *net.UDPConn){
+	msgBuf := make([]byte, 124)
+
+	n, msgAddr, err := conn.ReadFromUDP(msgBuf)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Recieve Msg from UDP client: %s", msgAddr)
+
+	receivedMsg := msg.Message(masBuf[:n])
+	msg.PrintMsg(receivedMsg)
+	switch msg.MessageType {
+		case HeartbeatMsg:
+			fmt.Println("===Receive Heartbeat===")
+		case JoinMsg:
+			fmt.Println("===Receive JoinMsg===")
+		case FailMsg:
+			fmt.Println("===Receive FailMsg===")
+		case LeaveMsg:
+			fmt.Println("===Receive LeaveMsg===")
+		default:
+			fmt.Println("Can't recognize the msg")
+	}
+}
+
+func (l *Listener) NodeListen(port string) {
+	fmt.Println("Initialize new listener...")
+	udpAddr,err := net.ListenPacket(msg.ConnType, ":"+port)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ln, err := net.ListenUDP(msg.ConnType, ":"+port)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Printf("Listen on port %s\n", port)
 	defer con.Close()
 	
-	
+	for {
+		handleListenMsg(ln)
+	}
 }
 
 //ListenMsg: Listen to Heartbeat or Leave Msg
