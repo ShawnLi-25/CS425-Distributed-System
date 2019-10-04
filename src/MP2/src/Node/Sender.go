@@ -133,7 +133,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	conn.SetReadDeadline(time.Now().Add(time.Duration(3) * time.Second))
 
 	//Read from Introducer 
-	joinAck := make([]byte, 128)
+	joinAck := make([]byte, 2048)
 	n, err := conn.Read(joinAck)
 	if err != nil {
 		log.Println(err.Error())
