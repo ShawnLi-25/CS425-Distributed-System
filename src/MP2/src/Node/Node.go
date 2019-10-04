@@ -57,9 +57,12 @@ func RunNode(isIntroducer bool) {
 	} else {
 		go curNode.Listener.NodeListen(true)
 	}
+
+	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 }
 
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
 func StopNode() {
+	curNode.Sender.NodeSend(msg.LeaveMsg)
 }
