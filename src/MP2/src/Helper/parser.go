@@ -25,7 +25,7 @@ func GetMonitorList(membershipList []string, localHostName string) {
 
 		for i := 0; i < memListLen; i++ {
 			if strings.Contains(membershipList[i], localHostName) {
-				localIdx := i
+				// localIdx := i
 				for _, v := range monitorIdxList {
 					monitorList = append(monitorList, membershipList[(i+v+memListLen)%memListLen])
 				}
