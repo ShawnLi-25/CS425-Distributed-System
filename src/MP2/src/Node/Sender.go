@@ -82,7 +82,7 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	conn.Close()
 }
 
-func SendLeaveMsg(monitorAddress string, monitorID string, localID string) {
+func SendLeaveMsg(ln *net.UDPConn, failNodeID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, localID, []string{})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 

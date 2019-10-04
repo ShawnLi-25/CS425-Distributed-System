@@ -60,7 +60,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 		SendFailMsg(conn, receivedMsg.NodeID)
 		fmt.Println("===Receive FailMsg===")
 	case msg.LeaveMsg:
-		SendLeaveMsg(conn, receivedMsg.NodeID)
+		// SendLeaveMsg(conn, receivedMsg.NodeID)
 		fmt.Println("===Receive LeaveMsg===")
 	case msg.IntroduceMsg:
 		fmt.Println("===Receive IntroduceMsg===")
