@@ -1,24 +1,21 @@
 package node
 
 import (
+	"fmt"
 	"log"
 	"net"
-	"fmt"
-)
 
-const (
-	connType = "udp"
+	msg "../Helper"
 )
-
 
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
-type Listener struct{
+type Listener struct {
 	Connection net.PacketConn
 }
 
-func NewListener(port string) Listener{
+func (l *Listener) NodeListen(port string) Listener {
 	fmt.Println("Initialize new listener...")
-	con, err := net.ListenPacket(connType,":"+port)
+	con, err := net.ListenPacket(msg.ConnType, ":"+port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +30,7 @@ func NewListener(port string) Listener{
 
 //ListenMsg: Listen to Heartbeat or Leave Msg
 func (l *Listener) ListenMsg() {
-	
+
 }
 
 //ListenJoinMsg: Listen to Join Msg (Introducer-only)

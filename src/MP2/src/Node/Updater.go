@@ -15,7 +15,7 @@ type UpdateQuery struct {
 }
 
 //Open a go routine for this function, whenever needs update, build a channel; output will be
-func UpdateMembershipList() {
+func (u *Updater) UpdateMembershipList() {
 
 	for {
 
@@ -44,7 +44,7 @@ func AddNewNode(newNodeID string, list []string) []string {
 	log.Print("=== Current List is: ===")
 	log.Print(list)
 	newList := append(list, newNodeID)
-	log.Print("=== Current List is: ===")
+	log.Print("=== New List is: ===")
 	log.Print(newList)
 	return newList
 }
@@ -63,13 +63,13 @@ func DeleteNode(nodeID string, list []string) []string {
 	return list
 }
 
-type MonitorList struct {
-	localID   string
-	monitorID []string
-	Content   []string
-}
+// type MonitorList struct {
+// 	localID   string
+// 	monitorID []string
+// 	Content   []string
+// }
 
-func (*MonitorList) InitList() {
-	var monitorList []string
+// func (*MonitorList) InitList() {
+// 	var monitorList []string
 
-}
+// }

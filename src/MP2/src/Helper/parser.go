@@ -12,10 +12,6 @@ import (
 	"time"
 )
 
-const (
-	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
-)
-
 func GetMonitorList(membershipList []string, localHostName string) {
 	var monitorList []string
 	monitorIdxList := [3]int{-1, 1, 2}
@@ -47,11 +43,11 @@ func CreateID() string {
 	hostName := GetHostName()
 	localTime := time.Now()
 	// fmt.Println(localTime.Format(time.RFC3339))
-	return hostName + ":" + ConnPort + "+" + localTime.Format("20060102150405")
+	return hostName + ":" + localTime.Format("20060102150405")
 }
 
 func GetIPAddressFromID(ID string) string {
-	return strings.Split(ID, "+")[0]
+	return strings.Split(ID, ":")[0]
 }
 
 func GetHostName() string {
