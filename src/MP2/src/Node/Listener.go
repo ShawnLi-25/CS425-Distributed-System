@@ -34,6 +34,8 @@ func handleListenMsg(conn *net.UDPConn){
 			fmt.Println("===Receive FailMsg===")
 		case msg.LeaveMsg:
 			fmt.Println("===Receive LeaveMsg===")
+		case msg.IntroduceMsg:
+			fmt.Println("===Receive IntroduceMsg===")
 		default:
 			fmt.Println("Can't recognize the msg")
 	}
