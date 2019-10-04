@@ -31,8 +31,8 @@ type Message struct {
 }
 
 //Used for debugging
-func PrintMsg (msg Message){
-	fmt.Printf("MessageType: %s\nNodeID: %s\nContent: %s\n", msg.MessageType, msg.NodeID, msg.Content[0])
+func PrintMsg(msg Message) {
+	fmt.Printf("MessageType: %s... NodeID: %s", msg.MessageType, msg.NodeID)
 }
 
 func NewMessage(Type string, ID string, Content []string) Message {
