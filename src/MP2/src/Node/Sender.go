@@ -159,7 +159,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
-func SendIntroduceMsg(ln net.*UDPConn, newNodeID string) {
+func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 
@@ -185,7 +185,7 @@ func SendIntroduceMsg(ln net.*UDPConn, newNodeID string) {
 	}
 }
 
-func SendFailMsg(ln net.*UDPConn, failNodeID string) {
+func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 
