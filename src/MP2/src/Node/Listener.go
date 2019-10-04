@@ -13,7 +13,7 @@ type Listener struct {
 }
 
 func HandleListenMsg(conn *net.UDPConn) {
-	msgBuf := make([]byte, 124)
+	msgBuf := make([]byte, 128)
 
 	n, msgAddr, err := conn.ReadFromUDP(msgBuf)
 	if err != nil {
@@ -62,7 +62,7 @@ func ListenHeartbeat() {
 
 	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.ConnPort)
 	defer ln.Close()
-	hbBuf := make([]byte, 124)
+	hbBuf := make([]byte, 128)
 	ln.SetReadDeadline(time.Now().Add(msg.Timeout))
 	for{
 		n, msgAddr, err := conn.ReadFromUDP(hbBuf)
