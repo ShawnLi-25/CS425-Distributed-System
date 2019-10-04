@@ -12,7 +12,7 @@ import (
 // Introducer is a type that implements the SendFullListToNewNode(), SendIntroduceMsg() "method"
 type Introducer struct{}
 
-func handleUDPConnection(conn *net.UDPConn){
+func handleUDPConnection(ln *net.UDPConn){
 	joinBuf := make([]byte, 1024)
 	n, joinAddr, err := ln.ReadFromUDP(joinBuf)
 	if err != nil {
