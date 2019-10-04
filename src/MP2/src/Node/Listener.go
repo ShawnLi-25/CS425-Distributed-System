@@ -11,22 +11,17 @@ import (
 
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
-	Connection net.PacketConn
 }
 
-func (l *Listener) NodeListen(port string) Listener {
+func (l *Listener) NodeListen(port string) {
 	fmt.Println("Initialize new listener...")
-	con, err := net.ListenPacket(msg.ConnType, ":"+msg.ConnPort)
+	con, err := net.ListenPacket(msg.ConnType, ":"+port)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Listen on port %s\n", port)
 	defer con.Close()
 
-	newListener := Listener{
-		Connection: con,
-	}
-	return newListener
 }
 
 //ListenMsg: Listen to Heartbeat or Leave Msg
