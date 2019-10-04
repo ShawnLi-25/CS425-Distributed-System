@@ -31,17 +31,17 @@ func (s *Sender) NodeSend(msgType string) {
 		}
 	} else if msgType == msg.HeartbeatMsg {
 		UpQryChan <- UpdateQuery{0, ""}
-		membershipList <- MemListChan
+		membershipList :=<- MemListChan
 
 		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
 		for _, v := range monitorList {
 			monitorAdd := msg.GetIPAddressFromID(v)
-			SendHearbeat(v, monitorAdd, LocalID)
+			SendHeartbeat(v, monitorAdd, LocalID)
 		}
 	} else if msgType == msg.LeaveMsg {
 		UpQryChan <- UpdateQuery{0, ""}
-		membershipList <- MemListChan
+		membershipList :=<- MemListChan
 
 		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 

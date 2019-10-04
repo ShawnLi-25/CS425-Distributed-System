@@ -41,20 +41,20 @@ func handleListenMsg(conn *net.UDPConn){
 	}
 }
 
-func (l *Listener) NodeListen(port string) {
+func (l *Listener) NodeListen() {
 	fmt.Println("Initialize new listener...")
-	udpAddr,err := net.ListenPacket(msg.ConnType, ":"+port)
+	udpAddr,err := net.ListenPacket(msg.ConnType, ":"+msg.ConnPort)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ln, err := net.ListenUDP(msg.ConnType, ":"+port)
+	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Printf("Listen on port %s\n", port)
-	defer con.Close()
+	defer ln.Close()
 	
 	for {
 		handleListenMsg(ln)

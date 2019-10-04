@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func GetMonitorList(membershipList []string, localHostName string) {
+func GetMonitorList(membershipList []string, localHostName string) []string{
 	var monitorList []string
 	monitorIdxList := [3]int{-1, 1, 2}
 	memListLen := len(membershipList)
@@ -34,8 +34,8 @@ func GetMonitorList(membershipList []string, localHostName string) {
 				monitorList = append(monitorList, membershipList[i])
 			}
 		}
-
 	}
+	return monitorList
 }
 
 //Call when JOIN the group

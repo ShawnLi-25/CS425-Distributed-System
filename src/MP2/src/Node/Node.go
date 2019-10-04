@@ -44,7 +44,7 @@ func RunNode(isIntroducer bool) {
 	LocalID = msg.CreateID()
 	LocalAddress = msg.GetHostName()
 
-	go curNode.Updater.UpdateMembershipList(IntroducerAddress)
+	go curNode.Updater.UpdateMembershipList
 
 	//Firstly, send Join Msg to Introducer
 	curNode.Sender.NodeSend(msg.JoinMsg)
@@ -53,9 +53,9 @@ func RunNode(isIntroducer bool) {
 	if !isIntroducer {
 		//false for non-intro, true for intro
 		go curNode.Introducer.NodeHandleJoin()
-		go curNode.Listener.NodeListen(false)
+		go curNode.Listener.NodeListen()
 	} else {
-		go curNode.Listener.NodeListen(true)
+		go curNode.Listener.NodeListen()
 	}
 
 	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
