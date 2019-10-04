@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func GetMonitorList(membershipList []string, localHostName string) []string{
+func GetMonitorList(membershipList []string, localHostName string) []string {
 	var monitorList []string
 	monitorIdxList := [3]int{-1, 1, 2}
 	memListLen := len(membershipList)
@@ -40,7 +40,8 @@ func GetMonitorList(membershipList []string, localHostName string) []string{
 
 //Call when JOIN the group
 func CreateID() string {
-	hostName := GetHostName()
+	originHostName := GetHostName()
+	hostName := strings.Replace(originHostName, "\n", "", -1)
 	localTime := time.Now()
 	// fmt.Println(localTime.Format(time.RFC3339))
 	return hostName + ":" + localTime.Format("20060102150405")
