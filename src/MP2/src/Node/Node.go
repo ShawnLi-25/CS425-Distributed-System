@@ -44,20 +44,19 @@ func RunNode(isIntroducer bool) {
 	LocalID = msg.CreateID()
 	LocalAddress = msg.GetHostName()
 
-	go curNode.UpdateMembershipList(IntroducerAddress)
+	go curNode.Updater.UpdateMembershipList(IntroducerAddress)
 
 	//Firstly, send Join Msg to Introducer
-	curNode.NodeSend(msg.JoinMsg)
+	curNode.Sender.NodeSend(msg.JoinMsg)
 
 	// curNode = CreateNewNode()
 	if !isIntroducer {
 		//false for non-intro, true for intro
-		go curNode.NodeHandleJoin()
-		go curNode.NodeListen(false)
+		go curNode.Introducer.NodeHandleJoin()
+		go curNode.Listener.NodeListen(false)
 	} else {
-		go curNode.NodeListen(true)
+		go curNode.Listener.NodeListen(true)
 	}
-	go curNode.Sender.NodeSend()
 }
 
 //Called from main.go when the command is "LEAVE\n"

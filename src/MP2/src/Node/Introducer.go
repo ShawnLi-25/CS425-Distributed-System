@@ -37,7 +37,6 @@ func (i *Introducer) NodeHandleJoin() {
 			fmt.Println("JoinMsg Received from Node... Address: "+ addr.IP.String())
 				
 		}
-
 	}
 }
 
