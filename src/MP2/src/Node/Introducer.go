@@ -89,4 +89,9 @@ func (i *Introducer) NodeHandleJoin() {
 
 // func SendJoinAckMsg(addr *net.UDPAddr) {
 
+<<<<<<< HEAD
 // }
+=======
+	log.Print("===JoinAck Sent to " + "\n" + "===Msg is" + string(msg))
+}
+>>>>>>> a8f6b9405dbbb63210d047fb3bcada8ceec8c040

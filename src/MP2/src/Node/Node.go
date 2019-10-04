@@ -4,9 +4,9 @@ import (
 	msg "../Helper"
 )
 
-var curNode = CreateNewNode()
-var UpQryChan = make(chan UpdateQuery)
-var MemListChan = make(chan []string)
+var curNode Node = CreateNewNode()
+var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
+var MemListChan chan []string = make(chan []string)
 var LocalAddress string
 var LocalID string
 
@@ -38,7 +38,8 @@ func CreateNewNode() *Node {
 }
 
 //Called from main.go when the command is "JOIN\n"
-//Create new node and run the node until LEAVE or crash
+//Create new node and run Listener,Sender and Updater
+//in seperate goroutines
 func RunNode(isIntroducer bool) {
 	LocalID = msg.CreateID()
 	LocalAddress = msg.GetHostName()
@@ -51,12 +52,12 @@ func RunNode(isIntroducer bool) {
 	// curNode = CreateNewNode()
 	if !isIntroducer {
 		//false for non-intro, true for intro
-		go curNoed.NodeHandleJoin()
+		go curNode.NodeHandleJoin()
 		go curNode.NodeListen(false)
 	} else {
 		go curNode.NodeListen(true)
 	}
-
+	go curNode.Sender.NodeSend()
 }
 
 //Called from main.go when the command is "LEAVE\n"

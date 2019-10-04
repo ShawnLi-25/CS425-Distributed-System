@@ -10,9 +10,6 @@ import (
 	"bufio"
 )
 
-const (
-	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
-)
 
 func main() {
 	isIntroducer := helper.IsIntroducer()
