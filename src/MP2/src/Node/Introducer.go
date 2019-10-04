@@ -40,8 +40,8 @@ func handleUDPConnection(ln *net.UDPConn) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-
-		log.Println("JoinAck Sent to New Node:" + joinMsg.NodeID)
+		fmt.Println("Introducer: JoinAckMsg Sent to %s, the message type is: %s...: ", joinAddr, joinAckMsg.MessageType)
+		log.Println("Introducer: JoinAck Sent to New Node:" + joinMsg.NodeID)
 	}
 }
 
