@@ -122,7 +122,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	}
 	defer conn.Close()
 
-	_, err := conn.Write(joinPkg)
+	_, err = conn.Write(joinPkg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
