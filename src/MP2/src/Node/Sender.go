@@ -29,9 +29,7 @@ func (s *Sender) NodeSend(msgType string) {
 			fmt.Println("Introducer is down!!")
 			return
 		}
-	}
-
-	else if msgType == msg.HeartbeatMsg {
+	} else if msgType == msg.HeartbeatMsg {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList <- MemListChan
 
@@ -140,7 +138,7 @@ func (s *Sender) SendJoinMsg(introducerAddress string) bool{
 		
 		//Copy the current membership list locally 
 		for _, member := range curMembershipList {
-			UpQryChan <- UpdateQuery{, member}
+			UpQryChan <- UpdateQuery{_, member}
 			<- MemListChan
 		}
 		return true

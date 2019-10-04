@@ -47,10 +47,7 @@ func (i *Introducer) SendIntroduceMsg() {
 
 func SendJoinAckMsg(newJoinAddress string, newJoinID string) {
 
-
-	
-
-	msg, err := conn.Write(joinAckPkg)
+	msg, err := conn.Write(msg.JoinAckMsg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
