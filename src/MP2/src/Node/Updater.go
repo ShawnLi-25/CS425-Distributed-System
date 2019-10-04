@@ -14,22 +14,22 @@ type UpdateQuery struct {
 	ID        string
 }
 
-//Open a go routine for this function, whenever needs update, build a channel; output will be 
+//Open a go routine for this function, whenever needs update, build a channel; output will be
 func UpdateMembershipList() {
 
 	for {
-		
+
 		select {
-		case updateQuery:=<-upQryChan:
+		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
-				memListChan <- membershipList
+				MemListChan <- membershipList
 			} else if updateQuery.queryType == 1 {
 				membershipList = AddNewNode(updateQuery.ID, membershipList)
 				SortMembershipList(membershipList)
-				memListChan <- membershipList
+				MemListChan <- membershipList
 			} else if updateQuery.queryType == 2 {
 				membershipList = DeleteNode(updateQuery.ID, membershipList)
-				memListChan <- membershipList
+				MemListChan <- membershipList
 			}
 		}
 	}

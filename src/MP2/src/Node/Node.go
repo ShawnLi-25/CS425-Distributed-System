@@ -6,6 +6,10 @@ import (
 	"net"
 )
 
+var node Node
+var	UpQryChan = make(chan UpdateQuery)
+var MemListChan = make(chan []string)
+
 type Node struct {
 	MemList      []string
 	InGroup      bool
@@ -34,19 +38,16 @@ func CreateNewNode() Node{
 //Called from main.go when the command is "JOIN\n"
 //Create new node and run the node until LEAVE or crash
 func RunNode(isIntroducer bool) {
-	var node Node
-	var	upQryChan := make(chan UpdateQuery)
-	var memListChan = make(chan []string)
 
 	node := CreateNewNode()
 	if(!isIntroducer){
 		//false for non-intro, true for intro
-		go NodeListen(&node,false) 
+		go node.NodeListen(false) 
 	} else {
-		go NodeListen(&node,true)
+		go node.NodeListen(true)
 	}
-	go NodeSend(&node)
-	go NodeUpdate(&node)
+	go node.NodeSend()
+	go node.NodeUpdate()
 }
 
 //Called from main.go when the command is "LEAVE\n"

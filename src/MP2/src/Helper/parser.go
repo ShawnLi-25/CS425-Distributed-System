@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -16,29 +17,37 @@ const (
 )
 
 func GetMonitorList(membershipList []string, localHostName string) {
-	var monitorList []string 
+	var monitorList []string
 	monitorIdxList := [3]int{-1, 1, 2}
 	memListLen := len(membershipList)
-	
+
 	if memListLen >= 4 {
-		
+
 		for i := 0; i < memListLen; i++ {
 			if strings.Contains(membershipList[i], localHostName) {
 				localIdx := i
-				for _,v := range monitorIdxList {
-					monitorList = append(monitorList, membershipList[(i + v + memListLen) % memListLen])	
+				for _, v := range monitorIdxList {
+					monitorList = append(monitorList, membershipList[(i+v+memListLen)%memListLen])
 				}
 				break
 			}
 		}
 	} else {
-		for i:= 0; i < memListLen; i++ {
+		for i := 0; i < memListLen; i++ {
 			if !(strings.Contains(membershipList[i], localHostName)) {
-				monitorList = append(monitorList, membershipList[i])	
+				monitorList = append(monitorList, membershipList[i])
 			}
 		}
 
 	}
+}
+
+//Call when JOIN the group
+func CreateID() string {
+	hostName := GetHostName()
+	localTime := time.Now()
+	// fmt.Println(localTime.Format(time.RFC3339))
+	return hostName + ":" + ConnPort + "+" + localTime.Format("20060102150405")
 }
 
 func GetIPAddressFromID(ID string) string {
