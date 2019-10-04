@@ -122,12 +122,12 @@ func SendJoinMsg(introducerAddress string) bool{
 	}
 	defer conn.Close()
 
-	msg, err := conn.Write(joinMsg)
+	_, err := conn.Write(joinPkg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
-	fmt.Print("JoinMsg Sent to Introducer..."+ "\n" + "Msg is" + string(msg))
+	fmt.Println("JoinMsg Sent to Introducer...")
 
 	//Set 3s Deadline for Ack
 	conn.SetReadDeadline(time.Now().Add(time.Duration(3) * time.Second))
@@ -163,7 +163,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 
-	monitorList = msg.GetMonitorList(MembershipList, LocalAddress)
+	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
 	for _, member := range monitorList {
 		if member == LocalID {
@@ -189,7 +189,7 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 
-	monitorList = msg.GetMonitorList(MembershipList, LocalAddress)
+	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
 	for _, member := range monitorList {
 		if member == LocalID {

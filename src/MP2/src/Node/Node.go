@@ -44,7 +44,7 @@ func RunNode(isIntroducer bool) {
 	LocalID = msg.CreateID()
 	LocalAddress = msg.GetHostName()
 
-	go curNode.Updater.UpdateMembershipList
+	go curNode.Updater.UpdateMembershipList()
 
 	//Firstly, send Join Msg to Introducer
 	curNode.Sender.NodeSend(msg.JoinMsg)
