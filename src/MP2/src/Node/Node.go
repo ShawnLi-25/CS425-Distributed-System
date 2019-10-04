@@ -47,12 +47,12 @@ func RunNode(isIntroducer bool) {
 	LocalAddress = msg.GetHostName()
 	fmt.Println("Node: Local Address is: " + LocalAddress)
 
-	//Firstly, send Join Msg to Introducer
-	curNode.Sender.NodeSend(msg.JoinMsg)
+	go curNode.Updater.UpdateMembershipList()
 
 	// curNode = CreateNewNode()
 	if !isIntroducer {
-		go curNode.Updater.UpdateMembershipList()
+		//Firstly, send Join Msg to Introducer
+		curNode.Sender.NodeSend(msg.JoinMsg)
 		//false for non-intro, true for intro
 		go curNode.Listener.NodeListen()
 	} else {
