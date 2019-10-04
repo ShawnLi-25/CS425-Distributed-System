@@ -127,7 +127,7 @@ func SendJoinMsg(introducerAddress string) bool{
 		log.Println(err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("JoinMsg Sent to Introducer...")
+	fmt.Println("Sender: JoinMsg Sent to Introducer...")
 
 	//Set 3s Deadline for Ack
 	conn.SetReadDeadline(time.Now().Add(time.Duration(3) * time.Second))
@@ -141,7 +141,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	}
 	
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
-	fmt.Println("JoinAckMsg Received from Introducer...")
+	fmt.Println("Sender: JoinAckMsg Received from Introducer...")
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content

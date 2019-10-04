@@ -22,7 +22,7 @@ func handleUDPConnection(ln *net.UDPConn) {
 	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
 
 	if joinMsg.MessageType == msg.JoinMsg {
-		fmt.Println("Inteoducer: JoinMsg Received from Node... Address: " + joinAddr.IP.String())
+		fmt.Println("Introducer: JoinMsg Received from Node... Address: " + joinAddr.IP.String())
 
 		//Send Introduce Message to Other node
 		SendIntroduceMsg(ln, joinMsg.NodeID)
