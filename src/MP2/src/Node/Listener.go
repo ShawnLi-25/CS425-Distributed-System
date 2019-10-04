@@ -21,7 +21,8 @@ func (l *Listener) NodeListen(port string) {
 	}
 	fmt.Printf("Listen on port %s\n", port)
 	defer con.Close()
-
+	
+	
 }
 
 //ListenMsg: Listen to Heartbeat or Leave Msg
