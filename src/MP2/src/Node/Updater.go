@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-var membershipList []string
+var MembershipList []string
 
 type Updater struct{}
 
@@ -22,14 +22,14 @@ func (u *Updater) UpdateMembershipList() {
 		select {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
-				MemListChan <- membershipList
+				MemListChan <- MembershipList
 			} else if updateQuery.queryType == 1 {
-				membershipList = AddNewNode(updateQuery.ID, membershipList)
-				SortMembershipList(membershipList)
-				MemListChan <- membershipList
+				MembershipList = AddNewNode(updateQuery.ID, MembershipList)
+				SortMembershipList(MembershipList)
+				MemListChan <- MembershipList
 			} else if updateQuery.queryType == 2 {
-				membershipList = DeleteNode(updateQuery.ID, membershipList)
-				MemListChan <- membershipList
+				MembershipList = DeleteNode(updateQuery.ID, MembershipList)
+				MemListChan <- MembershipList
 			}
 		}
 	}
