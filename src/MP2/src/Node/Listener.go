@@ -63,7 +63,7 @@ func ListenHeartbeat() {
 	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.ConnPort)
 	defer ln.Close()
 	hbBuf := make([]byte, 128)
-	ln.SetReadDeadline(time.Now().Add(msg.Timeout))
+	ln.SetReadDeadline(time.Now().Add(msg.TimeOut))
 	for{
 		n, msgAddr, err := ln.ReadFromUDP(hbBuf)
 		if err != nil {
@@ -73,7 +73,7 @@ func ListenHeartbeat() {
 		fmt.Println("Listener:Recieve Heartbeat from UDP client: %s", msgAddr)
 		if n > 0 {
 			//No delay, refresh deadline
-			ln.SetReadDeadline(time.Now().Add(msg.Timeout))
+			ln.SetReadDeadline(time.Now().Add(msg.TimeOut))
 			receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
 			msg.PrintMsg(receivedMsg)
 		}
