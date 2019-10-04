@@ -40,8 +40,7 @@ func GetMonitorList(membershipList []string, localHostName string) []string {
 
 //Call when JOIN the group
 func CreateID() string {
-	originHostName := GetHostName()
-	hostName := strings.Replace(originHostName, "\n", "", -1)
+	hostName := GetHostName()
 	localTime := time.Now()
 	// fmt.Println(localTime.Format(time.RFC3339))
 	return hostName + ":" + localTime.Format("20060102150405")
@@ -55,7 +54,8 @@ func GetHostName() string {
 	// Get client info(host name, ID, log file name)
 	cmd := exec.Command("hostname")
 	hName, _ := cmd.Output()
-	hostName := string(hName)
+	oldName := string(hName)
+	hostName := strings.Replace(oldName, "\n", "", -1)
 	return hostName
 }
 
