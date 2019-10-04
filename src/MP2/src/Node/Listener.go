@@ -20,7 +20,7 @@ func handleListenMsg(conn *net.UDPConn) {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Recieve Msg from UDP client: %s", msgAddr)
+	fmt.Println("Listender: Recieve Msg from UDP client: %s", msgAddr)
 
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	msg.PrintMsg(receivedMsg)

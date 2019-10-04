@@ -134,14 +134,14 @@ func SendJoinMsg(introducerAddress string) bool{
 
 	//Read from Introducer 
 	joinAck := make([]byte, 128)
-	n, err := conn.Read(joinAck)
+	n, msgAddr, err := conn.ReadFromUDP(joinAck)
 	if err != nil {
 		log.Println(err.Error())
 		return false
 	}
 	
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
-	fmt.Println("Sender: JoinAckMsg Received from Introducer...: " + joinAckMsg.MessageType)
+	fmt.Println("Sender: JoinAckMsg Received from Introducer %s, the message type is: %s...: ", msgAddr, joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content
