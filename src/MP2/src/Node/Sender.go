@@ -39,17 +39,18 @@ func (s *Sender) NodeSend(msgType string) {
 			monitorAdd := msg.GetIPAddressFromID(v)
 			SendHeartbeat(v, monitorAdd, LocalID)
 		}
-	} else if msgType == msg.LeaveMsg {
-		UpQryChan <- UpdateQuery{0, ""}
-		membershipList =<- MemListChan
+	} 
+	// else if msgType == msg.LeaveMsg {
+	// 	UpQryChan <- UpdateQuery{0, ""}
+	// 	membershipList =<- MemListChan
 
-		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
+	// 	monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
-		for _, v := range monitorList {
-			monitorAdd := msg.GetIPAddressFromID(v)
-			// SendLeaveMsg(v, monitorAdd, LocalID)
-		}
-	}
+	// 	for _, v := range monitorList {
+	// 		monitorAdd := msg.GetIPAddressFromID(v)
+	// 		// SendLeaveMsg(v, monitorAdd, LocalID)
+	// 	}
+	// }
 
 
 }
