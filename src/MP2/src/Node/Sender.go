@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 	"os"
-	"os/exec"
+	//"os/exec"
 	"time"
-	"strings"
+	//"strings"
 )
 
 // Sender is a type that implements the SendHearbeat() "method"
@@ -80,7 +80,6 @@ func (s *Sender) SendLeaveMsg(monitorAddress string, monitorID string, localID s
 		}
 
 		log.Print("===LeaveMsg Sent to: " + string(monitorID) + "\n" + "===Msg is" + string(msg))
-	}
 }
 
 func (s *Sender) SendJoinMsg(introducerAddress string, localID string) {

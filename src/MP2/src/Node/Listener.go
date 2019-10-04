@@ -13,7 +13,7 @@ const (
 
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct{
-	Connection PacketConn
+	Connection net.PacketConn
 }
 
 func NewListener(port string) Listener{
@@ -26,7 +26,7 @@ func NewListener(port string) Listener{
 	defer con.Close()
 
 	newListener := Listener{
-		Connection : con
+		Connection: con,
 	}
 	return newListener
 }
