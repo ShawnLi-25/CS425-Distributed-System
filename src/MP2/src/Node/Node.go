@@ -4,7 +4,7 @@ import (
 	msg "../Helper"
 )
 
-var curNode Node = CreateNewNode()
+var curNode *Node = CreateNewNode()
 var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
 var LocalAddress string
