@@ -47,7 +47,7 @@ func (s *Sender) NodeSend(msgType string) {
 
 		for _, v := range monitorList {
 			monitorAdd := msg.GetIPAddressFromID(v)
-			SendLeaveMsg(v, monitorAdd, LocalID)
+			// SendLeaveMsg(v, monitorAdd, LocalID)
 		}
 	}
 
