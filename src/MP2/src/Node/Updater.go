@@ -28,7 +28,7 @@ func (u *Updater) UpdateMembershipList() {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
 				MemListChan <- MembershipList
-				fmt.Println("Updater: Current Membership Length is: " + string(MembershipList))
+				fmt.Println("Updater: Current Membership Length is: " + string(len(MembershipList)))
 				for _, str := range MembershipList {
 					fmt.Printf("Updater: Membership List has member: %s...\n" + str)
 				}
