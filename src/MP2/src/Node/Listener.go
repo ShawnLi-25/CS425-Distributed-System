@@ -107,26 +107,15 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 			MemHBMap[c] = time.Now()
 		}
 	} else {                   //old MemHBMap has values
-		for NodeID, _ := range oldMemHBMap{
-			for i, c := range MemHBList {
-				if NodeID == c { //find same NodeID
-					MemHBList = append(MemHBList[:i], MemHBList[i+1:]...) //delete
-					break
-				}
+		for _, c := range MemHBList {
+			if LastTime, ok := oldMemHBMap[c]; ok {
+				MemHBMap[c] = LastTime
+			} else {
+				MemHBMap[c] = time.Now()
 			}
-			//Not found the NodeID
-			delete(oldMemHBMap, NodeID)
-		}
-		for NodeID, resTime := range oldMemHBMap{
-			MemHBMap[NodeID] = resTime
-		}
-		for _, c := range MemHBList{
-			MemHBMap[c] = time.Now()
 		}
 	}
 	fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-
-
 	return MemHBMap
 }
 
