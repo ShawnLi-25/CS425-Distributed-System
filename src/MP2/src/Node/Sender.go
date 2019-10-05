@@ -161,7 +161,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
-func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
+func SendIntroduceMsg(newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
@@ -176,6 +176,11 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 		if err != nil {
 			log.Println(err.Error())
 		}
+		ln, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		defer ln.Close()
 
 		_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
 		if wErr != nil {
