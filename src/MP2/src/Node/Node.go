@@ -49,10 +49,6 @@ func RunNode(isIntroducer bool) {
 	go curNode.Listener.RunHBListener()
 
 	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
-// 	k := <- KILL
-// 	if k == 1 {
-// 		return
-// 	}
 }
 
 //Called from main.go when the command is "LEAVE\n"
@@ -66,6 +62,8 @@ func StopNode(byLocal bool) {
 	fmt.Println("Node: Stop Node...")
 }
 
+//Called from main.go when the command is "LIST\n"
+//Show the List
 func ShowList() {
 	if Status {
 		UpQryChan <- UpdateQuery{0, ""}
@@ -77,6 +75,8 @@ func ShowList() {
 	}
 }
 
+//Called from main.go when the command is "ID\n"
+//Show Local ID
 func ShowID() {
 	if Status {
 		log.Println("The current node ID is:")

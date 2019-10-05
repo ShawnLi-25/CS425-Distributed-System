@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"./Helper"
 	"./Node"
-	// "flag"
 	"log"
 	"os"
 	"bufio"
@@ -12,6 +11,14 @@ import (
 
 
 func main() {
+	logFile, err := os.OpenFile("MP2.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+	
 	isIntroducer := helper.IsIntroducer()
 
 	reader := bufio.NewReader(os.Stdin)
@@ -23,19 +30,19 @@ func main() {
 
 		switch cmd{
 			case "Join\n"://TODO if node is already in group??
-				log.Println("Join the group")
+				log.Println("Main: Join the group")
 				go node.RunNode(isIntroducer)
 			case "Leave\n"://TODO if node is not in group??
-				log.Println("Leave the group")
+				log.Println("Main: Leave the group")
 				go node.StopNode(true)
 			case "List\n"://TODO if node hasn't joined a group??
-				log.Println("Show the current Membership List")
+				log.Println("Main: Show the current Membership List")
 				go node.ShowList()
 			case "ID\n":
-				log.Println("Show the current Node ID")
+				log.Println("Main: Show the current Node ID")
 				go node.ShowID()
 			default:
-				log.Println("Don't support this command")
+				log.Println("Main: Don't support this command")
 		}
 	}
 	/**
