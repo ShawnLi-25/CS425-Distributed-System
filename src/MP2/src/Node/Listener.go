@@ -84,6 +84,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 	return
 }
 
+//Use MembershipList to update the key in MemHBMap(NodeID, Time)
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	var MemHBMap map[string]time.Time
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
@@ -112,6 +113,22 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	return MemHBMap
 }
 
+//Counting the timeout
+func HBTimer(ln *net.UDPConn, MemHBMap map[string]time.Time) {
+	for{
+		time.Sleep(time.Second)
+
+		for NodeID, lastTime := range MemHBMap {
+			timeDiff := time.Now().Sub(lastTime)
+			if timeDiff - 2*msg.TimeOut*time.Second > 0{
+				SendFailMsg(ln, NodeID)
+			}
+		}
+		MemHBMap = getMemHBMap(MemHBMap)
+	}
+}
+
+
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
 	fmt.Println("HBListener:Initialize heartbeat listener...")
@@ -132,28 +149,26 @@ func (l *Listener) RunHBListener() {
 	//Initialize MemHBMap
 	var MemHBMap map[string]time.Time
 	MemHBMap = getMemHBMap(MemHBMap)
-
-	ln.SetReadDeadline(time.Now().Add(2*msg.TimeOut*time.Second))
+	
+	go HBTimer(ln, MemHBMap)
+	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
 		n, msgAddr, err := ln.ReadFromUDP(hbBuf)
 		if err != nil {
 			log.Println(err)
 		}
-
 		fmt.Println("Listener:Recieve Heartbeat from UDP client: %s", msgAddr)
-		if n > 0 {
-			//No delay, refresh deadline
-			ln.SetReadDeadline(time.Now().Add(2*msg.TimeOut*time.Second))
-			receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
-			msg.PrintMsg(receivedMsg)
+		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
+		
+		if receivedMsg.MessageType != msg.HeartbeatMsg {
+			fmt.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
+			continue
 		}
-
-		if nerr, ok := err.(net.Error); ok && nerr.Timeout() {
-			//Timeout error
-			fmt.Printf("HBListener: Client %s Timeout!\n", msgAddr)
-			//TODO Send timeout msg
+		
+		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
+			MemHBMap[receivedMsg.NodeID] = time.Now()
+		} else {
+			fmt.Println("Listener: MemHBMap doesn't contain the NodeID"+receivedMsg.NodeID)
 		}
-		time.Sleep(1/3 * time.Second)
-		MemHBMap = getMemHBMap(MemHBMap)
 	}
 }
