@@ -51,11 +51,9 @@ func HandleListenMsg(conn *net.UDPConn) {
 		case msg.FailMsg:
 			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
 		case msg.LeaveMsg:
-			// SendLeaveMsg(conn, receivedMsg.NodeID)
-			fmt.Println("===Receive LeaveMsg===")
+			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
 		case msg.IntroduceMsg:
-			fmt.Println("===Receive IntroduceMsg===")
-			SendIntroduceMsg(conn, receivedMsg.NodeID)
+			SendIntroduceMsg(receivedMsg.NodeID)
 		default:
 			fmt.Println("Listener:Can't recognize the msg")
 	}
