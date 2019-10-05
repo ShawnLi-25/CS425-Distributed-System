@@ -10,6 +10,8 @@ import (
 )
 
 
+var MemHBMap map[string]time.Time = make(map[string]time.Time)
+
 
 
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
@@ -96,28 +98,24 @@ func HandleListenMsg(conn *net.UDPConn) {
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	var MemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
+	for _, c := range MemHBList {
+		fmt.Println("Listener: MemHBList contains " + c)
+	}
+
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
 			MemHBMap[c] = time.Now()
 		}
 	} else {                   //old MemHBMap has values
-		for NodeID, _ := range oldMemHBMap{
-			for i, c := range MemHBList {
-				if NodeID == c { //find same NodeID
-					MemHBList = append(MemHBList[:i], MemHBList[i+1:]...) //delete
-					break
-				}
+		for _, c := range MemHBList {
+			if LastTime, ok := oldMemHBMap[c]; ok {
+				MemHBMap[c] = LastTime
+			} else {
+				MemHBMap[c] = time.Now()
 			}
-			//Not found the NodeID
-			delete(oldMemHBMap, NodeID)
-		}
-		for NodeID, resTime := range oldMemHBMap{
-			MemHBMap[NodeID] = resTime
-		}
-		for _, c := range MemHBList{
-			MemHBMap[c] = time.Now()
 		}
 	}
+	fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 	return MemHBMap
 }
 
@@ -133,6 +131,8 @@ func HBTimer(ln *net.UDPConn, MemHBMap map[string]time.Time) {
 			}
 		}
 		MemHBMap = getMemHBMap(MemHBMap)
+		fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+
 	}
 }
 
@@ -155,24 +155,31 @@ func (l *Listener) RunHBListener() {
 	hbBuf := make([]byte, 1024)
 	
 	//Initialize MemHBMap
-	MemHBMap := make(map[string]time.Time)
 	MemHBMap = getMemHBMap(MemHBMap)
+	
+
+	fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+	
+
 	
 	go HBTimer(ln, MemHBMap)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
-		n, msgAddr, err := ln.ReadFromUDP(hbBuf)
+		n, _, err := ln.ReadFromUDP(hbBuf)
 		if err != nil {
 			log.Println(err)
 		}
-		fmt.Println("Listener:Recieve Heartbeat from UDP client: %s", msgAddr)
+
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
+		fmt.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		
 		if receivedMsg.MessageType != msg.HeartbeatMsg {
 			fmt.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
 			continue
 		}
 		
+		fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+
 		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 			MemHBMap[receivedMsg.NodeID] = time.Now()
 		} else {

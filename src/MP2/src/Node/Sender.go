@@ -13,6 +13,8 @@ import (
 	//"strings"
 )
 
+var MonitorList []string
+
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
 
@@ -49,9 +51,9 @@ func (s *Sender) SendHeartbeat() {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList :=<- MemListChan
 
-		monitorList := msg.GetMonitorList(membershipList, LocalAddress)
+		MonitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
-		for _, monitorID := range monitorList {
+		for _, monitorID := range MonitorList {
 			monitorAddress := msg.GetIPAddressFromID(monitorID)
 			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
 			if err != nil {
@@ -69,7 +71,7 @@ func (s *Sender) SendHeartbeat() {
 				log.Println(err.Error())
 			}
 
-			fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
+			log.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
 			conn.Close()
 		}
 			time.Sleep(time.Second) //send heartbeat 1 second
@@ -98,7 +100,7 @@ func SendJoinMsg(introducerAddress string) bool{
 		log.Println(err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("Sender: JoinMsg Sent to Introducer...")
+	log.Println("Sender: JoinMsg Sent to Introducer...")
 
 	//Set 3s Deadline for Ack
 	conn.SetReadDeadline(time.Now().Add(time.Duration(3) * time.Second))
@@ -113,7 +115,7 @@ func SendJoinMsg(introducerAddress string) bool{
 	
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
 	
-	fmt.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
+	log.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content
@@ -160,7 +162,7 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
+		log.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
 	}
 	
 }
@@ -187,7 +189,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Println("Sender:IntroduceMsg Sent to: "+ member)
+		log.Println("Sender:IntroduceMsg Sent to: "+ member)
 	}
 }
 
@@ -214,14 +216,8 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
+		log.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
 
 }
 
-// func CreateID() string {
-// 	hostName := msg.GetHostName()
-// 	localTime := time.Now()
-// 	// fmt.Println(localTime.Format(time.RFC3339))
-// 	return hostName + ":" + msg.ConnPort + "+" + localTime.Format("20060102150405")
-// }
