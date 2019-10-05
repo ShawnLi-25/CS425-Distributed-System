@@ -94,7 +94,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 //Use MembershipList to update the key in MemHBMap(NodeID, Time)
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
-	var MemHBMap map[string]time.Time
+	var MemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
@@ -125,7 +125,7 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 func HBTimer(ln *net.UDPConn, MemHBMap map[string]time.Time) {
 	for{
 		time.Sleep(time.Second)
-
+		fmt.Println("HBTimer:Checking......")
 		for NodeID, lastTime := range MemHBMap {
 			timeDiff := time.Now().Sub(lastTime)
 			if timeDiff - 2*msg.TimeOut*time.Second > 0{
@@ -155,7 +155,7 @@ func (l *Listener) RunHBListener() {
 	hbBuf := make([]byte, 1024)
 	
 	//Initialize MemHBMap
-	var MemHBMap map[string]time.Time = make(map[string]time.Time)
+	MemHBMap := make(map[string]time.Time)
 	MemHBMap = getMemHBMap(MemHBMap)
 	
 	go HBTimer(ln, MemHBMap)
