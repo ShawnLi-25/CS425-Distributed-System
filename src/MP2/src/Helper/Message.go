@@ -3,6 +3,9 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net"
+	"os"
 )
 
 const (
@@ -61,4 +64,29 @@ func JSONToMsg(b []byte) Message {
 		fmt.Println(err)
 	}
 	return m
+}
+
+func CloseConnPort(localID string) {
+
+	//Send Leave Msg to local listener to close connection
+	leaveMsg := msg.NewMessage(LeaveMsg, localID, []string{localID})
+	leavePkg := msg.MsgToJSON(leaveMsg)
+
+	udpAddr, err := net.ResolveUDPAddr(ConnType, ":"+ConnPort)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	conn, err := net.DialUDP(ConnType, nil, udpAddr)
+	if err != nil {
+		log.Println(err.Error())
+		// os.Exit(1)
+	}
+	defer conn.Close()
+
+	_, err = conn.Write(leavePkg)
+	if err != nil {
+		log.Println(err.Error())
+		os.Exit(1)
+	}
 }

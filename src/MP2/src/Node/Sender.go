@@ -44,33 +44,7 @@ func (s *Sender) NodeSend(msgType string) {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList =<- MemListChan
 
-		leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{})
-		leavePkg := msg.MsgToJSON(leaveMsg)
-
-		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-		if err != nil {
-			log.Println(err.Error())
-			// os.Exit(1)
-		}
-		defer conn.Close()
-
-		_, err = conn.Write(leavePkg)
-		if err != nil {
-			log.Println(err.Error())
-			os.Exit(1)
-		}
-
-		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
-
-		for _, v := range monitorList {
-			monitorAdd := msg.GetIPAddressFromID(v)
-			SendLeaveMsg(monitorAdd, LocalID)
-		}
+		helper.CloseConnPort(LocalID)
 	}
 	return
 
@@ -166,28 +140,43 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
-func SendLeaveMsg(monitorAddress string, leaveNodeID string) {
+func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
+
+	for _, v := range monitorList {
+		monitorAdd := msg.GetIPAddressFromID(v)
+		SendLeaveMsg(monitorAdd, LocalID)
+	}
+
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
+	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.ConnPort)
-	if err != nil {
-		log.Println(err.Error())
-		// os.Exit(1)
-	}
-	conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-	if err != nil {
-		log.Println(err.Error())
-		// os.Exit(1)
-	}
-	defer conn.Close()
+	for _, member := range monitorList {
+		
+		if member == LocalID {
+			continue
+		}
 
-	_, err = conn.Write(leavePkg)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
+		memberAddress := msg.GetIPAddressFromID(member)
+		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+		if err != nil {
+			log.Println(err.Error())
+			// os.Exit(1)
+		}
+		defer conn.Close()
+	
+		_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
+		if wErr != nil {
+			log.Println(wErr.Error())
+		}
+		fmt.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
 	}
-	fmt.Printf("Sender: LeaveMsg Sent to Monitor: %s...\n" ,monitorAddress)
+	
 }
 
 
@@ -196,8 +185,8 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introducePkg := msg.MsgToJSON(introduceMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
-	for i, member := range monitorList {
-		fmt.Println(i,member)
+	for _, member := range monitorList {
+		// fmt.Println(i,member)
 		if member == LocalID {
 			continue
 		}
@@ -212,7 +201,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Println("Sender:IntroduceMsg Sent to: "+ string(member))
+		fmt.Println("Sender:IntroduceMsg Sent to: "+ member)
 	}
 }
 
@@ -238,7 +227,7 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Print("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
+		fmt.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
 
 }
