@@ -16,7 +16,7 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 	
-	nodeProcess:for {
+	for {
 		var cmd string
 		fmt.Println("Please type your command:")
 		cmd, _ = reader.ReadString('\n')
@@ -25,11 +25,9 @@ func main() {
 			case "Join\n"://TODO if node is already in group??
 				log.Println("Join the group")
 				go node.RunNode(isIntroducer)
-				continue
 			case "Leave\n"://TODO if node is not in group??
 				log.Println("Leave the group")
 				go node.StopNode()
-				break nodeProcess
 			case "List\n"://TODO if node hasn't joined a group??
 				log.Println("Show the current Membership List")
 				go node.ShowList()
@@ -38,7 +36,6 @@ func main() {
 				go node.ShowID()
 			default:
 				log.Println("Don't support this command")
-				continue
 		}
 	}
 	/**
