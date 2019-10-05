@@ -203,6 +203,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 }
 
 func SendFailMsg(ln *net.UDPConn, failNodeID string) {
+	
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 

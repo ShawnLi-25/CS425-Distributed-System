@@ -36,6 +36,7 @@ func (l *Listener) RunMSGListener() {
 			case <-KillRoutine:
 				ln.Close()
 				fmt.Println("Listener: Leave!!")
+				KillRoutine <- struct{}{}
 				return
 			default:
 				fmt.Println("Listener: Works!!")
@@ -57,11 +58,18 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
-		fmt.Println("Listener: receive failMsg")
-		UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
-		retMemList := <-MemListChan
-		if len(retMemList) != 0 {
-			SendFailMsg(conn, receivedMsg.NodeID)
+			//Triggered by False-Positive Situation
+		if receivedMsg.NodeID == LocalID {
+			log.Printf("Listener: NodeID %s is recognized as failed...\n", LocalID)
+			StopNode(false)
+			return
+		} else {
+			fmt.Println("Listener: receive failMsg")
+			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
+			retMemList := <-MemListChan
+			if len(retMemList) != 0 {
+				SendFailMsg(conn, receivedMsg.Content[0])
+			}
 		}
 	case msg.LeaveMsg:
 		fmt.Println("Listener: receive leaveMsg")
