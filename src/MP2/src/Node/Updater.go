@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"log"
 	"sort"
 )
@@ -19,18 +18,14 @@ type UpdateQuery struct {
 func (u *Updater) UpdateMembershipList() {
 
 	for {
-		// ok := <- KillRoutine
-		// if ok == 1 {
-		// 	fmt.Println("Updater: Go Routine Closed")
-		// 	return
-		// }
+
 		select {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
 				MemListChan <- MembershipList
-				fmt.Printf("Updater: Current Membership Length is: %d ", len(MembershipList))
+				log.Printf("Updater: Current Membership Length is: %d...\n ", len(MembershipList))
 				for _, str := range MembershipList {
-					fmt.Printf("Updater: Membership List has member: %s...\n", str)
+					log.Printf("Updater: Membership List has member: %s...\n", str)
 				}
 			} else if updateQuery.queryType == 1 {
 				newMemList := AddNewNode(updateQuery.ID, MembershipList)
@@ -83,7 +78,7 @@ func DeleteNode(nodeID string, list []string) []string {
 func FindNode(list []string, nodeID string) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
-			fmt.Println("Updater: Find Node!!!!!!" + list[i])
+			log.Println("Updater: Find Node!!!!!!" + list[i])
 			return i // return index
 		}
 	}
