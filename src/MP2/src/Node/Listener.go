@@ -98,9 +98,6 @@ func HandleListenMsg(conn *net.UDPConn) {
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
-	for _, c := range MemHBList {
-		//fmt.Println("Listener: MemHBList contains " + c)
-	}
 
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
