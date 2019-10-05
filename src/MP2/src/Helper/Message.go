@@ -9,7 +9,7 @@ const (
 	ConnHostName      = "fa19-cs425-g73-%02d.cs.illinois.edu"
 	ConnType          = "udp"
 	ConnPort          = "8888"
-	HeartbeatPort	  = "8887"
+	HeartbeatPort     = "8887"
 	IntroducePort     = "8886"
 	ConnlocalHost     = "localhost"
 	TimeOut           = 1
@@ -26,9 +26,9 @@ const (
 )
 
 type Message struct {
-	MessageType string //Heartbeat, Join, Leave, Introduce,(IntroduceAck?)
-	NodeID      string
-	Content     []string
+	MessageType string   //Heartbeat, Join, Leave, Introduce,(IntroduceAck?)
+	NodeID      string   //Local ID
+	Content     []string //Message Content
 }
 
 //Used for debugging

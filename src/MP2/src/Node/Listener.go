@@ -60,10 +60,10 @@ func HandleListenMsg(conn *net.UDPConn) {
 			}
 		case msg.IntroduceMsg:
 			fmt.Println("Listener: receive IntroduceMsg")
-			UpQryChan <- UpdateQuery{1, receivedMsg.NodeID}
+			UpQryChan <- UpdateQuery{1, receivedMsg.Content[0]}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
-				SendIntroduceMsg(conn, receivedMsg.NodeID)
+				SendIntroduceMsg(conn, receivedMsg.Content[0])
 			}
 		default:
 			fmt.Println("Listener:Can't recognize the msg")
