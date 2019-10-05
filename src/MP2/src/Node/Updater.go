@@ -76,10 +76,9 @@ func FindNode(list []string, nodeID string) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
 			return i // return index
-		} else {
-			return -1
 		}
 	}
+	return -1
 }
 
 // type MonitorList struct {
