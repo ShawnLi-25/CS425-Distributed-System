@@ -44,6 +44,27 @@ func (s *Sender) NodeSend(msgType string) {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList =<- MemListChan
 
+		leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{})
+		leavePkg := msg.MsgToJSON(leaveMsg)
+
+		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+		if err != nil {
+			log.Println(err.Error())
+			// os.Exit(1)
+		}
+		defer conn.Close()
+
+		_, err = conn.Write(leavePkg)
+		if err != nil {
+			log.Println(err.Error())
+			os.Exit(1)
+		}
+
 		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
 		for _, v := range monitorList {
