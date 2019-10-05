@@ -25,7 +25,7 @@ func (i *Introducer) NodeHandleJoin() {
 	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
 	if err != nil {
 		log.Println(err.Error())
-		os.Exit(1)
+		// os.Exit(1)
 	}
 	fmt.Println("Introducer: Listening on port " + msg.IntroducePort)
 	defer ln.Close()
