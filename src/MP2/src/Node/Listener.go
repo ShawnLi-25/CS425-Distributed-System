@@ -29,6 +29,8 @@ func (l *Listener) RunMSGListener() {
 
 
 	for {
+		fmt.Println("Listener: Works!!")			
+		HandleListenMsg(ln)
 		select {
 			case <- KillRoutine:
 				fmt.Println("Listener: Go Routine Closed")
@@ -37,8 +39,7 @@ func (l *Listener) RunMSGListener() {
 			// default:	
 				
 		}	
-		fmt.Println("Listener: Works!!")			
-		HandleListenMsg(ln)	
+			
 	}
 	
 }
