@@ -48,7 +48,7 @@ func AddNewNode(newNodeID string, list []string) []string {
 	log.Print(list)
 	if FindNode(list, newNodeID) < 0 {
 		newList := append(list, newNodeID)
-		SortMembershipList(MembershipList)
+		SortMembershipList(newList)
 		log.Print("Updater: New List is: ")
 		log.Print(newList)
 		return newList
