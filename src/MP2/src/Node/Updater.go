@@ -28,9 +28,9 @@ func (u *Updater) UpdateMembershipList() {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
 				MemListChan <- MembershipList
-				fmt.Println("Updater: Current Membership Length is: " + string(len(MembershipList)))
+				fmt.Println("Updater: Current Membership Length is: " + len(MembershipList))
 				for _, str := range MembershipList {
-					fmt.Printf("Updater: Membership List has member: %s...\n" + str)
+					fmt.Printf("Updater: Membership List has member: %s...\n", str)
 				}
 			} else if updateQuery.queryType == 1 {
 				newMemList := AddNewNode(updateQuery.ID, MembershipList)
