@@ -28,10 +28,10 @@ func (u *Updater) UpdateMembershipList() {
 					fmt.Println("Updater: Current Membership List is: " + str)
 				}
 			} else if updateQuery.queryType == 1 {
-				MembershipList = AddNewNode(updateQuery.ID, MembershipList)
-				MemListChan <- MembershipList
+				newMemList := AddNewNode(updateQuery.ID, MembershipList)
+				MemListChan <- newMemList
 			} else if updateQuery.queryType == 2 {
-				MembershipList = DeleteNode(updateQuery.ID, MembershipList)
+				newMemList := DeleteNode(updateQuery.ID, MembershipList)
 				MemListChan <- MembershipList
 			}
 		}
@@ -51,7 +51,8 @@ func AddNewNode(newNodeID string, list []string) []string {
 		SortMembershipList(newList)
 		log.Print("Updater: New List is: ")
 		log.Print(newList)
-		return newList
+		MembershipList = newList
+		return MembershipList
 	} else {
 		return []string{}
 	}
@@ -64,17 +65,20 @@ func DeleteNode(nodeID string, list []string) []string {
 	var idx = FindNode(list, nodeID)
 	if idx >= 0 {
 		if idx != len(list)-1 {
-			list = append(list[:idx], list[idx+1:]...)
+			MembershipList = append(list[:idx], list[idx+1:]...)
 		} else {
-			list = list[:idx]
+			MembershipList = list[:idx]
 		}
+		return MembershipList
+	} else {
+		return []string{}
 	}
-	return list
 }
 
 func FindNode(list []string, nodeID string) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
+			fmt.Println("Updater: Find Node!!!!!!" + list[i])
 			return i // return index
 		}
 	}
