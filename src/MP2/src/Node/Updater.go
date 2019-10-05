@@ -52,7 +52,7 @@ func AddNewNode(newNodeID string, list []string) []string {
 		log.Print("Updater: New List is: ")
 		log.Print(newList)
 		MembershipList = newList
-		return MembershipList
+		return newList
 	} else {
 		return []string{}
 	}
@@ -69,7 +69,10 @@ func DeleteNode(nodeID string, list []string) []string {
 		} else {
 			MembershipList = list[:idx]
 		}
-		return MembershipList
+		newList := make([]string, len(MembershipList))
+		copy(newList, MembershipList)
+		// newList := MembershipList
+		return newList
 	} else {
 		return []string{}
 	}
