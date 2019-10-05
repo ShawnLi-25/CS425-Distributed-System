@@ -10,6 +10,7 @@ var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
 var LocalAddress string
 var LocalID string
+var KILL chan int
 
 type Node struct {
 	Sender
@@ -41,12 +42,18 @@ func RunNode(isIntroducer bool) {
 		go curNode.Introducer.NodeHandleJoin()
 	}
 
-	//go curNode.Listener.NodeListen()
+	//go curNode.Listener.RunHBListener()
+	go.curNode.Listener.RunMSGListener()
 	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
+	k := <- KILL
+	if k == 1 {
+		return
+	}
 }
 
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
 func StopNode() {
 	curNode.Sender.NodeSend(msg.LeaveMsg)
+	KILL <- 1
 }
