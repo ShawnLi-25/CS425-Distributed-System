@@ -30,14 +30,22 @@ func (i *Introducer) NodeHandleJoin() {
 	fmt.Println("Introducer: Listening on port " + msg.IntroducePort)
 
 	//Handle JoinMsg
-	for {
 
-		handleJoinMsg(ln)
+	for {
+		select {
+			case <-KillRoutine:
+				ln.Close()
+				fmt.Println("Introducer: Leave!!")
+				return
+			default:
+				fmt.Println("Introducer: Works!!")
+				HandleJoinMsg(ln)
+		}
 	}
-	ln.Close()
+
 }
 
-func handleJoinMsg(ln *net.UDPConn) {
+func HandleJoinMsg(ln *net.UDPConn) {
 	joinBuf := make([]byte, 1024)
 	n, joinAddr, err := ln.ReadFromUDP(joinBuf)
 	if err != nil {
