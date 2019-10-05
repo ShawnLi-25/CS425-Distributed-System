@@ -17,8 +17,8 @@ import (
 type Sender struct{}
 
 func (s *Sender) NodeSend(msgType string) {
-	var membershipList []string
-	var monitorList []string
+	// var membershipList []string
+	// var monitorList []string
 	// localHostName := msg.GetHostName()
 
 	//Join the group
