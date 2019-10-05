@@ -58,10 +58,10 @@ func RunNode(isIntroducer bool) {
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
 func StopNode() {
-	fmt.Println("Node: Stop Node...")
 	curNode.Sender.NodeSend(msg.LeaveMsg)
 	Status = false
 	KillRoutine <- struct{}{}
+	fmt.Println("Node: Stop Node...")
 }
 
 func ShowList() {
