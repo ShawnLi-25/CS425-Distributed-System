@@ -12,7 +12,6 @@ var LocalAddress string
 var LocalID string
 
 type Node struct {
-	MemList []string
 	Sender
 	Listener
 	Updater
@@ -21,7 +20,6 @@ type Node struct {
 
 func CreateNewNode() *Node {
 	var newNode *Node = new(Node)
-	newNode.MemList = []string{}
 	return newNode
 }
 
@@ -34,20 +32,18 @@ func RunNode(isIntroducer bool) {
 	LocalAddress = msg.GetHostName()
 	fmt.Println("Node: Local Address is: " + LocalAddress)
 
-	//go curNode.Updater.UpdateMembershipList()
-
+	go curNode.Updater.UpdateMembershipList()
 	if !isIntroducer {
 		fmt.Println("Node: I'm not Introducer")
-		//Firstly, send Join Msg to Introducer
+		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
-		//false for non-intro, true for intro
-		go curNode.Listener.NodeListen()
 	} else {
 		fmt.Println("Node: I'm Introducer")
+		//Introducer receive JoinMsg from non-intro
 		go curNode.Introducer.NodeHandleJoin()
-		//go curNode.Listener.NodeListen()
 	}
 
+	//go curNode.Listener.NodeListen()
 	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 }
 
