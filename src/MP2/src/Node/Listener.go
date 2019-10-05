@@ -31,8 +31,7 @@ func (l *Listener) RunMSGListener() {
 
 		select {
 			case <-KillRoutine:
-				fmt.Println("Listener: Go Routine Closed")
-				break
+				return
 				
 			default:
 				fmt.Println("Listener: Works!!")
