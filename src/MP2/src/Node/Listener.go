@@ -98,8 +98,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
-	fmt.Println("Listener: Current Monitoring List is:...")
-	fmt.Print(MemHBList)
+
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
 			MemHBMap[c] = time.Now()
@@ -114,7 +113,10 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 		}
 	}
 	//fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+	fmt.Println("Listener: Current Monitoring List is:...")
+	fmt.Print(newMemHBMap)
 	return newMemHBMap
+
 }
 
 //Counting the timeout
