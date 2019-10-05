@@ -128,6 +128,8 @@ func HBTimer(ln *net.UDPConn) {
 			}
 		}
 		MemHBMap = getMemHBMap(MemHBMap)
+		fmt.Println("Listener: Current Monitoring List is:...")
+		fmt.Print(MemHBMap)
 		//fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 	}
