@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	msg "./Helper"
+	"./Helper"
 	"./Node"
 	"log"
 	"os"
@@ -11,7 +11,7 @@ import (
 
 
 func main() {
-	vmNumber := msg.GetVMNumber() 
+	vmNumber := helper.GetVMNumber() 
 	logFile, err := os.OpenFile("MP2_"+string(vmNumber)+".log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
