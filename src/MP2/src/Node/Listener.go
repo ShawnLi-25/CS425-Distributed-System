@@ -36,6 +36,7 @@ func (l *Listener) RunMSGListener() {
 			case <-KillRoutine:
 				ln.Close()
 				fmt.Println("Listener: Leave!!")
+				KillRoutine <- struct{}{}
 				return
 			default:
 				fmt.Println("Listener: Works!!")

@@ -37,6 +37,7 @@ func RunNode(isIntroducer bool) {
 	Status = true
 
 	go curNode.Updater.UpdateMembershipList()
+	go curNode.Listener.RunMSGListener()	
 	if !isIntroducer {
 		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
@@ -44,7 +45,6 @@ func RunNode(isIntroducer bool) {
 		//Introducer receive JoinMsg from non-intro
 		go curNode.Introducer.NodeHandleJoin()
 	}
-	go curNode.Listener.RunMSGListener()	
 
 	// go curNode.Listener.RunHBListener()
 
