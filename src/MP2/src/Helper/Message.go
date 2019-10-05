@@ -50,7 +50,7 @@ func MsgToJSON(message Message) []byte {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(b)
+	//fmt.Println(b)
 	return b
 }
 

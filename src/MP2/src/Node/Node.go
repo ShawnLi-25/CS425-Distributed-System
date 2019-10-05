@@ -13,7 +13,6 @@ var LocalID string
 
 type Node struct {
 	MemList []string
-	InGroup bool
 	Sender
 	Listener
 	Updater
@@ -23,18 +22,6 @@ type Node struct {
 func CreateNewNode() *Node {
 	var newNode *Node = new(Node)
 	newNode.MemList = []string{}
-	newNode.InGroup = true
-	// newSender := NewSender()
-	// newListener := NewListener()
-	// newIntroducer := NewIntroducer()
-	// newUpdater := NewUpdater()
-	// newNode := Node{
-	// 	MemList:  newMemList,
-	// 	Sender:   newSender,
-	// 	Listener: newListener,
-	// 	Updater:  newUpdater,
-	// 	InGroup:  false,
-	// }
 	return newNode
 }
 
@@ -47,9 +34,8 @@ func RunNode(isIntroducer bool) {
 	LocalAddress = msg.GetHostName()
 	fmt.Println("Node: Local Address is: " + LocalAddress)
 
-	go curNode.Updater.UpdateMembershipList()
+	//go curNode.Updater.UpdateMembershipList()
 
-	// curNode = CreateNewNode()
 	if !isIntroducer {
 		fmt.Println("Node: I'm not Introducer")
 		//Firstly, send Join Msg to Introducer
@@ -57,12 +43,12 @@ func RunNode(isIntroducer bool) {
 		//false for non-intro, true for intro
 		go curNode.Listener.NodeListen()
 	} else {
-		fmt.Println("Node: I'm the Introducer")
+		fmt.Println("Node: I'm Introducer")
 		go curNode.Introducer.NodeHandleJoin()
-		go curNode.Listener.NodeListen()
+		//go curNode.Listener.NodeListen()
 	}
 
-	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
+	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 }
 
 //Called from main.go when the command is "LEAVE\n"

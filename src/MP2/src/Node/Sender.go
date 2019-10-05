@@ -164,9 +164,7 @@ func SendJoinMsg(introducerAddress string) bool{
 func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
-
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-
 	for _, member := range monitorList {
 		if member == LocalID {
 			continue
@@ -183,7 +181,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-	fmt.Print("IntroduceMsg Sent to: "+ string(member))
+		fmt.Println("Sender:IntroduceMsg Sent to: "+ string(member))
 	}
 }
 

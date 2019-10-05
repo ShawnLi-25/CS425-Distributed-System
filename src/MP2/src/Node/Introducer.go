@@ -5,18 +5,18 @@ import (
 	"log"
 	"net"
 	"os"
-
 	msg "../Helper"
 )
 
-// Introducer is a type that implements the SendFullListToNewNode(), SendIntroduceMsg() "method"
 type Introducer struct{}
 
-
+//Called from Node.go when the node type is Introducer
 func (i *Introducer) NodeHandleJoin() {
+	//Add Introducer itself to MemList
 	UpQryChan <- UpdateQuery{1, LocalID}
 	<-MemListChan
 
+	//Set up UDP connection for upcoming JoinMsg
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.IntroducePort)
 	if err != nil {
 		log.Println(err.Error())
@@ -27,15 +27,16 @@ func (i *Introducer) NodeHandleJoin() {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("Introducer: Listening on port %s", msg.IntroducePort)
+	fmt.Println("Introducer: Listening on port " + msg.IntroducePort)
 	defer ln.Close()
 
+	//Handle JoinMsg
 	for {
-		handleUDPConnection(ln)
+		handleJoinMsg(ln)
 	}
 }
 
-func handleUDPConnection(ln *net.UDPConn) {
+func handleJoinMsg(ln *net.UDPConn) {
 	joinBuf := make([]byte, 1024)
 	n, joinAddr, err := ln.ReadFromUDP(joinBuf)
 	if err != nil {
@@ -45,7 +46,7 @@ func handleUDPConnection(ln *net.UDPConn) {
 	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
 
 	if joinMsg.MessageType == msg.JoinMsg {
-		fmt.Println("Introducer: JoinMsg Received from Node... Address: " + joinAddr.IP.String())
+		log.Println("Introducer: JoinMsg Received from Node:" + joinMsg.NodeID)
 
 		//Send Introduce Message to Other node
 		SendIntroduceMsg(ln, joinMsg.NodeID)
@@ -54,14 +55,12 @@ func handleUDPConnection(ln *net.UDPConn) {
 		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
 		newMembershipList := <-MemListChan
 
-		/*
-		Send full membershiplist to new join node
-		*/
-
+		/*For debugging: print full MemList*/
 		// for _, str := range newMembershipList {
 		// 	fmt.Println("Introducer: Current Membership List is: " + str)
 		// }
 
+		//Send full membershiplist to new join node
 		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, newMembershipList)
 		joinAckPkg := msg.MsgToJSON(joinAckMsg)
 
@@ -69,16 +68,8 @@ func handleUDPConnection(ln *net.UDPConn) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		// fmt.Printf("Introducer: JoinAckMsg Sent to %s, the message type is: %s...: ", joinAddr, joinAckMsg.MessageType)
-		log.Println("Introducer: JoinAck Sent to New Node:" + joinMsg.NodeID)
+		log.Println("Introducer: JoinAck Sent to Node:" + joinMsg.NodeID)
+	} else {
+		log.Printf("Introducer: Port %s only accepts JoinMsg\n", msg.IntroducePort)
 	}
 }
-
-
-// func SendIntroduceMsg() {
-
-// }
-
-// func SendJoinAckMsg(addr *net.UDPAddr) {
-
-// }
