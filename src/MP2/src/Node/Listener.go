@@ -155,7 +155,7 @@ func (l *Listener) RunHBListener() {
 	hbBuf := make([]byte, 1024)
 	
 	//Initialize MemHBMap
-	var MemHBMap map[string]time.Time
+	var MemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBMap = getMemHBMap(MemHBMap)
 	
 	go HBTimer(ln, MemHBMap)
