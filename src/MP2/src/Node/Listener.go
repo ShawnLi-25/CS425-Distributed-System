@@ -13,9 +13,9 @@ type Listener struct {
 }
 
 
-func (l *Listener) NodeListen() {
+func (l *Listener) RunMSGListener() {
 
-	fmt.Println("MSGListener:Initialize new listener...")
+	fmt.Println("Listener:Run message listener...")
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
 	if err != nil {
 		log.Fatal(err)
@@ -25,13 +25,10 @@ func (l *Listener) NodeListen() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Printf("Listener:MSGListener listen on port %s\n", msg.ConnPort)
 
-	fmt.Printf("MSGListener:Listen on port %s\n", msg.ConnPort)
 	defer ln.Close()
-	/*
-	Goroutine for Heartbeat
-	*/
-	go ListenHeartbeat()
+
 	for {
 		HandleListenMsg(ln)
 	}
@@ -46,33 +43,27 @@ func HandleListenMsg(conn *net.UDPConn) {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Listender: Recieve Msg from UDP client: %s", msgAddr)
-
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
-	msg.PrintMsg(receivedMsg)
+	
+	log.Printf("Listender: Recieve %s message from Node: %s", receivedMsg.MessageType,receivedMsg.NodeID)
 
 	switch receivedMsg.MessageType {
-	// case msg.HeartbeatMsg:
-	// 	fmt.Println("===Receive Heartbeat===")
-	// case msg.JoinMsg:
-		// fmt.Println("===Receive JoinMsg===")
-	case msg.FailMsg:
-		SendFailMsg(conn, receivedMsg.NodeID)
-		fmt.Println("===Receive FailMsg===")
-	case msg.LeaveMsg:
-		// SendLeaveMsg(conn, receivedMsg.NodeID)
-		fmt.Println("===Receive LeaveMsg===")
-	case msg.IntroduceMsg:
-		fmt.Println("===Receive IntroduceMsg===")
-		SendIntroduceMsg(conn, receivedMsg.NodeID)
-	default:
-		fmt.Println("Listener:Can't recognize the msg")
+		case msg.FailMsg:
+			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
+		case msg.LeaveMsg:
+			// SendLeaveMsg(conn, receivedMsg.NodeID)
+			fmt.Println("===Receive LeaveMsg===")
+		case msg.IntroduceMsg:
+			fmt.Println("===Receive IntroduceMsg===")
+			SendIntroduceMsg(conn, receivedMsg.NodeID)
+		default:
+			fmt.Println("Listener:Can't recognize the msg")
 	}
 }
 
 
 //Listen to Heartbeat and Check timeout
-func ListenHeartbeat() {
+func (l *Listener) RunHBListener() {
 	fmt.Println("HBListener:Initialize heartbeat listener...")
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.HeartbeatPort)
 	if err != nil {
