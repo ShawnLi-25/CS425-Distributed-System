@@ -44,7 +44,7 @@ func (s *Sender) NodeSend(msgType string) {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList =<- MemListChan
 
-		helper.CloseConnPort(LocalID)
+		msg.CloseConnPort(LocalID)
 	}
 	return
 
@@ -142,11 +142,6 @@ func SendJoinMsg(introducerAddress string) bool{
 
 func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 
-	for _, v := range monitorList {
-		monitorAdd := msg.GetIPAddressFromID(v)
-		SendLeaveMsg(monitorAdd, LocalID)
-	}
-
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
@@ -170,7 +165,7 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 		}
 		defer conn.Close()
 	
-		_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
+		_, wErr := ln.WriteToUDP(leavePkg, udpAddr)
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
