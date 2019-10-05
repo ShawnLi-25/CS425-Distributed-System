@@ -31,6 +31,7 @@ func (l *Listener) RunMSGListener() {
 
 		select {
 			case <-KillRoutine:
+				ln.Close()
 				return
 				
 			default:
