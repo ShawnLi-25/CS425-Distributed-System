@@ -32,11 +32,11 @@ func (i *Introducer) NodeHandleJoin() {
 
 	//Handle JoinMsg
 	for {
-		ok := <- KillRoutine
-		if ok == 1 {
-			fmt.Println("Introducer: Go Routine Closed")
-			return 
-		} 
+		// ok := <- KillRoutine
+		// if ok == 1 {
+		// 	fmt.Println("Introducer: Go Routine Closed")
+		// 	return 
+		// } 
 		handleJoinMsg(ln)
 	}
 }

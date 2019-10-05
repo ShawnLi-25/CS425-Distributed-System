@@ -71,11 +71,11 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	}
 
 	for {
-		ok := <- KillRoutine
-		if ok == 1 {
-			fmt.Println("Listener: Go Routine Closed")
-			return 
-		} 
+		// ok := <- KillRoutine
+		// if ok == 1 {
+		// 	fmt.Println("Listener: Go Routine Closed")
+		// 	return 
+		// } 
 
 		msg, err := conn.Write(heartBeatPkg)
 		if err != nil {

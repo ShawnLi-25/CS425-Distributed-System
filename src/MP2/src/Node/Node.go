@@ -60,7 +60,7 @@ func RunNode(isIntroducer bool) {
 func StopNode() {
 	curNode.Sender.NodeSend(msg.LeaveMsg)
 	Status = false
-	KillRoutine <- 1
+	KillRoutine <- struct{}{}
 }
 
 func ShowList() {
