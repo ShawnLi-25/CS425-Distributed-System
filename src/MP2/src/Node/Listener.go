@@ -27,12 +27,12 @@ func (l *Listener) RunMSGListener() {
 	}
 	fmt.Printf("Listener:MSGListener listen on port %s\n", msg.ConnPort)
 
-	defer ln.Close()
 
 	for {
 		ok := <- KillRoutine
 		if ok == 1 {
 			fmt.Println("Listener: Go Routine Closed")
+			ln.Close()
 			return 
 		} else {
 			fmt.Println("Listener: Nothing Happens")
