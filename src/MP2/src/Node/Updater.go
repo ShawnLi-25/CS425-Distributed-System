@@ -19,7 +19,11 @@ type UpdateQuery struct {
 func (u *Updater) UpdateMembershipList() {
 
 	for {
-
+		ok := <- KillRoutine
+		if ok == 1 {
+			fmt.Println("Updater: Go Routine Closed")
+			return 
+		} 
 		select {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {

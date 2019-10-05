@@ -9,7 +9,7 @@ import (
 var curNode *Node = CreateNewNode()
 var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
-var KILL chan int
+var KillRoutine chan int
 var LocalAddress string
 var LocalID string
 var Status bool
@@ -48,19 +48,19 @@ func RunNode(isIntroducer bool) {
 
 	//go curNode.Listener.RunHBListener()
 
-	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
-	k := <- KILL
-	if k == 1 {
-		return
-	}
-}
+	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
+// 	k := <- KILL
+// 	if k == 1 {
+// 		return
+// 	}
+// }
 
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
 func StopNode() {
 	curNode.Sender.NodeSend(msg.LeaveMsg)
 	Status = false
-	KILL <- 1
+	KillRoutine <- 1
 }
 
 func ShowList() {

@@ -39,8 +39,8 @@ func (s *Sender) NodeSend(msgType string) {
 			monitorAdd := msg.GetIPAddressFromID(v)
 			SendHeartbeat(v, monitorAdd, LocalID)
 		}
-	} 
-	else if msgType == msg.LeaveMsg {
+		
+	} else if msgType == msg.LeaveMsg {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList =<- MemListChan
 
@@ -51,7 +51,7 @@ func (s *Sender) NodeSend(msgType string) {
 			SendLeaveMsg(v, monitorAdd, LocalID)
 		}
 	}
-
+	return
 
 }
 
@@ -71,6 +71,12 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	}
 
 	for {
+		ok := <- KillRoutine
+		if ok == 1 {
+			fmt.Println("Listener: Go Routine Closed")
+			return 
+		} 
+
 		msg, err := conn.Write(heartBeatPkg)
 		if err != nil {
 			log.Println(err.Error())
@@ -79,6 +85,8 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 
 		fmt.Print("HeartBeat Sent to: " + string(monitorID) + "\nMsg is" + string(msg))
 		time.Sleep(time.Second) //send heartbeat 1 second
+
+		
 	}
 	conn.Close()
 }
@@ -209,7 +217,7 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Print("Sender: FailMsg Sent to Monitor: %s...\n " memberAddress)
+		fmt.Print("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
 
 }

@@ -30,6 +30,11 @@ func (l *Listener) RunMSGListener() {
 	defer ln.Close()
 
 	for {
+		ok := <- KillRoutine
+		if ok == 1 {
+			fmt.Println("Listener: Go Routine Closed")
+			return 
+		} 
 		HandleListenMsg(ln)
 	}
 	
