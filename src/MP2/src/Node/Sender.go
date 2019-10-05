@@ -185,7 +185,7 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	}
 }
 
-func SendFailMsg(ln *net.UDPConn, failNodeID string) {
+func SendFailMsg(failNodeID string) {
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 
@@ -202,12 +202,17 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if err != nil {
 			log.Println(err.Error())
 		}
+		ln, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		defer ln.Close()
 
 		_, wErr := ln.WriteToUDP(failPkg, udpAddr)
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-	fmt.Print("FailMsg Sent to: "+ string(member))
+		fmt.Print("FailMsg Sent to: "+ string(member))
 	}
 
 }
