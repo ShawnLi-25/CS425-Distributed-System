@@ -42,9 +42,9 @@ func HandleListenMsg(conn *net.UDPConn) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("1111")
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
-	
+	fmt.Println("222")
 	log.Printf("Listender: Recieve %s message from Node: %s, Addrs: %s", receivedMsg.MessageType,receivedMsg.NodeID, msgAddr)
 
 	switch receivedMsg.MessageType {
