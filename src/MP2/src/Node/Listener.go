@@ -37,6 +37,7 @@ func (l *Listener) RunMSGListener() {
 					return 
 				} 
 			default:	
+				fmt.Println("Listener: Works!!")			
 				HandleListenMsg(ln)	
 		}	
 	}
