@@ -31,7 +31,6 @@ func (i *Introducer) NodeHandleJoin() {
 
 	//Handle JoinMsg
 	for {
-
 		handleJoinMsg(ln)
 	}
 	ln.Close()

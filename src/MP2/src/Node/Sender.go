@@ -69,7 +69,7 @@ func (s *Sender) NodeSend(msgType string) {
 
 		for _, v := range monitorList {
 			monitorAdd := msg.GetIPAddressFromID(v)
-			SendLeaveMsg(monitorAdd)
+			SendLeaveMsg(monitorAdd, LocalID)
 		}
 	}
 	return
@@ -166,8 +166,8 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
-func SendLeaveMsg(monitorAddress string) {
-	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{})
+func SendLeaveMsg(monitorAddress string, leaveNodeID string) {
+	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.ConnPort)
