@@ -32,7 +32,7 @@ func (u *Updater) UpdateMembershipList() {
 				MemListChan <- newMemList
 			} else if updateQuery.queryType == 2 {
 				newMemList := DeleteNode(updateQuery.ID, MembershipList)
-				MemListChan <- MembershipList
+				MemListChan <- newMemList
 			}
 		}
 	}
