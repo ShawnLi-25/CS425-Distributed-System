@@ -68,22 +68,14 @@ func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
 	}
 
 	for {
-		// ok := <- KillRoutine
-		// if ok == 1 {
-		// 	fmt.Println("Listener: Go Routine Closed")
-		// 	return 
-		// } 
-
-		msg, err := conn.Write(heartBeatPkg)
+		_, err := conn.Write(heartBeatPkg)
 		if err != nil {
 			log.Println(err.Error())
 			os.Exit(1)
 		}
 
-		fmt.Print("HeartBeat Sent to: " + string(monitorID) + "\nMsg is" + string(msg))
+		fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
 		time.Sleep(time.Second) //send heartbeat 1 second
-
-		
 	}
 	conn.Close()
 }
