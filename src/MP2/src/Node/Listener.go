@@ -45,14 +45,20 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
 	
-	log.Printf("Listender: Recieve %s message from Node: %s", receivedMsg.MessageType,receivedMsg.NodeID)
+	log.Printf("Listender: Recieve %s message from Node: %s, Addrs: %s", receivedMsg.MessageType,receivedMsg.NodeID, msgAddr)
 
 	switch receivedMsg.MessageType {
 		case msg.FailMsg:
+			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
+			<-MemListChan
 			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
 		case msg.LeaveMsg:
+			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
+			<-MemListChan
 			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
 		case msg.IntroduceMsg:
+			UpQryChan <- UpdateQuery{1, receivedMsg.NodeID}
+			<-MemListChan
 			SendIntroduceMsg(receivedMsg.NodeID)
 		default:
 			fmt.Println("Listener:Can't recognize the msg")
