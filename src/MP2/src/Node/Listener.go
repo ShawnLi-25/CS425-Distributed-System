@@ -34,10 +34,11 @@ func (l *Listener) RunMSGListener() {
 				fmt.Println("Listener: Go Routine Closed")
 				ln.Close()
 				return 
-			default:	
-				fmt.Println("Listener: Works!!")			
-				HandleListenMsg(ln)	
+			// default:	
+				
 		}	
+		fmt.Println("Listener: Works!!")			
+		HandleListenMsg(ln)	
 	}
 	
 }
