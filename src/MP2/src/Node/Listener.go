@@ -34,14 +34,11 @@ func (l *Listener) RunMSGListener() {
 				ln.Close()
 				fmt.Println("Listener: Leave!!")
 				return
-				
 			default:
 				fmt.Println("Listener: Works!!")
 				HandleListenMsg(ln)
 		}
 	}
-	ln.Close()
-	return
 
 }
 
