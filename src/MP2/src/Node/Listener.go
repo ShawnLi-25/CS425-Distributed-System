@@ -65,7 +65,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 		UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
 		retMemList := <-MemListChan
 		if len(retMemList) != 0 {
-			SendFailMsg(conn, receivedMsg.NodeID)
+			SendLeaveMsg(conn, receivedMsg.NodeID)
 		}
 	case msg.IntroduceMsg:
 		fmt.Println("Listener: receive IntroduceMsg")
@@ -77,6 +77,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 	default:
 		fmt.Println("Listener:Can't recognize the msg")
 	}
+	fmt.Println("Listener: Return from HandleListenMsg ")
 	return
 }
 
