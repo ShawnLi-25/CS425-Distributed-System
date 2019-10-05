@@ -13,6 +13,8 @@ import (
 	//"strings"
 )
 
+var MonitorList []string
+
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
 
@@ -49,9 +51,9 @@ func (s *Sender) SendHeartbeat() {
 		UpQryChan <- UpdateQuery{0, ""}
 		membershipList :=<- MemListChan
 
-		monitorList := msg.GetMonitorList(membershipList, LocalAddress)
+		MonitorList = msg.GetMonitorList(membershipList, LocalAddress)
 
-		for _, monitorID := range monitorList {
+		for _, monitorID := range MonitorList {
 			monitorAddress := msg.GetIPAddressFromID(monitorID)
 			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
 			if err != nil {
