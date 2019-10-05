@@ -28,17 +28,13 @@ func (i *Introducer) NodeHandleJoin() {
 		// os.Exit(1)
 	}
 	fmt.Println("Introducer: Listening on port " + msg.IntroducePort)
-	defer ln.Close()
 
 	//Handle JoinMsg
 	for {
-		// ok := <- KillRoutine
-		// if ok == 1 {
-		// 	fmt.Println("Introducer: Go Routine Closed")
-		// 	return 
-		// } 
+
 		handleJoinMsg(ln)
 	}
+	ln.Close()
 }
 
 func handleJoinMsg(ln *net.UDPConn) {
