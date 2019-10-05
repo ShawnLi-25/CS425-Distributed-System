@@ -69,8 +69,8 @@ func JSONToMsg(b []byte) Message {
 func CloseConnPort(localID string) {
 
 	//Send Leave Msg to local listener to close connection
-	leaveMsg := msg.NewMessage(LeaveMsg, localID, []string{localID})
-	leavePkg := msg.MsgToJSON(leaveMsg)
+	leaveMsg := NewMessage(LeaveMsg, localID, []string{localID})
+	leavePkg := MsgToJSON(leaveMsg)
 
 	udpAddr, err := net.ResolveUDPAddr(ConnType, ":"+ConnPort)
 	if err != nil {
