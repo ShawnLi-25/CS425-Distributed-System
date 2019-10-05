@@ -9,7 +9,7 @@ import (
 var curNode *Node = CreateNewNode()
 var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
-var KillRoutine chan struct make(chan struct{})
+var KillRoutine chan struct{} make(chan struct{})
 var LocalAddress string
 var LocalID string
 var Status bool
