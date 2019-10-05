@@ -34,6 +34,7 @@ func RunNode(isIntroducer bool) {
 	fmt.Println("Node: Local Address is: " + LocalAddress)
 
 	go curNode.Updater.UpdateMembershipList()
+	go curNode.Listener.RunMSGListener()	
 	if !isIntroducer {
 		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
@@ -43,7 +44,7 @@ func RunNode(isIntroducer bool) {
 	}
 
 	//go curNode.Listener.RunHBListener()
-	go curNode.Listener.RunMSGListener()
+
 	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 	k := <- KILL
 	if k == 1 {

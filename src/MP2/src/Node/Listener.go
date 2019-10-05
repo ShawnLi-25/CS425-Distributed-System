@@ -57,6 +57,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			<-MemListChan
 			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
 		case msg.IntroduceMsg:
+			fmt.Println("Listener: receive IntroduceMsg")
 			UpQryChan <- UpdateQuery{1, receivedMsg.NodeID}
 			<-MemListChan
 			SendIntroduceMsg(receivedMsg.NodeID)
