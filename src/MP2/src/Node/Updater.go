@@ -28,8 +28,9 @@ func (u *Updater) UpdateMembershipList() {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
 				MemListChan <- MembershipList
+				fmt.Println("Updater: Current Membership Length is: " + string(MembershipList))
 				for _, str := range MembershipList {
-					fmt.Println("Updater: Current Membership List is: " + str)
+					fmt.Printf("Updater: Membership List has member: %s...\n" + str)
 				}
 			} else if updateQuery.queryType == 1 {
 				newMemList := AddNewNode(updateQuery.ID, MembershipList)
@@ -88,8 +89,6 @@ func FindNode(list []string, nodeID string) int {
 	}
 	return -1
 }
-
-
 
 // type MonitorList struct {
 // 	localID   string
