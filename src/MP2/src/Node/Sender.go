@@ -42,17 +42,17 @@ func (s *Sender) NodeSend(msgType string) {
 }
 
 func (s *Sender) SendHeartbeat() {
-	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, localID, []string{})
+	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, LocalID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
 	
 	for {
 		UpQryChan <- UpdateQuery{0, ""}
-		membershipList =<- MemListChan
+		membershipList :=<- MemListChan
 
-		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
+		monitorList := msg.GetMonitorList(membershipList, LocalAddress)
 
 		for _, monitorID := range monitorList {
-			monitorAddress := GetIPAddressFromID(monitorID)
+			monitorAddress := msg.GetIPAddressFromID(monitorID)
 			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
 			if err != nil {
 				log.Println(err.Error())
@@ -64,7 +64,7 @@ func (s *Sender) SendHeartbeat() {
 				// os.Exit(1)
 			}
 
-			_, err := conn.Write(heartBeatPkg)
+			_, err = conn.Write(heartBeatPkg)
 			if err != nil {
 				log.Println(err.Error())
 			}
