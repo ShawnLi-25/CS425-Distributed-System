@@ -46,7 +46,7 @@ func RunNode(isIntroducer bool) {
 		go curNode.Introducer.NodeHandleJoin()
 	}
 
-	//go curNode.Listener.RunHBListener()
+	go curNode.Listener.RunHBListener()
 
 	go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 // 	k := <- KILL
