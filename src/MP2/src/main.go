@@ -27,7 +27,7 @@ func main() {
 				go node.RunNode(isIntroducer)
 			case "Leave\n"://TODO if node is not in group??
 				log.Println("Leave the group")
-				go node.StopNode()
+				go node.StopNode(true)
 			case "List\n"://TODO if node hasn't joined a group??
 				log.Println("Show the current Membership List")
 				go node.ShowList()

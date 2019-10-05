@@ -57,8 +57,10 @@ func RunNode(isIntroducer bool) {
 
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
-func StopNode() {
-	curNode.Sender.NodeSend(msg.LeaveMsg)
+func StopNode(byLocal bool) {
+	if byLocal {
+		curNode.Sender.NodeSend(msg.LeaveMsg)
+	}
 	Status = false
 	KillRoutine <- struct{}{}
 	fmt.Println("Node: Stop Node...")
