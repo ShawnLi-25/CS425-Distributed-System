@@ -161,26 +161,21 @@ func SendJoinMsg(introducerAddress string) bool{
 	return true
 }
 
-func SendIntroduceMsg(newNodeID string) {
+func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-	for _, member := range monitorList {
+	for i, member := range monitorList {
+		fmt.Println(i,member)
 		if member == LocalID {
 			continue
 		}
 
 		memberAddress := msg.GetIPAddressFromID(member)
-
 		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
 		if err != nil {
 			log.Println(err.Error())
 		}
-		ln, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-		if err != nil {
-			log.Println(err.Error())
-		}
-		defer ln.Close()
 
 		_, wErr := ln.WriteToUDP(introducePkg, udpAddr)
 		if wErr != nil {
@@ -190,7 +185,7 @@ func SendIntroduceMsg(newNodeID string) {
 	}
 }
 
-func SendFailMsg(failNodeID string) {
+func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 
@@ -207,11 +202,6 @@ func SendFailMsg(failNodeID string) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		ln, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-		if err != nil {
-			log.Println(err.Error())
-		}
-		defer ln.Close()
 
 		_, wErr := ln.WriteToUDP(failPkg, udpAddr)
 		if wErr != nil {

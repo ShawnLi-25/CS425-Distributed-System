@@ -51,16 +51,16 @@ func HandleListenMsg(conn *net.UDPConn) {
 		case msg.FailMsg:
 			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
 			<-MemListChan
-			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
+			SendFailMsg(conn, receivedMsg.NodeID)//TODO No round send!!
 		case msg.LeaveMsg:
 			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
 			<-MemListChan
-			SendFailMsg(receivedMsg.NodeID)//TODO No round send!!
+			SendFailMsg(conn, receivedMsg.NodeID)//TODO No round send!!
 		case msg.IntroduceMsg:
 			fmt.Println("Listener: receive IntroduceMsg")
 			UpQryChan <- UpdateQuery{1, receivedMsg.NodeID}
 			<-MemListChan
-			SendIntroduceMsg(receivedMsg.NodeID)
+			SendIntroduceMsg(conn, receivedMsg.NodeID)
 		default:
 			fmt.Println("Listener:Can't recognize the msg")
 	}
