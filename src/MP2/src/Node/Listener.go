@@ -34,7 +34,9 @@ func (l *Listener) RunMSGListener() {
 		if ok == 1 {
 			fmt.Println("Listener: Go Routine Closed")
 			return 
-		} 
+		} else {
+			fmt.Println("Listener: Nothing Happens")
+		}
 		HandleListenMsg(ln)
 	}
 	
