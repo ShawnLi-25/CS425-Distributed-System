@@ -47,16 +47,16 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 		case msg.FailMsg:
-			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
+			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
-				SendFailMsg(conn, receivedMsg.Content[0])
+				SendFailMsg(conn, receivedMsg.NodeID)
 			}
 		case msg.LeaveMsg:
-			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
+			UpQryChan <- UpdateQuery{2, receivedMsg.NodeID}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
-				SendFailMsg(conn, receivedMsg.Content[0])
+				SendFailMsg(conn, receivedMsg.NodeID)
 			}
 		case msg.IntroduceMsg:
 			fmt.Println("Listener: receive IntroduceMsg")
