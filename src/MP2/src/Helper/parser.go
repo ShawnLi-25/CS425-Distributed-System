@@ -30,12 +30,37 @@ func GetMonitorList(membershipList []string, localHostName string) []string {
 		}
 	} else {
 		for i := 0; i < memListLen; i++ {
-			if !(strings.Contains(membershipList[i], localHostName)) {
+			if !strings.Contains(membershipList[i], localHostName) {
 				monitorList = append(monitorList, membershipList[i])
 			}
 		}
 	}
 	return monitorList
+}
+
+func GetMonitoringList(membershipList []string, localHostName string) []string {
+	var monitoringList []string
+	monitorIdxList := [3]int{-2, -1, 1}
+	memListLen := len(membershipList)
+
+	if memListLen >= 4 {
+		for i := 0; i < memListLen; i++ {
+			if strings.Contains(membershipList[i], localHostName) {
+				// localIdx := i
+				for _, v := range monitorIdxList {
+					monitoringList = append(monitoringList, membershipList[(i+v+memListLen)%memListLen])
+				}
+				break
+			}
+		}
+	} else {
+		for i := 0; i < memListLen; i++ {
+			if !strings.Contains(membershipList[i], localHostName) {
+				monitoringList = append(monitoringList, membershipList[i])
+			}
+		}
+	}
+	return monitoringList
 }
 
 //Call when JOIN the group
