@@ -53,7 +53,7 @@ func RunNode(isIntroducer bool) {
 // 	if k == 1 {
 // 		return
 // 	}
-// }
+}
 
 //Called from main.go when the command is "LEAVE\n"
 //Delete the Node
