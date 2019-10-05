@@ -29,18 +29,7 @@ func (s *Sender) NodeSend(msgType string) {
 			fmt.Println("Introducer is down!!")
 			return
 		}
-	} else if msgType == msg.HeartbeatMsg {
-		UpQryChan <- UpdateQuery{0, ""}
-		membershipList =<- MemListChan
-
-		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
-
-		for _, v := range monitorList {
-			monitorAdd := msg.GetIPAddressFromID(v)
-			SendHeartbeat(v, monitorAdd, LocalID)
-		}
-		
-	} else if msgType == msg.LeaveMsg {
+	}  else if msgType == msg.LeaveMsg {
 		// UpQryChan <- UpdateQuery{0, ""}
 		// membershipList =<- MemListChan
 		if msg.IsIntroducer() {
@@ -52,32 +41,40 @@ func (s *Sender) NodeSend(msgType string) {
 
 }
 
-func SendHeartbeat(monitorAddress string, monitorID string, localID string) {
+func (s *Sender) SendHeartbeat() {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, localID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
-
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-	conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-	if err != nil {
-		log.Println(err.Error())
-		os.Exit(1)
-	}
-
+	
 	for {
-		_, err := conn.Write(heartBeatPkg)
-		if err != nil {
-			log.Println(err.Error())
-			os.Exit(1)
-		}
+		UpQryChan <- UpdateQuery{0, ""}
+		membershipList =<- MemListChan
 
-		fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
-		time.Sleep(time.Second) //send heartbeat 1 second
+		monitorList = msg.GetMonitorList(membershipList, LocalAddress)
+
+		for _, monitorID := range monitorList {
+			monitorAddress := GetIPAddressFromID(monitorID)
+			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
+			if err != nil {
+				log.Println(err.Error())
+				// os.Exit(1)
+			}
+			conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+			if err != nil {
+				log.Println(err.Error())
+				// os.Exit(1)
+			}
+
+			_, err := conn.Write(heartBeatPkg)
+			if err != nil {
+				log.Println(err.Error())
+			}
+
+			fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
+			conn.Close()
+		}
+			time.Sleep(time.Second) //send heartbeat 1 second
 	}
-	conn.Close()
+	
 }
 
 func SendJoinMsg(introducerAddress string) bool{
