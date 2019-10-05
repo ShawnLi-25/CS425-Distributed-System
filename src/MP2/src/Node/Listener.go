@@ -32,6 +32,7 @@ func (l *Listener) RunMSGListener() {
 		select {
 			case <-KillRoutine:
 				ln.Close()
+				fmt.Println("Listener: Leave!!")
 				return
 				
 			default:
