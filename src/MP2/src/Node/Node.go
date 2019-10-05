@@ -48,7 +48,7 @@ func RunNode(isIntroducer bool) {
 
 	go curNode.Listener.RunHBListener()
 
-	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
+	go curNode.Sender.SendHeartbeat()
 }
 
 //Called from main.go when the command is "LEAVE\n"
