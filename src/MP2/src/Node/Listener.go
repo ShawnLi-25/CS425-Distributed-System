@@ -29,15 +29,16 @@ func (l *Listener) RunMSGListener() {
 
 
 	for {
-		ok := <- KillRoutine
-		if ok == 1 {
-			fmt.Println("Listener: Go Routine Closed")
-			ln.Close()
-			return 
-		} else {
-			fmt.Println("Listener: Nothing Happens")
-		}
-		HandleListenMsg(ln)
+		select {
+			case ok := <- KillRoutine:
+				if ok == 1 {
+					fmt.Println("Listener: Go Routine Closed")
+					ln.Close()
+					return 
+				} 
+			default:	
+				HandleListenMsg(ln)	
+		}	
 	}
 	
 }
