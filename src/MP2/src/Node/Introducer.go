@@ -27,7 +27,7 @@ func (i *Introducer) NodeHandleJoin() {
 		log.Println(err.Error())
 		// os.Exit(1)
 	}
-	fmt.Println("Introducer: Listening on port " + msg.IntroducePort)
+	log.Println("Introducer: Listening on port " + msg.IntroducePort)
 
 	//Handle JoinMsg
 
@@ -35,10 +35,10 @@ func (i *Introducer) NodeHandleJoin() {
 		select {
 			case <-KillRoutine:
 				ln.Close()
-				fmt.Println("Introducer: Leave!!")
+				log.Println("Introducer: Leave!!")
 				return
 			default:
-				fmt.Println("Introducer: Works!!")
+				log.Println("Introducer: Works!!")
 				HandleJoinMsg(ln)
 		}
 	}
