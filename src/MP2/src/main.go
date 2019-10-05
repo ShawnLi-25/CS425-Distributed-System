@@ -5,7 +5,7 @@ import (
 	"./Helper"
 	"./Node"
 	// "flag"
-	//"log"
+	"log"
 	"os"
 	"bufio"
 )
@@ -22,16 +22,22 @@ func main() {
 		cmd, _ = reader.ReadString('\n')
 
 		switch cmd{
-			case "JOIN\n"://TODO if node is already in group??
-				fmt.Println("Join the group")
+			case "Join\n"://TODO if node is already in group??
+				log.Println("Join the group")
 				go node.RunNode(isIntroducer)
 				continue
-			case "LEAVE\n"://TODO if node is not in group??
-				fmt.Println("Leave the group")
+			case "Leave\n"://TODO if node is not in group??
+				log.Println("Leave the group")
 				go node.StopNode()
 				break nodeProcess
+			case "List\n"://TODO if node hasn't joined a group??
+				log.Println("Show the current Membership List")
+				go node.ShowList()
+			case "ID\n":
+				log.Println("Show the current Node ID")
+				go node.ShowID()
 			default:
-				fmt.Println("Don't support this command")
+				log.Println("Don't support this command")
 				continue
 		}
 	}

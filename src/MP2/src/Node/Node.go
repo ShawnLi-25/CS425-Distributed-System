@@ -8,9 +8,10 @@ import (
 var curNode *Node = CreateNewNode()
 var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
+var KILL chan int
 var LocalAddress string
 var LocalID string
-var KILL chan int
+var Status bool
 
 type Node struct {
 	Sender
@@ -32,6 +33,7 @@ func RunNode(isIntroducer bool) {
 	fmt.Println("Node: Local ID is: " + LocalID)
 	LocalAddress = msg.GetHostName()
 	fmt.Println("Node: Local Address is: " + LocalAddress)
+	Status = true
 
 	go curNode.Updater.UpdateMembershipList()
 	go curNode.Listener.RunMSGListener()	
@@ -56,5 +58,26 @@ func RunNode(isIntroducer bool) {
 //Delete the Node
 func StopNode() {
 	curNode.Sender.NodeSend(msg.LeaveMsg)
+	Status = false
 	KILL <- 1
+}
+
+func ShowList() {
+	if Status {
+		UpQryChan <- UpdateQuery{0, ""}
+		curList :=<- MemListChan
+		log.Println("The current membership list is:")
+		log.Print(curList)
+	} else {
+		log.Println("This server doesn't belong to a group")
+	}
+}
+
+func ShowID() {
+	if Status {
+		log.Println("The current node ID is:")
+		log.Print(LocalID)
+	} else {
+		log.Println("This server doesn't belong to a group")
+	}
 }

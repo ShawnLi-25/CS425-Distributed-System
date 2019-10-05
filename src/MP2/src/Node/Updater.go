@@ -29,7 +29,6 @@ func (u *Updater) UpdateMembershipList() {
 				}
 			} else if updateQuery.queryType == 1 {
 				MembershipList = AddNewNode(updateQuery.ID, MembershipList)
-				SortMembershipList(MembershipList)
 				MemListChan <- MembershipList
 			} else if updateQuery.queryType == 2 {
 				MembershipList = DeleteNode(updateQuery.ID, MembershipList)
@@ -45,26 +44,42 @@ func SortMembershipList(list []string) []string {
 }
 
 func AddNewNode(newNodeID string, list []string) []string {
-	log.Print("=== Current List is: ===")
+	log.Println("Updater: Current List is: ")
 	log.Print(list)
-	newList := append(list, newNodeID)
-	log.Print("=== New List is: ===")
-	log.Print(newList)
-	return newList
+	if FindNode(list, newNodeID) < 0 {
+		newList := append(list, newNodeID)
+		SortMembershipList(MembershipList)
+		log.Print("Updater: New List is: ")
+		log.Print(newList)
+		return newList
+	} else {
+		return []string{}
+	}
+
 }
 
 func DeleteNode(nodeID string, list []string) []string {
-	for i := 0; i < len(list); i++ {
-		if list[i] == nodeID {
-
-			if i != len(list)-1 {
-				list = append(list[:i], list[i+1:]...)
-			} else {
-				list = list[:i]
-			}
+	log.Println("Updater: Current List is: ")
+	log.Print(list)
+	var idx = FindNode(list, nodeID)
+	if idx >= 0 {
+		if idx != len(list)-1 {
+			list = append(list[:idx], list[idx+1:]...)
+		} else {
+			list = list[:idx]
 		}
 	}
 	return list
+}
+
+func FindNode(list []string, nodeID string) int {
+	for i := 0; i < len(list); i++ {
+		if list[i] == nodeID {
+			return i // return index
+		} else {
+			return -1
+		}
+	}
 }
 
 // type MonitorList struct {
