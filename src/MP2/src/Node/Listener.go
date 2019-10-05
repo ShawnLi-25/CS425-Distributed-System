@@ -9,6 +9,9 @@ import (
 	msg "../Helper"
 )
 
+
+
+
 // Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
 }
@@ -79,6 +82,10 @@ func HandleListenMsg(conn *net.UDPConn) {
 	return
 }
 
+func getMemHBMap() map[string]Time {
+
+}
+
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
 	fmt.Println("HBListener:Initialize heartbeat listener...")
@@ -95,11 +102,13 @@ func (l *Listener) RunHBListener() {
 	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 	defer ln.Close()
 	hbBuf := make([]byte, 1024)
+
+	MemHBMap := getMemHBMap()
 	ln.SetReadDeadline(time.Now().Add(2*msg.TimeOut*time.Second))
 	for {
 		n, msgAddr, err := ln.ReadFromUDP(hbBuf)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		fmt.Println("Listener:Recieve Heartbeat from UDP client: %s", msgAddr)
@@ -115,5 +124,6 @@ func (l *Listener) RunHBListener() {
 			fmt.Printf("HBListener: Client %s Timeout!\n", msgAddr)
 			//TODO Send timeout msg
 		}
+		time.Sleep(1/3 * time.Second)
 	}
 }
