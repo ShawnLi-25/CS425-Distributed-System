@@ -55,7 +55,7 @@ func HandleJoinMsg(ln *net.UDPConn) {
 	joinMsg := msg.JSONToMsg([]byte(string(joinBuf[:n])))
 
 	if joinMsg.MessageType == msg.JoinMsg {
-		log.Println("Introducer: JoinMsg Received from Node:" + joinMsg.NodeID)
+		log.Printf("Introducer: JoinMsg Received from Node: %s...\n", joinMsg.NodeID)
 
 		//Send Introduce Message to Other node
 		SendIntroduceMsg(ln,joinMsg.NodeID)
@@ -77,8 +77,8 @@ func HandleJoinMsg(ln *net.UDPConn) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		log.Println("Introducer: JoinAck Sent to Node:" + joinMsg.NodeID)
-	} else {
-		log.Printf("Introducer: Port %s only accepts JoinMsg\n", msg.IntroducePort)
-	}
+		log.Printf("Introducer: JoinAck Sent to Node: %s...\n", joinMsg.NodeID)
+	} else if joinMsg.MessageType == msg.LeaveMsg{
+		log.Printf("Introducer: Introducer Leave... Close Port:%s...\n", msg.IntroducePort)
+	} 
 }
