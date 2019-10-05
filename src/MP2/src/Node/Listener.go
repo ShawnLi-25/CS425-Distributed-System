@@ -96,11 +96,8 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 //Use MembershipList to update the key in MemHBMap(NodeID, Time)
 func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
-	var MemHBMap map[string]time.Time = make(map[string]time.Time)
+	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
-	for _, c := range MemHBList {
-		fmt.Println("Listener: MemHBList contains " + c)
-	}
 
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
@@ -109,29 +106,29 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	} else {                   //old MemHBMap has values
 		for _, c := range MemHBList {
 			if LastTime, ok := oldMemHBMap[c]; ok {
-				MemHBMap[c] = LastTime
+				newMemHBMap[c] = LastTime
 			} else {
-				MemHBMap[c] = time.Now()
+				newMemHBMap[c] = time.Now()
 			}
 		}
 	}
-	fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-	return MemHBMap
+	//fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+	return newMemHBMap
 }
 
 //Counting the timeout
-func HBTimer(ln *net.UDPConn, MemHBMap map[string]time.Time) {
+func HBTimer(ln *net.UDPConn) {
 	for{
 		time.Sleep(time.Second)
-		fmt.Println("HBTimer:Checking......")
+		curTime := time.Now()
 		for NodeID, lastTime := range MemHBMap {
-			timeDiff := time.Now().Sub(lastTime)
+			timeDiff := curTime.Sub(lastTime)
 			if timeDiff - 2*msg.TimeOut*time.Second > 0{
 				SendFailMsg(ln, NodeID)
 			}
 		}
 		MemHBMap = getMemHBMap(MemHBMap)
-		fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+		//fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 	}
 }
@@ -139,7 +136,8 @@ func HBTimer(ln *net.UDPConn, MemHBMap map[string]time.Time) {
 
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
-	fmt.Println("HBListener:Initialize heartbeat listener...")
+	log.Println("HBListener:Initialize heartbeat listener...")
+
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.HeartbeatPort)
 	if err != nil {
 		log.Fatal(err)
@@ -149,20 +147,16 @@ func (l *Listener) RunHBListener() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
+	log.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 	defer ln.Close()
+
+
 	hbBuf := make([]byte, 1024)
 	
-	//Initialize MemHBMap
 	MemHBMap = getMemHBMap(MemHBMap)
+	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 	
-
-	fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-	
-
-	
-	go HBTimer(ln, MemHBMap)
+	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
 		n, _, err := ln.ReadFromUDP(hbBuf)
@@ -178,7 +172,7 @@ func (l *Listener) RunHBListener() {
 			continue
 		}
 		
-		fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+		//fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 			MemHBMap[receivedMsg.NodeID] = time.Now()
