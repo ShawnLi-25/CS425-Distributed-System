@@ -43,7 +43,7 @@ func RunNode(isIntroducer bool) {
 	}
 
 	//go curNode.Listener.RunHBListener()
-	go.curNode.Listener.RunMSGListener()
+	go curNode.Listener.RunMSGListener()
 	//go curNode.Sender.NodeSend(msg.HeartbeatMsg)
 	k := <- KILL
 	if k == 1 {
