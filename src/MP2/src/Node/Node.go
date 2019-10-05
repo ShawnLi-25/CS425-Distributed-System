@@ -34,11 +34,9 @@ func RunNode(isIntroducer bool) {
 
 	go curNode.Updater.UpdateMembershipList()
 	if !isIntroducer {
-		fmt.Println("Node: I'm not Introducer")
 		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
 	} else {
-		fmt.Println("Node: I'm Introducer")
 		//Introducer receive JoinMsg from non-intro
 		go curNode.Introducer.NodeHandleJoin()
 	}
