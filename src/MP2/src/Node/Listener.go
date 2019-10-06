@@ -5,23 +5,18 @@ import (
 	"log"
 	"net"
 	"time"
-
 	msg "../Helper"
 )
-
 
 var MemHBMap map[string]time.Time = make(map[string]time.Time)
 
 
 
-// Listener is a type that implements the ListenMsg(), ListenJoinMsg() "method"
 type Listener struct {
 }
 
-func (l *Listener) RunMSGListener() {
-
-	fmt.Println("Listener:Run message listener...")
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.ConnPort)
+func buildUDPServer(ConnPort string) *net.UDPConn{
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+ConnPort)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,10 +25,17 @@ func (l *Listener) RunMSGListener() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return ln
+}
+
+
+func (l *Listener) RunMSGListener() {
+	fmt.Println("here")
+
+	ln := buildUDPServer(msg.ConnPort)
 	fmt.Printf("Listener:MSGListener listen on port %s\n", msg.ConnPort)
 
 	for {
-
 		select {
 			case <-KillRoutine:
 				ln.Close()
@@ -45,10 +47,10 @@ func (l *Listener) RunMSGListener() {
 				HandleListenMsg(ln)
 		}
 	}
-
 }
 
 func HandleListenMsg(conn *net.UDPConn) {
+
 	msgBuf := make([]byte, 1024)
 
 	n, msgAddr, err := conn.ReadFromUDP(msgBuf)
@@ -103,14 +105,23 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	fmt.Println("..")
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
-			MemHBMap[c] = time.Now()
+			newMemHBMap[c] = time.Now()
+			fmt.Println("===Map insert new element===")
+			fmt.Print(newMemHBMap)
+		
 		}
 	} else {                   //old MemHBMap has values
 		for _, c := range MemHBList {
 			if LastTime, ok := oldMemHBMap[c]; ok {
 				newMemHBMap[c] = LastTime
+			fmt.Println("===Map insert new element===")
+			fmt.Print(newMemHBMap)
+
 			} else {
 				newMemHBMap[c] = time.Now()
+			fmt.Println("===Map insert new element===")
+			fmt.Print(newMemHBMap)
+
 			}
 		}
 	}
@@ -143,20 +154,9 @@ func HBTimer(ln *net.UDPConn) {
 
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
-	log.Println("HBListener:Initialize heartbeat listener...")
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.HeartbeatPort)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
-	defer ln.Close()
-
+	ln := buildUDPServer(msg.HeartbeatPort)
+	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 
 	hbBuf := make([]byte, 1024)
 	
