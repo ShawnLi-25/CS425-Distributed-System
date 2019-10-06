@@ -84,7 +84,6 @@ func CloseConnPort(localID string) {
 	}
 	defer conn.Close()
 
-	fmt.Println("===Listener: Send leaveMsg to itself!!!!!!")
 	_, err = conn.Write(leavePkg)
 	if err != nil {
 		log.Println(err.Error())

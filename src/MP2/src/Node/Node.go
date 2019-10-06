@@ -75,7 +75,8 @@ func ShowList() {
 		UpQryChan <- UpdateQuery{0, ""}
 		curList := <-MemListChan
 		fmt.Println("The current membership list is:")
-		fmt.Print(curList)
+		fmt.Print(curList, "\n")
+		// fmt.Println()
 	} else {
 		fmt.Println("This server doesn't belong to a group")
 	}
@@ -86,7 +87,7 @@ func ShowList() {
 func ShowID() {
 	if Status {
 		fmt.Println("The current node ID is:")
-		fmt.Print(LocalID)
+		fmt.Print(LocalID, "\n")
 	} else {
 		fmt.Println("This server doesn't belong to a group")
 	}
