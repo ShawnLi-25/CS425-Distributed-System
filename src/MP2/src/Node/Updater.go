@@ -106,10 +106,13 @@ func DeleteNode(nodeID string, list []string) []string {
 }
 
 func FindNode(list []string, nodeID string) int {
+	fmt.Printf("Updater: Current Length is: %d", len(list))
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
 			fmt.Println("Updater: Find Node!!!!!!" + list[i])
 			return i // return index
+		} else {
+			fmt.Println("Updater: No Match Node!!!!!!" + list[i])
 		}
 	}
 	return -1
