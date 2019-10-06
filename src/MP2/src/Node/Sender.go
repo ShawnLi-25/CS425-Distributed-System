@@ -34,9 +34,12 @@ func (s *Sender) NodeSend(msgType string) {
 	}  else if msgType == msg.LeaveMsg {
 		// UpQryChan <- UpdateQuery{0, ""}
 		// membershipList =<- MemListChan
-		if msg.IsIntroducer() {
+		isIntroducer := msg.IsIntroducer()
+		if isIntroducer {
+			fmt.Println("Close Introducer Port")
 			msg.CloseIntroducePort(LocalID)
 		}
+		fmt.Println("Not Introducer??????")
 		msg.CloseConnPort(LocalID)
 	}
 	return
