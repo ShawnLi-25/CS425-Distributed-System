@@ -104,6 +104,7 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	if len(oldMemHBMap) == 0 {//New MemHBMap
 		for _, c := range MemHBList {
 			MemHBMap[c] = time.Now()
+			fmt.Println("====Old Map is empty")
 		}
 	} else {                   //old MemHBMap has values
 		for _, c := range MemHBList {
