@@ -39,7 +39,7 @@ func (s *Sender) NodeSend(msgType string) {
 			fmt.Println("Close Introducer Port")
 			msg.CloseIntroducePort(LocalID)
 		}
-		fmt.Println("Not Introducer??????")
+		msg.CloseHBPort(LocalID)
 		msg.CloseConnPort(LocalID)
 	}
 	return
