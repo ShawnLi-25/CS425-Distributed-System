@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+
 	// "os"
 	msg "../Helper"
 )
@@ -33,13 +34,14 @@ func (i *Introducer) NodeHandleJoin() {
 
 	for {
 		select {
-			case <-KillRoutine:
-				ln.Close()
-				log.Println("Introducer: Leave!!")
-				return
-			default:
-				log.Println("Introducer: Works!!")
-				HandleJoinMsg(ln)
+		case <-KillRoutine:
+			ln.Close()
+			log.Println("====Introducer: Leave!!")
+			KillRoutine <- struct{}{}
+			return
+		default:
+			log.Println("====Introducer: Works!!")
+			HandleJoinMsg(ln)
 		}
 	}
 
@@ -58,7 +60,7 @@ func HandleJoinMsg(ln *net.UDPConn) {
 		log.Printf("Introducer: JoinMsg Received from Node: %s...\n", joinMsg.NodeID)
 
 		//Send Introduce Message to Other node
-		SendIntroduceMsg(ln,joinMsg.NodeID)
+		SendIntroduceMsg(ln, joinMsg.NodeID)
 
 		//Add new node to introducer's merbership list
 		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
@@ -78,8 +80,8 @@ func HandleJoinMsg(ln *net.UDPConn) {
 			log.Println(err.Error())
 		}
 		log.Printf("Introducer: JoinAck Sent to Node: %s...\n", joinMsg.NodeID)
-	} else if joinMsg.MessageType == msg.LeaveMsg{
+	} else if joinMsg.MessageType == msg.LeaveMsg {
 		log.Printf("Introducer: Introducer Leave... Close Port:%s...\n", msg.IntroducePort)
-	} 
-	return 
+	}
+	return
 }

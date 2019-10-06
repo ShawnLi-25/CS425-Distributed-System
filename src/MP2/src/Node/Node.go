@@ -10,6 +10,8 @@ var curNode *Node = CreateNewNode()
 var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
 var MemListChan chan []string = make(chan []string)
 var KillRoutine chan struct{} = make(chan struct{})
+
+// var Kill
 var LocalAddress string
 var LocalID string
 var Status bool
@@ -37,7 +39,7 @@ func RunNode(isIntroducer bool) {
 	Status = true
 
 	go curNode.Updater.UpdateMembershipList()
-	go curNode.Listener.RunMSGListener()	
+	go curNode.Listener.RunMSGListener()
 	if !isIntroducer {
 		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.NodeSend(msg.JoinMsg)
@@ -67,7 +69,7 @@ func StopNode(byLocal bool) {
 func ShowList() {
 	if Status {
 		UpQryChan <- UpdateQuery{0, ""}
-		curList :=<- MemListChan
+		curList := <-MemListChan
 		fmt.Println("The current membership list is:")
 		fmt.Print(curList)
 	} else {

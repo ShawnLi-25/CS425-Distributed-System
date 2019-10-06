@@ -5,13 +5,14 @@ import (
 	"log"
 	"net"
 	"time"
+
 	msg "../Helper"
 )
 
 type Listener struct {
 }
 
-func buildUDPServer(ConnPort string) *net.UDPConn{
+func buildUDPServer(ConnPort string) *net.UDPConn {
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+ConnPort)
 	if err != nil {
 		log.Fatal(err)
@@ -30,14 +31,14 @@ func (l *Listener) RunMSGListener() {
 
 	for {
 		select {
-			case <-KillRoutine:
-				ln.Close()
-				fmt.Println("Listener: Leave!!")
-				KillRoutine <- struct{}{}
-				return
-			default:
-				fmt.Println("Listener: Works!!")
-				HandleListenMsg(ln)
+		case <-KillRoutine:
+			ln.Close()
+			fmt.Println("====Listener: Conn Port Leave!!")
+			KillRoutine <- struct{}{}
+			return
+		default:
+			fmt.Println("====Listener: Conn Port Works!!")
+			HandleListenMsg(ln)
 		}
 	}
 }
@@ -61,7 +62,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			StopNode(false)
 			return
 		} else {
-			fmt.Println("Listener: receive failMsg")
+			fmt.Println("Listener: Receive failMsg")
 			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
@@ -69,7 +70,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			}
 		}
 	case msg.LeaveMsg:
-		fmt.Println("Listener: receive leaveMsg")
+		fmt.Println("Listener: Receive leaveMsg")
 		UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 		retMemList := <-MemListChan
 		if len(retMemList) != 0 {
@@ -90,18 +91,17 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 //Counting the timeout
 func HBTimer(ln *net.UDPConn) {
-	for{
+	for {
 		time.Sleep(time.Second)
 		curTime := time.Now()
 		for NodeID, lastTime := range MemHBMap {
 			timeDiff := curTime.Sub(lastTime)
-			if timeDiff - 2*msg.TimeOut*time.Second > 0{
+			if timeDiff-2*msg.TimeOut*time.Second > 0 {
 				SendFailMsg(ln, NodeID)
 			}
 		}
 	}
 }
-
 
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
@@ -110,9 +110,9 @@ func (l *Listener) RunHBListener() {
 	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 
 	hbBuf := make([]byte, 1024)
-	
+
 	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-	
+
 	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
@@ -122,20 +122,20 @@ func (l *Listener) RunHBListener() {
 		}
 
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
-		
+
 		if receivedMsg.MessageType != msg.HeartbeatMsg {
 			fmt.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
 			continue
 		} else {
 			fmt.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
-		
+
 		//fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 			MemHBMap[receivedMsg.NodeID] = time.Now()
 		} else {
-			fmt.Println("Listener: MemHBMap doesn't contain the NodeID"+receivedMsg.NodeID)
+			fmt.Println("Listener: MemHBMap doesn't contain the NodeID" + receivedMsg.NodeID)
 		}
 	}
 }

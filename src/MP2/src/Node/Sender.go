@@ -31,7 +31,7 @@ func (s *Sender) NodeSend(msgType string) {
 			fmt.Println("Introducer is down!!")
 			return
 		}
-	}  else if msgType == msg.LeaveMsg {
+	} else if msgType == msg.LeaveMsg {
 		// UpQryChan <- UpdateQuery{0, ""}
 		// membershipList =<- MemListChan
 		isIntroducer := msg.IsIntroducer()
@@ -49,44 +49,53 @@ func (s *Sender) NodeSend(msgType string) {
 func (s *Sender) SendHeartbeat() {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, LocalID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
-	
+
 	for {
-		UpQryChan <- UpdateQuery{0, ""}
-		membershipList :=<- MemListChan
+		select {
+		case <-KillRoutine:
+			ln.Close()
+			fmt.Println("====Heartbeat Sender: Leave!!")
+			KillRoutine <- struct{}{}
+			return
 
-		MonitorList = msg.GetMonitorList(membershipList, LocalAddress)
+		default:
+			UpQryChan <- UpdateQuery{0, ""}
+			membershipList := <-MemListChan
 
-		for _, monitorID := range MonitorList {
-			monitorAddress := msg.GetIPAddressFromID(monitorID)
-			udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress + ":" + msg.HeartbeatPort)
-			if err != nil {
-				log.Println(err.Error())
-				// os.Exit(1)
+			MonitorList = msg.GetMonitorList(membershipList, LocalAddress)
+
+			for _, monitorID := range MonitorList {
+				monitorAddress := msg.GetIPAddressFromID(monitorID)
+				udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress+":"+msg.HeartbeatPort)
+				if err != nil {
+					log.Println(err.Error())
+					// os.Exit(1)
+				}
+				conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+				if err != nil {
+					log.Println(err.Error())
+					// os.Exit(1)
+				}
+
+				_, err = conn.Write(heartBeatPkg)
+				if err != nil {
+					log.Println(err.Error())
+				}
+
+				fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
+				conn.Close()
 			}
-			conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-			if err != nil {
-				log.Println(err.Error())
-				// os.Exit(1)
-			}
-
-			_, err = conn.Write(heartBeatPkg)
-			if err != nil {
-				log.Println(err.Error())
-			}
-
-			fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
-			conn.Close()
-		}
 			time.Sleep(time.Second) //send heartbeat 1 second
+		}
 	}
-	
+
 }
 
-func SendJoinMsg(introducerAddress string) bool{
+func SendJoinMsg(introducerAddress string) bool {
 	joinMsg := msg.NewMessage(msg.JoinMsg, LocalID, []string{})
 	joinPkg := msg.MsgToJSON(joinMsg)
 
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, introducerAddress + ":" + msg.IntroducePort)
+	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, introducerAddress+":"+msg.IntroducePort)
 	if err != nil {
 		log.Println(err.Error())
 		// os.Exit(1)
@@ -108,25 +117,25 @@ func SendJoinMsg(introducerAddress string) bool{
 	//Set 3s Deadline for Ack
 	conn.SetReadDeadline(time.Now().Add(time.Duration(3) * time.Second))
 
-	//Read from Introducer 
+	//Read from Introducer
 	joinAck := make([]byte, 2048)
 	n, err := conn.Read(joinAck)
 	if err != nil {
 		log.Println(err.Error())
 		return false
 	}
-	
+
 	joinAckMsg := msg.JSONToMsg([]byte(string(joinAck[:n])))
-	
+
 	log.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		curMembershipList := joinAckMsg.Content
-		
-		//Copy the current membership list locally 
+
+		//Copy the current membership list locally
 		for _, member := range curMembershipList {
 			UpQryChan <- UpdateQuery{1, member}
-			<- MemListChan
+			<-MemListChan
 		}
 		return true
 	} else {
@@ -143,7 +152,7 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
 	for _, member := range monitorList {
-		
+
 		if member == LocalID {
 			continue
 		}
@@ -160,16 +169,15 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 			// os.Exit(1)
 		}
 		defer conn.Close()
-	
+
 		_, wErr := ln.WriteToUDP(leavePkg, udpAddr)
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		log.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
+		fmt.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
 	}
-	
-}
 
+}
 
 func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
@@ -192,12 +200,12 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		log.Println("Sender:IntroduceMsg Sent to: "+ member)
+		log.Println("Sender:IntroduceMsg Sent to: " + member)
 	}
 }
 
 func SendFailMsg(ln *net.UDPConn, failNodeID string) {
-	
+
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
 
@@ -219,8 +227,7 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		log.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
+		fmt.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
 
 }
-
