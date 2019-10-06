@@ -70,12 +70,16 @@ func HandleListenMsg(conn *net.UDPConn) {
 			}
 		}
 	case msg.LeaveMsg:
-		fmt.Println("===Listener: Receive leaveMsg")
-		UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
-		retMemList := <-MemListChan
-		fmt.Print(retMemList)
-		if len(retMemList) != 0 {
+		if receivedMsg.NodeID == LocalID {
 			SendLeaveMsg(conn, receivedMsg.Content[0])
+		} else {
+			fmt.Println("===Listener: Receive leaveMsg")
+			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
+			retMemList := <-MemListChan
+			fmt.Print(retMemList)
+			if len(retMemList) != 0 {
+				SendLeaveMsg(conn, receivedMsg.Content[0])
+			}
 		}
 	case msg.IntroduceMsg:
 		fmt.Println("===Listener: receive IntroduceMsg")
