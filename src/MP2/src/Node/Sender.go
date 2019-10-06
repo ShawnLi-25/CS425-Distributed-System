@@ -150,7 +150,6 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-	fmt.Println("===Listener: Send Leave Message here !!!!!!")
 
 	for _, member := range monitorList {
 
@@ -163,12 +162,15 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 		if err != nil {
 			log.Println(err.Error())
 		}
+		fmt.Println("===Listener: Send Leave Message 1111")
 
 		conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
 		if err != nil {
 			log.Println(err.Error())
 			// os.Exit(1)
 		}
+		fmt.Println("===Listener: Send Leave Message 2222")
+
 		defer conn.Close()
 
 		_, wErr := ln.WriteToUDP(leavePkg, udpAddr)
