@@ -108,7 +108,7 @@ func CloseIntroducePort(localID string) {
 		// os.Exit(1)
 	}
 	defer conn.Close()
-
+	fmt.Println("Close Introducer Port")
 	_, err = conn.Write(leavePkg)
 	if err != nil {
 		log.Println(err.Error())
