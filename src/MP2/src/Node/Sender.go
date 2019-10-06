@@ -208,6 +208,7 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
+	fmt.Printf("Sender: Node %s is failed...\n ", failNodeID)
 
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
