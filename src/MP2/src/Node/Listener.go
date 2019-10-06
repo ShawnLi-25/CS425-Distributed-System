@@ -108,8 +108,10 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	} else {                   //old MemHBMap has values
 		for _, c := range MemHBList {
 			if LastTime, ok := oldMemHBMap[c]; ok {
+				fmt.Println("====Old Monitor")
 				newMemHBMap[c] = LastTime
 			} else {
+				fmt.Println("====New Monitor")
 				newMemHBMap[c] = time.Now()
 			}
 		}
