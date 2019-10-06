@@ -103,25 +103,17 @@ func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
 	fmt.Println("Listener: Correct Monitoring List is:...")
 	fmt.Print(MemHBList)
 	fmt.Println("..")
-	if len(oldMemHBMap) == 0 {//New MemHBMap
+	if len(oldMemHBMap) == 0 {
 		for _, c := range MemHBList {
 			newMemHBMap[c] = time.Now()
-			fmt.Println("===Map insert new element===")
-			fmt.Print(newMemHBMap)
-		
 		}
-	} else {                   //old MemHBMap has values
+	} else {
 		for _, c := range MemHBList {
 			if LastTime, ok := oldMemHBMap[c]; ok {
 				newMemHBMap[c] = LastTime
-			fmt.Println("===Map insert new element===")
-			fmt.Print(newMemHBMap)
 
 			} else {
 				newMemHBMap[c] = time.Now()
-			fmt.Println("===Map insert new element===")
-			fmt.Print(newMemHBMap)
-
 			}
 		}
 	}
