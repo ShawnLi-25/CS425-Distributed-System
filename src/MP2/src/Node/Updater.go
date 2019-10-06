@@ -102,6 +102,7 @@ func DeleteNode(nodeID string, list []string) []string {
 		// newList := MembershipList
 		return newList
 	} else {
+		fmt.Println("What the fuck!!!!!!!")
 		return []string{}
 	}
 }
