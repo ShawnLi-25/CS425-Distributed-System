@@ -62,7 +62,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			StopNode(false)
 			return
 		} else {
-			fmt.Println("Listener: Receive failMsg")
+			fmt.Println("===Listener: Receive failMsg")
 			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
@@ -70,7 +70,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			}
 		}
 	case msg.LeaveMsg:
-		fmt.Println("Listener: Receive leaveMsg")
+		fmt.Println("===Listener: Receive leaveMsg")
 		UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 		retMemList := <-MemListChan
 		if len(retMemList) != 0 {

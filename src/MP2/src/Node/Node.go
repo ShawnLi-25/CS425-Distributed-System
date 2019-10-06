@@ -64,7 +64,7 @@ func StopNode(byLocal bool) {
 	Status = false
 	KillRoutine <- struct{}{}
 	fmt.Println("Node: Stop Node...")
-	time.Sleep(3 * time.Second)
+	time.Sleep(2 * time.Second)
 	<-KillRoutine
 }
 
