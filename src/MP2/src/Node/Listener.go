@@ -73,10 +73,11 @@ func HandleListenMsg(conn *net.UDPConn) {
 		fmt.Println("===Listener: Receive leaveMsg")
 		UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 		retMemList := <-MemListChan
+		fmt.Println("===Listener: Current Membershiplist is: !!!!!!")
+		fmt.Print(retMemList)
 		if len(retMemList) != 0 {
 			SendLeaveMsg(conn, receivedMsg.Content[0])
 		}
-		fmt.Println("===Listener: Current Membershiplist is empty !!!!!!")
 	case msg.IntroduceMsg:
 		fmt.Println("===Listener: receive IntroduceMsg")
 		UpQryChan <- UpdateQuery{1, receivedMsg.Content[0]}
