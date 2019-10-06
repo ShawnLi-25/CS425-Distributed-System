@@ -4,6 +4,7 @@ import (
 	"fmt"
 	//"log"
 	msg "../Helper"
+	"time"
 )
 
 var curNode *Node = CreateNewNode()
@@ -62,6 +63,8 @@ func StopNode(byLocal bool) {
 	Status = false
 	KillRoutine <- struct{}{}
 	fmt.Println("Node: Stop Node...")
+	time.Sleep(5*time.Second)
+	<- KillRoutine
 }
 
 //Called from main.go when the command is "LIST\n"
