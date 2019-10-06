@@ -108,7 +108,7 @@ func DeleteNode(nodeID string, list []string) []string {
 func FindNode(list []string, nodeID string) int {
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
-			log.Println("Updater: Find Node!!!!!!" + list[i])
+			fmt.Println("Updater: Find Node!!!!!!" + list[i])
 			return i // return index
 		}
 	}
