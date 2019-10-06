@@ -150,6 +150,7 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	fmt.Println("===Listener: Send Leave Message here !!!!!!")
 
 	for _, member := range monitorList {
 

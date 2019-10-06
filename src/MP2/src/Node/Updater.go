@@ -88,9 +88,7 @@ func AddNewNode(newNodeID string, list []string) []string {
 func DeleteNode(nodeID string, list []string) []string {
 	fmt.Println("Updater: Current List is: ")
 	fmt.Print(list, "\n")
-	fmt.Println("Updater: Delete Node ID is: " + nodeID)
 	var idx = FindNode(list, nodeID)
-	fmt.Printf("Updater: Find Index is: %d", idx)
 	if idx != -1 {
 		if idx != len(list)-1 {
 			MembershipList = append(list[:idx], list[idx+1:]...)
@@ -102,19 +100,14 @@ func DeleteNode(nodeID string, list []string) []string {
 		// newList := MembershipList
 		return newList
 	} else {
-		fmt.Println("What the fuck!!!!!!!")
 		return []string{}
 	}
 }
 
 func FindNode(list []string, nodeID string) int {
-	fmt.Printf("Updater: Current Length is: %d", len(list))
 	for i := 0; i < len(list); i++ {
 		if list[i] == nodeID {
-			fmt.Printf("Updater: Find Node %s at position %d!!!!!!\n", list[i], i)
 			return i // return index
-		} else {
-			fmt.Println("Updater: No Match Node!!!!!!" + list[i])
 		}
 	}
 	return -1
