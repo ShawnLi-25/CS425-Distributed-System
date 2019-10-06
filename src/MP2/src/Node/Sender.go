@@ -150,6 +150,8 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	fmt.Println("===Listener: MembershipList is")
+	fmt.Print(monitorList)
 
 	for _, member := range monitorList {
 
@@ -158,6 +160,7 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 		}
 
 		memberAddress := msg.GetIPAddressFromID(member)
+		fmt.Println("===Listener: Monitor is" + memberAddress)
 		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
 		if err != nil {
 			log.Println(err.Error())
