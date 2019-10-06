@@ -136,7 +136,8 @@ func HBTimer(ln *net.UDPConn) {
 				SendFailMsg(ln, NodeID)
 			}
 		}
-		MemHBMap = getMemHBMap(MemHBMap)
+		tempMap := getMemHBMap(MemHBMap)
+		MemHBMap = tempMap
 
 		//fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
@@ -163,7 +164,7 @@ func (l *Listener) RunHBListener() {
 
 	hbBuf := make([]byte, 1024)
 	
-	MemHBMap = getMemHBMap(MemHBMap)
+	// MemHBMap = getMemHBMap(MemHBMap)
 	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 	
 	go HBTimer(ln)
