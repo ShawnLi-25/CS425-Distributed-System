@@ -89,7 +89,7 @@ func DeleteNode(nodeID string, list []string) []string {
 	fmt.Println("Updater: Current List is: ")
 	fmt.Print(list, "\n")
 	fmt.Println("Updater: Delete Node ID is: " + nodeID)
-	var idx := FindNode(list, nodeID)
+	var idx = FindNode(list, nodeID)
 	if idx >= 0 {
 		if idx != len(list)-1 {
 			MembershipList = append(list[:idx], list[idx+1:]...)
