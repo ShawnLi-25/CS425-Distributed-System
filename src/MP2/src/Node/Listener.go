@@ -8,10 +8,6 @@ import (
 	msg "../Helper"
 )
 
-var MemHBMap map[string]time.Time = make(map[string]time.Time)
-
-
-
 type Listener struct {
 }
 
@@ -94,35 +90,6 @@ func HandleListenMsg(conn *net.UDPConn) {
 	}
 	fmt.Println("Listener: Return from HandleListenMsg ")
 	return
-}
-
-//Use MembershipList to update the key in MemHBMap(NodeID, Time)
-func getMemHBMap(oldMemHBMap map[string]time.Time) map[string]time.Time {
-	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
-	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
-	fmt.Println("Listener: Correct Monitoring List is:...")
-	fmt.Print(MemHBList)
-	fmt.Println("..")
-	if len(oldMemHBMap) == 0 {
-		for _, c := range MemHBList {
-			newMemHBMap[c] = time.Now()
-		}
-	} else {
-		for _, c := range MemHBList {
-			if LastTime, ok := oldMemHBMap[c]; ok {
-				newMemHBMap[c] = LastTime
-
-			} else {
-				newMemHBMap[c] = time.Now()
-			}
-		}
-	}
-	//fmt.Printf("\nListener:::getMem:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-	fmt.Println("Listener: Current Monitoring List is:...")
-	fmt.Print(newMemHBMap)
-	fmt.Println("..")
-	return newMemHBMap
-
 }
 
 //Counting the timeout
