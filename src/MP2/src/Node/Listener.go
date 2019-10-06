@@ -26,13 +26,13 @@ func buildUDPServer(ConnPort string) *net.UDPConn{
 
 func (l *Listener) RunMSGListener() {
 	ln := buildUDPServer(msg.ConnPort)
-	fmt.Printf("Listener:MSGListener listen on port %s\n", msg.ConnPort)
+	fmt.Printf("===Listener:MSGListener listen on port %s\n", msg.ConnPort)
 
 	for {
 		select {
 			case <-KillRoutine:
 				ln.Close()
-				fmt.Println("Listener: Leave!!")
+				fmt.Println("===Listener: MSGListener Leave!!")
 				KillRoutine <- struct{}{}
 				return
 			default:
@@ -61,7 +61,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			StopNode(false)
 			return
 		} else {
-			fmt.Println("Listener: receive failMsg")
+			fmt.Println("===Listener: receive failMsg")
 			UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 			retMemList := <-MemListChan
 			if len(retMemList) != 0 {
@@ -69,21 +69,21 @@ func HandleListenMsg(conn *net.UDPConn) {
 			}
 		}
 	case msg.LeaveMsg:
-		fmt.Println("Listener: receive leaveMsg")
+		fmt.Println("===Listener: receive leaveMsg")
 		UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 		retMemList := <-MemListChan
 		if len(retMemList) != 0 {
 			SendLeaveMsg(conn, receivedMsg.Content[0])
 		}
 	case msg.IntroduceMsg:
-		fmt.Println("Listener: receive IntroduceMsg")
+		fmt.Println("===Listener: receive IntroduceMsg")
 		UpQryChan <- UpdateQuery{1, receivedMsg.Content[0]}
 		retMemList := <-MemListChan
 		if len(retMemList) != 0 {
 			SendIntroduceMsg(conn, receivedMsg.Content[0])
 		}
 	default:
-		fmt.Println("Listener:Can't recognize the msg")
+		fmt.Println("===Listener:Can't recognize the msg")
 	}
 	fmt.Println("Listener: Return from HandleListenMsg ")
 }
@@ -91,12 +91,20 @@ func HandleListenMsg(conn *net.UDPConn) {
 //Counting the timeout
 func HBTimer(ln *net.UDPConn) {
 	for{
-		time.Sleep(time.Second)
-		curTime := time.Now()
-		for NodeID, lastTime := range MemHBMap {
-			timeDiff := curTime.Sub(lastTime)
-			if timeDiff - 2*msg.TimeOut*time.Second > 0{
-				SendFailMsg(ln, NodeID)
+		select {
+			case <-KillRoutine:
+				ln.Close()
+				fmt.Println("===Listener: Timer Leave!!")
+				KillRoutine <- struct{}{}
+				return
+			default:		
+				time.Sleep(time.Second)
+				curTime := time.Now()
+				for NodeID, lastTime := range MemHBMap {
+					timeDiff := curTime.Sub(lastTime)
+					if timeDiff - 2*msg.TimeOut*time.Second > 0{
+					SendFailMsg(ln, NodeID)
+				}
 			}
 		}
 	}
@@ -107,7 +115,7 @@ func HBTimer(ln *net.UDPConn) {
 func (l *Listener) RunHBListener() {
 
 	ln := buildUDPServer(msg.HeartbeatPort)
-	fmt.Printf("HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
+	fmt.Printf("===HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 
 	hbBuf := make([]byte, 1024)
 	
@@ -116,6 +124,13 @@ func (l *Listener) RunHBListener() {
 	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
+	  select {
+		case <-KillRoutine:
+		ln.Close()
+		fmt.Println("===Listener: HBListener Leave!!")
+		KillRoutine <- struct{}{}
+		return
+	  default:
 		n, _, err := ln.ReadFromUDP(hbBuf)
 		if err != nil {
 			log.Println(err)
@@ -137,5 +152,6 @@ func (l *Listener) RunHBListener() {
 		} else {
 			fmt.Println("Listener: MemHBMap doesn't contain the NodeID"+receivedMsg.NodeID)
 		}
+	  }
 	}
 }
