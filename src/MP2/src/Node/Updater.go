@@ -1,15 +1,17 @@
 package node
 
 import (
+	"fmt"
 	"log"
 	"sort"
 	"time"
-	msg "../Helper"
 
+	msg "../Helper"
 )
 
 var MembershipList []string
 var MemHBMap map[string]time.Time = make(map[string]time.Time)
+
 type Updater struct{}
 
 type UpdateQuery struct {
@@ -42,7 +44,7 @@ func (u *Updater) UpdateMembershipList() {
 }
 
 //Use MembershipList to update the key in MemHBMap(NodeID, Time)
-func UpdateMemHBMap(){
+func UpdateMemHBMap() {
 	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
 	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
 
@@ -84,8 +86,8 @@ func AddNewNode(newNodeID string, list []string) []string {
 }
 
 func DeleteNode(nodeID string, list []string) []string {
-	log.Println("Updater: Current List is: ")
-	log.Print(list)
+	fmt.Println("Updater: Current List is: ")
+	fmt.Print(list, "\n")
 	var idx = FindNode(list, nodeID)
 	if idx >= 0 {
 		if idx != len(list)-1 {
