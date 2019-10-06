@@ -117,7 +117,7 @@ func (l *Listener) RunHBListener() {
 	ln := buildUDPServer(msg.HeartbeatPort)
 	fmt.Printf("===HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
 
-	hbBuf := make([]byte, 1024)
+	hbBuf := make([]byte, 2048)
 
 	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
