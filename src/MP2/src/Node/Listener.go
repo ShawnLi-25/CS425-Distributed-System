@@ -24,10 +24,7 @@ func buildUDPServer(ConnPort string) *net.UDPConn{
 	return ln
 }
 
-
 func (l *Listener) RunMSGListener() {
-	fmt.Println("here")
-
 	ln := buildUDPServer(msg.ConnPort)
 	fmt.Printf("Listener:MSGListener listen on port %s\n", msg.ConnPort)
 
@@ -58,7 +55,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
-			//Triggered by False-Positive Situation
+		//Triggered by False-Positive Situation
 		if receivedMsg.NodeID == LocalID {
 			log.Printf("Listener: NodeID %s is recognized as failed...\n", LocalID)
 			StopNode(false)
@@ -89,7 +86,6 @@ func HandleListenMsg(conn *net.UDPConn) {
 		fmt.Println("Listener:Can't recognize the msg")
 	}
 	fmt.Println("Listener: Return from HandleListenMsg ")
-	return
 }
 
 //Counting the timeout
@@ -103,10 +99,6 @@ func HBTimer(ln *net.UDPConn) {
 				SendFailMsg(ln, NodeID)
 			}
 		}
-		MemHBMap = getMemHBMap(MemHBMap)
-
-		//fmt.Printf("\nListener:::HBTimer:::MemHBMap has %d elements.\n\n",len(MemHBMap))
-
 	}
 }
 
@@ -119,8 +111,7 @@ func (l *Listener) RunHBListener() {
 
 	hbBuf := make([]byte, 1024)
 	
-	MemHBMap = getMemHBMap(MemHBMap)
-	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+	fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 	
 	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
@@ -131,14 +122,15 @@ func (l *Listener) RunHBListener() {
 		}
 
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
-		fmt.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		
 		if receivedMsg.MessageType != msg.HeartbeatMsg {
 			fmt.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
 			continue
+		} else {
+			fmt.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
 		
-		//fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+		fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 			MemHBMap[receivedMsg.NodeID] = time.Now()
