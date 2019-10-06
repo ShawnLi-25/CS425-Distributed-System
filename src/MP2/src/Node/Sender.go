@@ -53,7 +53,7 @@ func (s *Sender) SendHeartbeat() {
 	for {
 		select {
 		case <-KillRoutine:
-			ln.Close()
+			// ln.Close()
 			fmt.Println("====Heartbeat Sender: Leave!!")
 			KillRoutine <- struct{}{}
 			return
