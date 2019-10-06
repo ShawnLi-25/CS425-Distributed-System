@@ -111,7 +111,7 @@ func (l *Listener) RunHBListener() {
 
 	hbBuf := make([]byte, 1024)
 	
-	fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+	//fmt.Printf("\nListener:::RunHBListener:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 	
 	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
@@ -130,7 +130,7 @@ func (l *Listener) RunHBListener() {
 			fmt.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
 		
-		fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
+		//fmt.Printf("\nListener:::For-loop:::MemHBMap has %d elements.\n\n",len(MemHBMap))
 
 		if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 			MemHBMap[receivedMsg.NodeID] = time.Now()
