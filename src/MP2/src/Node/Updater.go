@@ -3,10 +3,11 @@ package node
 import (
 	"log"
 	"sort"
+	"time"
 )
 
 var MembershipList []string
-
+var MemHBMap map[string]time.Time = make(map[string]time.Time)
 type Updater struct{}
 
 type UpdateQuery struct {
@@ -16,9 +17,7 @@ type UpdateQuery struct {
 
 //Open a go routine for this function, whenever needs update, build a channel; output will be
 func (u *Updater) UpdateMembershipList() {
-
 	for {
-
 		select {
 		case updateQuery := <-UpQryChan:
 			if updateQuery.queryType == 0 {
@@ -30,11 +29,34 @@ func (u *Updater) UpdateMembershipList() {
 			} else if updateQuery.queryType == 1 {
 				newMemList := AddNewNode(updateQuery.ID, MembershipList)
 				MemListChan <- newMemList
+				UpdateMemHBMap()
 			} else if updateQuery.queryType == 2 {
 				newMemList := DeleteNode(updateQuery.ID, MembershipList)
 				MemListChan <- newMemList
+				UpdateMemHBMap()
 			}
 		}
+	}
+}
+
+//Use MembershipList to update the key in MemHBMap(NodeID, Time)
+func UpdateMemHBMap(){
+	var newMemHBMap map[string]time.Time = make(map[string]time.Time)
+	MemHBList := msg.GetMonitoringList(MembershipList, LocalAddress)
+
+	if len(MemHBMap) == 0 {
+		for _, c := range MemHBList {
+			MemHBMap[c] = time.Now()
+		}
+	} else {
+		for _, c := range MemHBList {
+			if LastTime, ok := MemHBMap[c]; ok {
+				newMemHBMap[c] = LastTime
+			} else {
+				newMemHBMap[c] = time.Now()
+			}
+		}
+		MemHBMap = newMemHBMap
 	}
 }
 
