@@ -134,8 +134,7 @@ func SendJoinMsg(introducerAddress string) bool {
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
 		MembershipList = joinAckMsg.Content
 		UpdateMemHBMap()
-		// UpQryChan <- UpdateQuery{1, member}
-		// <-MemListChan
+
 		return true
 	} else {
 		log.Println("Sender: Received Wrong Ack...")

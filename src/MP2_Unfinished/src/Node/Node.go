@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"time"
 
 	//"log"
 
@@ -56,9 +57,9 @@ func RunNode(isIntroducer bool) {
 		go curNode.Introducer.NodeHandleJoin()
 	}
 
-	// go curNode.Sender.SendHeartbeat()
-	// time.Sleep(time.Second)
-	// go curNode.Listener.RunHBListener()
+	go curNode.Sender.SendHeartbeat()
+	time.Sleep(time.Second)
+	go curNode.Listener.RunHBListener()
 
 }
 
@@ -71,8 +72,6 @@ func StopNode() {
 	// 	curNode.Sender.SendLeave(false)
 	// }
 
-
-
 	fmt.Println("1")
 	curNode.Sender.SendLeave()
 	KillMsgListener <- struct{}{}
@@ -80,12 +79,14 @@ func StopNode() {
 	Status = false
 	fmt.Println("1")
 
-	//KillHBListener <- struct{}{}
+	KillHBListener <- struct{}{}
 
-	//KillHBSender <- struct{}{}
+	KillHBSender <- struct{}{}
 
+	//When Leave, Clear all elements
+	MembershipList = make([]string)
+	MemHBMap = make(map[string]time.Time)
 
-	// KillUpdater <- struct{}{}
 	if msg.IsIntroducer() {
 		KillIntroducer <- struct{}{}
 	}
