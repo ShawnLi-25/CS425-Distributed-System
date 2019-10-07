@@ -84,7 +84,7 @@ func StopNode() {
 	KillHBSender <- struct{}{}
 
 	//When Leave, Clear all elements
-	MembershipList = make([]string)
+	MembershipList = MembershipList[:0]
 	MemHBMap = make(map[string]time.Time)
 
 	if msg.IsIntroducer() {
