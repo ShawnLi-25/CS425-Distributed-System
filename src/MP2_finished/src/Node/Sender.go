@@ -53,6 +53,7 @@ func (s *Sender) SendHeartbeat() {
 	var max, min, test int64
 	max = 100
 	min = 0
+	test = 10
 	cnt := 0
 
 	for {
