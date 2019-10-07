@@ -67,7 +67,7 @@ func (s *Sender) SendHeartbeat() {
 			randNum := rand.Int63n(max-min) + min
 			cnt += 1
 			log.Printf("Generate Heartbeat %d round..\n", cnt)
-			if randNum >= test1 {
+			if randNum >= test {
 				for _, monitorID := range MonitorList {
 					monitorAddress := msg.GetIPAddressFromID(monitorID)
 					udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress+":"+msg.HeartbeatPort)
