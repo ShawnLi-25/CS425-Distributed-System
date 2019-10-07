@@ -15,7 +15,7 @@ const (
 	HeartbeatPort     = "8887"
 	IntroducePort     = "8886"
 	ConnlocalHost     = "localhost"
-	TimeOut           = 3000
+	TimeOut           = 4100
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 

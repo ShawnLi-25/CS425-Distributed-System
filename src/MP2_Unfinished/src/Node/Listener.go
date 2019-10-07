@@ -12,9 +12,9 @@ import (
 type Listener struct {
 }
 
-var MayFailMap map[string]time.Time = make(map[string]time.Time)
 
-func buildUDPServer(ConnPort string) *net.UDPConn {
+
+func BuildUDPServer(ConnPort string) *net.UDPConn {
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+ConnPort)
 	if err != nil {
 		log.Fatal(err)
@@ -24,15 +24,13 @@ func buildUDPServer(ConnPort string) *net.UDPConn {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// fmt.Println("Build UDP Success!!!")
-	fmt.Println("Build up UDP Connection on Port" + ConnPort)
+	fmt.Println("===BuildUDPServer: Listen on Port" + ConnPort)
 
 	return ln
 }
 
 func (l *Listener) RunMSGListener() {
-	ln := buildUDPServer(msg.ConnPort)
-	fmt.Printf("===Listener:MSGListener listen on port %s\n", msg.ConnPort)
+	ln := BuildUDPServer(msg.ConnPort)
 
 	for {
 		select {
@@ -56,12 +54,32 @@ func HandleListenMsg(conn *net.UDPConn) {
 		log.Fatal(err)
 	}
 	receivedMsg := msg.JSONToMsg([]byte(string(msgBuf[:n])))
-	log.Printf("Listener: Recieve %s message from Node: %s, Addrs: %s", receivedMsg.MessageType, receivedMsg.NodeID, msgAddr)
+	msgType := receivedMsg.MessageType
+	senderID := receivedMsg.NodeID
+	contents := receivedMsg.Content
+	log.Printf("Listener: Recieve %s message from Node: %s", msgType, senderID)
 
 	switch receivedMsg.MessageType {
+	case msg.LeaveMsg:
+		updateOk := UpdateMemshipList(receivedMsg)
+		if updateOk {
+			log.Printf("Listener: NodeID %s is recognized as leave...\n", contents[0])
+			SendLeaveMsg(conn, senderID, contents[0])
+		}
+	case msg.IntroduceMsg:
+		updateOk := UpdateMemshipList(receivedMsg)	
+		if updateOk {
+			log.Printf("Listener: NodeID %s join the group, welcome!\n", contents[0])
+			SendIntroduceMsg(conn, senderID, contents[0])
+		}
 	case msg.FailMsg:
-		if receivedMsg.Content[0] == LocalID {
-
+		if contents[0] != LocalID {
+			updateOk := UpdateMemshipList(receivedMsg)
+			if updateOk {
+				log.Printf("Listener: NodeID %s is detected as fail...\n", contents[0])
+				SendFailMsg(conn, senderID, contents[0])
+			}
+		} else {
 			// fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			// if SelfFailTime%3 == 0 {
 			// 	joinSucceed := SendJoinMsg(msg.IntroducerAddress)
@@ -71,6 +89,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			// 	}
 			// }
 			// SelfFailTime += 1
+			/***********************************
 			time.Sleep(3 * time.Second)
 			joinSucceed := SendJoinMsg(msg.IntroducerAddress)
 			if !joinSucceed {
@@ -80,6 +99,11 @@ func HandleListenMsg(conn *net.UDPConn) {
 			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 
 			// StopNode()
+			***********************************/
+			go StopNode()
+			time.Sleep(3*time.Second)
+			go RunNode(msg.IsIntroducer())
+		/******************************************
 		} else if FindNode(MembershipList, receivedMsg.NodeID) != -1 {
 			// fmt.Println("Fail Msg: Delete Node!!")
 			ret := FindNode(MembershipList, receivedMsg.Content[0])
@@ -91,31 +115,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 				_ = DeleteNode(receivedMsg.Content[0])
 				UpdateMemHBMap()
 			}
-		}
-	case msg.LeaveMsg:
-		fmt.Println("Leave Msg: Delete Node!!")
-		newList := MembershipList
-		if LocalID != receivedMsg.Content[0] {
-			newList = DeleteNode(receivedMsg.Content[0])
-			UpdateMemHBMap()
-		}
-		// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
-		// retMemList := <-MemListChan
-		// fmt.Print(retMemList)
-		if len(newList) != 0 {
-			log.Printf("Listener: NodeID %s is recognized as leave...\n", receivedMsg.Content[0])
-			SendLeaveMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
-		}
-	case msg.IntroduceMsg:
-		retMemList := AddNewNode(receivedMsg.Content[0])
-		UpdateMemHBMap()
-		fmt.Println("The current MemHBMap is:")
-		fmt.Print(MemHBMap, "\n")
-		// UpQryChan <- UpdateQuery{1, receivedMsg.Content[0]}
-		// retMemList := <-MemListChan
-		if len(retMemList) != 0 {
-			log.Printf("Listener: NodeID %s join the group, welcome!\n", receivedMsg.Content[0])
-			SendIntroduceMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
+		*********************************************/
 		}
 	default:
 		fmt.Println("===Listener:Can't recognize the msg")
@@ -133,43 +133,28 @@ func HBTimer(ln *net.UDPConn) {
 			// KillRoutine <- struct{}{}
 			return
 		default:
-			time.Sleep(time.Second)
-			UpdateMemHBMap()
-
+			time.Sleep(2 * time.Second)
 			curTime := time.Now()
 			for NodeID, lastTime := range MemHBMap {
 				timeDiff := curTime.Sub(lastTime)
 				// fmt.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
-				log.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
+				// log.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
 				_, ok := MayFailMap[NodeID]
 				if ok {
-
-					//Oops! This guy may fail!! Let me check
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
-						//Ahaaaaaa! You fail!!!
-						// fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
-						newList := DeleteNode(NodeID)
-						if len(newList) != 0 {
+						updateOk := UpdateMemshipList(msg.Message{msg.FailMsg, LocalID,[]string{NodeID}})
+						if updateOk {
 							//I have a update on MemList, so this is the first time I receive the msg
 							//and I will send to other nodes this new msg!!!!!
 							log.Printf("HBTimer: %s timeout!! timeDiff is %s\n", NodeID, timeDiff.String())
-							UpdateMemHBMap()
-							//SendFailMsg(ln, "", NodeID)
+							SendFailMsg(ln, "", NodeID)
 						}
-
-					} else {
-						//Sorry, you are still good~
-						delete(MayFailMap, NodeID)
 					}
+					delete(MayFailMap, NodeID)
 				} else {
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
 						//You may fail...
-						//BE CAREFUL! time.Now() is used to
-						//record WHEN I add the NodeID to MayFailMap
-						//No other use, just a record!!
 						MayFailMap[NodeID] = time.Now()
-					} else {
-						//You are good guy~
 					}
 				}
 			}
@@ -180,13 +165,11 @@ func HBTimer(ln *net.UDPConn) {
 //Listen to Heartbeat and Check timeout
 func (l *Listener) RunHBListener() {
 
-	ln := buildUDPServer(msg.HeartbeatPort)
-	fmt.Printf("===HBListener:Listen Heartbeat on port %s\n", msg.HeartbeatPort)
+	ln := BuildUDPServer(msg.HeartbeatPort)
 
 	hbBuf := make([]byte, 2048)
 
 	go HBTimer(ln)
-	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
 		// select {
 		// case <-KillHBListener:
@@ -208,9 +191,8 @@ func (l *Listener) RunHBListener() {
 			if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 				MemHBMap[receivedMsg.NodeID] = time.Now()
 			} else {
-				// log.Println("Listener: MemHBMap doesn't contain the NodeID" + receivedMsg.NodeID)
+				//log.Println("Listener: MemHBMap doesn't contain the NodeID" + receivedMsg.NodeID)
 			}
-			// log.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
 			continue
 		} else if receivedMsg.MessageType == msg.LeaveMsg && receivedMsg.NodeID == LocalID {
 			KillHBTimer <- struct{}{}
@@ -219,8 +201,5 @@ func (l *Listener) RunHBListener() {
 			return
 			// log.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
-
-		// }
 	}
-	return
 }

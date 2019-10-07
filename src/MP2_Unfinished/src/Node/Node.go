@@ -2,17 +2,13 @@ package node
 
 import (
 	"fmt"
-	"time"
-
-	//"log"
+	//"time"
 
 	msg "../Helper"
 )
 
 var curNode *Node = CreateNewNode()
 
-// var UpQryChan chan UpdateQuery = make(chan UpdateQuery)
-// var MemListChan chan []string = make(chan []string)
 var KillHBListener chan struct{} = make(chan struct{})
 var KillHBSender chan struct{} = make(chan struct{})
 var KillMsgListener chan struct{} = make(chan struct{})
@@ -40,7 +36,7 @@ func CreateNewNode() *Node {
 	return newNode
 }
 
-//Called from main.go when the command is "JOIN\n"
+//Called from main.go when the command is "Join\n"
 //Create new node and run Listener,Sender and Updater
 //in seperate goroutines
 func RunNode(isIntroducer bool) {
@@ -50,8 +46,7 @@ func RunNode(isIntroducer bool) {
 	fmt.Println("Node: Local Address is: " + LocalAddress)
 	Status = true
 
-	// go curNode.Updater.UpdateMembershipList()
-	go curNode.Listener.RunMSGListener()
+	go curNode.Listener.RunMSGListener() // how about running outside?
 	if !isIntroducer {
 		//Non-intro send JoinMsg to Introducer
 		curNode.Sender.SendJoin()
@@ -60,27 +55,16 @@ func RunNode(isIntroducer bool) {
 		go curNode.Introducer.NodeHandleJoin()
 	}
 
-	go curNode.Sender.SendHeartbeat()
-	// time.Sleep(time.Second)
 	go curNode.Listener.RunHBListener()
-
+	go curNode.Sender.SendHeartbeat()
 }
 
-//Called from main.go when the command is "LEAVE\n"
+//Called from main.go when the command is "Leave\n"
 //Delete the Node
 func StopNode() {
-	// if byLocal {
-	// 	curNode.Sender.SendLeave(true)
-	// } else {
-	// 	curNode.Sender.SendLeave(false)
-	// }
-
-	fmt.Println("1")
 	curNode.Sender.SendLeave()
 	KillMsgListener <- struct{}{}
-	fmt.Println("1")
 	KillHBSender <- struct{}{}
-	fmt.Println("1")
 
 	// KillHBListener <- struct{}{}
 	if msg.IsIntroducer() {
@@ -90,15 +74,15 @@ func StopNode() {
 	fmt.Println("1")
 
 	//When Leave, Clear all elements
-	MembershipList = MembershipList[:0]
-	MemHBMap = make(map[string]time.Time)
+	//MembershipList = MembershipList[:0]
+	UpdateMemshipList(msg.Message{"Clear","",[]string{""}})
 
 	fmt.Println("Node: Stop Node...")
 	// time.Sleep(3 * time.Second)
 	// <-KillHBListener
 }
 
-//Called from main.go when the command is "LIST\n"
+//Called from main.go when the command is "List\n"
 //Show the List
 func ShowList() {
 	if Status {
@@ -133,13 +117,3 @@ func ShowID() {
 	}
 	return
 }
-
-// func ShowMonitoringList() {
-// 	if Status {
-// 		fmt.Println("The current MonitorList is:")
-// 		fmt.Print(LocalID, "\n")
-// 	} else {
-// 		fmt.Println("This server doesn't belong to a group")
-// 	}
-// 	return
-// }

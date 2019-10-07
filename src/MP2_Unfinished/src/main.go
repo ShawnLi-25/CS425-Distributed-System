@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-
 	helper "./Helper"
 	node "./Node"
 )
@@ -31,13 +30,13 @@ func main() {
 		cmd, _ = reader.ReadString('\n')
 
 		switch cmd {
-		case "Join\n": //TODO if node is already in group??
+		case "Join\n":
 			log.Println("Main: Join the group")
 			go node.RunNode(isIntroducer)
-		case "Leave\n": //TODO if node is not in group??
+		case "Leave\n":
 			log.Println("Main: Leave the group")
 			go node.StopNode()
-		case "List\n": //TODO if node hasn't joined a group??
+		case "List\n":
 			log.Println("Main: Show the current Membership List")
 			go node.ShowList()
 		case "ID\n":
@@ -47,14 +46,4 @@ func main() {
 			log.Println("Main: Don't support this command")
 		}
 	}
-	/**
-	logFile, fileErr := os.OpenFile("MP2.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if fileErr != nil {
-		log.Println(fileErr)
-	}
-	defer logFile.Close()
-	var updateChan = make(chan node.UpdateQuery)
-	go node.UpdateMembershipList(updateChan)
-	go node.ListenMsg()
-	**/
 }
