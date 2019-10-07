@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"log"
 	"sort"
 	"time"
@@ -16,58 +15,6 @@ var MayFailMap map[string]time.Time = make(map[string]time.Time)
 
 type Updater struct{}
 
-//type UpdateQuery struct {
-//	queryType int //0-GET, 1-ADD, 2-DELETE
-//	ID        string
-//}
-
-//Open a go routine for this function, whenever needs update, build a channel; output will be
-// func (u *Updater) UpdateMembershipList() {
-// 	for {
-// 		select {
-// 		case updateQuery := <-UpQryChan:
-// 			// if updateQuery.queryType == 0 {
-// 			// 	MemListChan <- MembershipList
-// 			// 	log.Printf("Updater: Current Membership Length is: %d...\n ", len(MembershipList))
-// 			// 	for _, str := range MembershipList {
-// 			// 		log.Printf("Updater: Membership List has member: %s...\n", str)
-// 			// 	}
-// 			// } else
-// 			if updateQuery.queryType == 1 {
-// 				newMemList := AddNewNode(updateQuery.ID, MembershipList)
-// 				MemListChan <- newMemList
-// 				UpdateMemHBMap()
-
-// 				for _, str := range MonitorList {
-// 					log.Printf("Updater: MonitorList has member:%s...\n", str)
-// 					fmt.Printf("Updater: MonitorList has member:%s...\n", str)
-// 				}
-// 				for NodeID, _ := range MemHBMap {
-// 					log.Printf("Updater: MemHBMap has member:%s...\n", NodeID)
-// 					fmt.Printf("Updater: MemHBMap has member:%s...\n", NodeID)
-// 				}
-// 			} else if updateQuery.queryType == 2 {
-// 				newMemList := DeleteNode(updateQuery.ID, MembershipList)
-// 				MemListChan <- newMemList
-// 				UpdateMemHBMap()
-// 				for _, str := range MonitorList {
-// 					log.Printf("Updater: MonitorList has member:%s...\n", str)
-// 					fmt.Printf("Updater: MonitorList has member:%s...\n", str)
-// 				}
-// 				for NodeID, _ := range MemHBMap {
-// 					log.Printf("Updater: MemHBMap has member:%s...\n", NodeID)
-// 					fmt.Printf("Updater: MemHBMap has member:%s...\n", NodeID)
-// 				}
-// 			}
-// 		case <-KillUpdater:
-// 			// ln.Close()
-// 			fmt.Println("===Updater: UpdateMembershipList Leave!!")
-// 			// KillRoutine <- struct{}{}
-// 			return
-// 		}
-// 	}
-// }
-
 func UpdateMemshipList(recvMsg helper.Message) bool {
 	msgType := recvMsg.MessageType
 	senderID := recvMsg.NodeID
@@ -77,7 +24,11 @@ func UpdateMemshipList(recvMsg helper.Message) bool {
 	case helper.JoinMsg:
 		updateOk = AddNode(senderID)
 	case helper.LeaveMsg:
-		updateOk = DeleteNode(contents[0])
+		if contents == LocalID {
+			updateOk = true
+		} else {
+			updateOk = DeleteNode(contents[0])
+		}
 	case helper.FailMsg:
 		updateOk = DeleteNode(contents[0])
 	case helper.IntroduceMsg:
@@ -97,7 +48,6 @@ func UpdateMemshipList(recvMsg helper.Message) bool {
 	}
 	return updateOk
 }
-
 
 func updateMonitorList() {
 	MonitorList = helper.GetMonitorList(MembershipList, LocalAddress)
@@ -148,7 +98,7 @@ func DeleteNode(nodeID string) bool {
 		return false
 	}
 	log.Println("Updater: Before Delete the List is: ")
-	fmt.Print(MembershipList, "\n")
+	// fmt.Print(MembershipList, "\n")
 	idx, found := FindNode(nodeID)
 	log.Printf("The Delete Node is in the positition: %d\n", idx)
 	if found {
@@ -165,11 +115,11 @@ func DeleteNode(nodeID string) bool {
 	}
 }
 
-func FindNode(nodeID string) (int,bool) {
+func FindNode(nodeID string) (int, bool) {
 	for i, c := range MembershipList {
 		if c == nodeID {
-			return i,true // return index
+			return i, true // return index
 		}
 	}
-	return -1,false
+	return -1, false
 }
