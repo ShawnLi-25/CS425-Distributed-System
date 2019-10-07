@@ -63,7 +63,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 		if receivedMsg.Content[0] == LocalID {
 			log.Println("Fail Msg: I'm gonna Delete myself !!")
 			fmt.Println("Fail Msg: I'm gonna Delete myself !!")
-			node.StopNode()
+			StopNode()
 		} else {
 			fmt.Println("Fail Msg: Delete Node!!")
 			newList := DeleteNode(receivedMsg.Content[0])
