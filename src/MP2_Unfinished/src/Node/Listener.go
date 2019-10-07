@@ -123,6 +123,8 @@ func HBTimer(ln *net.UDPConn) {
 						//Ahaaaaaa! You fail!!!
 						log.Printf("HBTimer: %s timeout!!\n", NodeID)
 						fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
+						newList := DeleteNode(receivedMsg.Content[0])
+						UpdateMemHBMap()
 						SendFailMsg(ln, "", NodeID)
 					} else {
 						//Sorry, you are still good~
@@ -169,7 +171,7 @@ func (l *Listener) RunHBListener() {
 
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
 
-		log.Printf("Received Unknown Message Type: %s...\n", receivedMsg.MessageType)
+		log.Printf("Received Message Type: %s...\n", receivedMsg.MessageType)
 
 		if receivedMsg.MessageType == msg.HeartbeatMsg {
 			if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
