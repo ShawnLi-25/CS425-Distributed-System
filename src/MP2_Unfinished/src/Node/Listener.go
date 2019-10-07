@@ -80,7 +80,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 
 			// StopNode()
-		} else {
+		} else if FindNode(MembershipList, receivedMsg.NodeID) != -1 {
 			// fmt.Println("Fail Msg: Delete Node!!")
 			ret := FindNode(MembershipList, receivedMsg.Content[0])
 			if ret != -1 {
