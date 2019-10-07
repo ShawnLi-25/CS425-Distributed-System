@@ -169,6 +169,8 @@ func (l *Listener) RunHBListener() {
 
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
 
+		log.Printf("Received Unknown Message Type: %s...\n", receivedMsg.MessageType)
+
 		if receivedMsg.MessageType == msg.HeartbeatMsg {
 			if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 				MemHBMap[receivedMsg.NodeID] = time.Now()

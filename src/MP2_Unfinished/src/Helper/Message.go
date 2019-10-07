@@ -123,7 +123,7 @@ func CloseIntroducePort(localID string) {
 func CloseHBPort(localID string) {
 
 	//Send Leave Msg to local listener to close connection
-	leaveMsg := NewMessage(LeaveMsg, localID, []string{})
+	leaveMsg := NewMessage(LeaveMsg, localID, []string{localID})
 	leavePkg := MsgToJSON(leaveMsg)
 
 	udpAddr, err := net.ResolveUDPAddr(ConnType, ":"+HeartbeatPort)
