@@ -181,7 +181,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 func SendIntroduceMsg(ln *net.UDPConn, predecessorID string, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
-	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	fmt.Printf("Node %s is joining the group...\n", newNodeID)
 
 	for _, member := range MonitorList {
 		// fmt.Println(i,member)
