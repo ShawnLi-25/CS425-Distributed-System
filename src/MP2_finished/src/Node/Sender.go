@@ -80,7 +80,7 @@ func (s *Sender) SendHeartbeat() {
 				log.Printf("===HeartBeat Message Sent to Monitor: %s !!!\n", monitorID)
 				conn.Close()
 			}
-			time.Sleep(time.Second) //send heartbeat 1 second
+			time.Sleep(500 * time.Millisecond.Seconds()) //send heartbeat 1 second
 		}
 	}
 
@@ -141,7 +141,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
-	fmt.Printf("Node %s is leaving voluntarily...\n ", leaveNodeID)
+	fmt.Printf("Node %s is leaving voluntarily...\n", leaveNodeID)
 	log.Println("===Sender: MembershipList is")
 	log.Print(MonitorList)
 
@@ -209,7 +209,7 @@ func SendFailMsg(ln *net.UDPConn, predecessorID string, failNodeID string) {
 
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
-	fmt.Printf("Node %s is detected as failed...\n ", failNodeID)
+	fmt.Printf("Node %s is detected as failed...\n", failNodeID)
 
 	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
