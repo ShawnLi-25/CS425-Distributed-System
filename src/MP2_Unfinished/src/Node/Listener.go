@@ -115,6 +115,7 @@ func HBTimer(ln *net.UDPConn) {
 			for NodeID, lastTime := range MemHBMap {
 				timeDiff := curTime.Sub(lastTime)
 				fmt.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
+				log.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
 				_, ok := MayFailMap[NodeID]
 				if ok {
 
