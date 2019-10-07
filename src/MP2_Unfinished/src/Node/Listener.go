@@ -152,9 +152,9 @@ func HBTimer(ln *net.UDPConn) {
 						if len(newList) != 0 {
 							//I have a update on MemList, so this is the first time I receive the msg
 							//and I will send to other nodes this new msg!!!!!
-							log.Printf("HBTimer: %s timeout!!\n", NodeID)
+							log.Printf("HBTimer: %s timeout!! timeDiff is %s\n", NodeID, timeDiff.String())
 							UpdateMemHBMap()
-							SendFailMsg(ln, "", NodeID)
+							//SendFailMsg(ln, "", NodeID)
 						}
 
 					} else {
