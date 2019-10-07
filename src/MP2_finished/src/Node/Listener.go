@@ -116,7 +116,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			*********************************************/
 		}
 	default:
-		log.("===Listener:Can't recognize the msg")
+		log.Println("===Listener:Can't recognize the msg")
 	}
 	log.Println("Listener: Return from HandleListenMsg ")
 }
