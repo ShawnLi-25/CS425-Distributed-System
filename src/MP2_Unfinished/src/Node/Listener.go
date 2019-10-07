@@ -61,7 +61,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
 		fmt.Println("Fail Msg: Delete Node!!")
-		newList = DeleteNode(receivedMsg.Content[0])
+		newList := DeleteNode(receivedMsg.Content[0])
 		UpdateMemHBMap()
 		// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 		// retMemList := <-MemListChan
@@ -74,7 +74,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 	case msg.LeaveMsg:
 		fmt.Println("Leave Msg: Delete Node!!")
 		if LocalID != receivedMsg.Content[0] {
-			newList = DeleteNode(receivedMsg.Content[0])
+			newList := DeleteNode(receivedMsg.Content[0])
 			UpdateMemHBMap()
 		}
 		// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
