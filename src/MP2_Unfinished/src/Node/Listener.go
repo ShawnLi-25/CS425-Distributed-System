@@ -65,9 +65,9 @@ func HandleListenMsg(conn *net.UDPConn) {
 			fmt.Println("Fail Msg: I'm gonna Delete myself !!")
 			StopNode()
 		} else {
-			fmt.Println("Fail Msg: Delete Node!!")
-			newList := DeleteNode(receivedMsg.Content[0])
-			UpdateMemHBMap()
+			// fmt.Println("Fail Msg: Delete Node!!")
+			// newList := DeleteNode(receivedMsg.Content[0])
+			// UpdateMemHBMap()
 			// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
 			// retMemList := <-MemListChan
 			if len(newList) != 0 {
