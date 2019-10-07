@@ -50,11 +50,9 @@ func (s *Sender) SendLeave() {
 func (s *Sender) SendHeartbeat() {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, LocalID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
-	max := 100
-	min := 0
-	test1 := 3
-	test2 := 10
-	test3 := 30
+	var max, min, test int64
+	max = 100
+	min = 0
 	cnt := 0
 
 	for {
