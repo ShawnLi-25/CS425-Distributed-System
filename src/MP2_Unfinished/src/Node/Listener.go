@@ -183,9 +183,11 @@ func (l *Listener) RunHBListener() {
 			KillHBTimer <- struct{}{}
 			ln.Close()
 			fmt.Println("===Listener: HBListener Leave!!")
+			return
 			// log.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
 
 		// }
 	}
+	return
 }
