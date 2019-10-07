@@ -106,7 +106,7 @@ func ShowList() {
 		// UpQryChan <- UpdateQuery{0, ""}
 		// curList := <-MemListChan
 		fmt.Println("The current membership list is:")
-		for _,str in range MembershipList {
+		for _, str := range MembershipList {
 			fmt.Println(str)
 		}
 		// fmt.Print(MembershipList, "\n")
