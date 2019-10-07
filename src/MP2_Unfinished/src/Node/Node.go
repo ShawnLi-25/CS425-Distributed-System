@@ -106,11 +106,14 @@ func ShowList() {
 		// UpQryChan <- UpdateQuery{0, ""}
 		// curList := <-MemListChan
 		fmt.Println("The current membership list is:")
-		fmt.Print(MembershipList, "\n")
-		fmt.Println("The current MemHBMap is:")
-		fmt.Print(MemHBMap, "\n")
-		fmt.Println("The current monitor list is:")
-		fmt.Print(MonitorList, "\n")
+		for _,str in range MembershipList {
+			fmt.Println(str)
+		}
+		// fmt.Print(MembershipList, "\n")
+		// fmt.Println("The current MemHBMap is:")
+		// fmt.Print(MemHBMap, "\n")
+		// fmt.Println("The current monitor list is:")
+		// fmt.Print(MonitorList, "\n")
 
 		// fmt.Println()
 	} else {

@@ -16,7 +16,6 @@ var MayFailMap map[string]time.Time = make(map[string]time.Time)
 
 func buildUDPServer(ConnPort string) *net.UDPConn {
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+ConnPort)
-	fmt.Println("Build UDP!!!")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,7 +24,8 @@ func buildUDPServer(ConnPort string) *net.UDPConn {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Build UDP Success!!!")
+	// fmt.Println("Build UDP Success!!!")
+	fmt.Println("Build up UDP Connection on Port" + ConnPort)
 
 	return ln
 }
@@ -61,19 +61,19 @@ func HandleListenMsg(conn *net.UDPConn) {
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
 		if receivedMsg.Content[0] == LocalID {
-			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
+			// fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
+			// // time.Sleep(2 * time.Second)
+			// if SelfFailTime%3 == 0 {
+			// 	joinSucceed := SendJoinMsg(msg.IntroducerAddress)
+			// 	if !joinSucceed {
+			// 		fmt.Println("Introducer is down!!")
+			// 		return
+			// 	}
+			// }
+			// SelfFailTime += 1
 			log.Println("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
-			// time.Sleep(2 * time.Second)
-			if SelfFailTime%3 == 0 {
-				joinSucceed := SendJoinMsg(msg.IntroducerAddress)
-				if !joinSucceed {
-					fmt.Println("Introducer is down!!")
-					return
-				}
-			}
-			SelfFailTime += 1
 
-			// StopNode()
+			StopNode()
 		} else {
 			// fmt.Println("Fail Msg: Delete Node!!")
 			ret := FindNode(MembershipList, receivedMsg.Content[0])
