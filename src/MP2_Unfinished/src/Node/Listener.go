@@ -121,10 +121,11 @@ func HBTimer(ln *net.UDPConn) {
 				timeDiff := curTime.Sub(lastTime)
 				fmt.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
 				log.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
-				_, ok := MayFailMap[NodeID]
+				recordTime, ok := MayFailMap[NodeID]
 				if ok {
 
 					//Oops! This guy may fail!! Let me check
+					timeDiff = curTime.Sub(recordTime)
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
 						//Ahaaaaaa! You fail!!!
 						fmt.Printf("HBTimer: %s timeout!!\n", NodeID)

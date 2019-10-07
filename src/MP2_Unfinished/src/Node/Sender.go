@@ -12,7 +12,7 @@ import (
 	//"strings"
 )
 
-var MonitorList []string
+
 
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
