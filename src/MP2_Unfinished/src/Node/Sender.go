@@ -41,7 +41,7 @@ func (s *Sender) SendLeave() {
 	}
 	// msg.CloseHBPort(LocalID)
 	msg.CloseConnPort(LocalID)
-	KillMsgListener <- struct{}{}
+	//KillMsgListener <- struct{}{}
 
 	fmt.Println("All Port Closed!!")
 	return
