@@ -79,7 +79,7 @@ func StopNode() {
 	KillHBSender <- struct{}{}
 	fmt.Println("1")
 
-	KillHBListener <- struct{}{}
+	// KillHBListener <- struct{}{}
 	if msg.IsIntroducer() {
 		KillIntroducer <- struct{}{}
 	}

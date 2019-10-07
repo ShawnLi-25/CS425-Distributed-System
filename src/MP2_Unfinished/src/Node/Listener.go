@@ -155,32 +155,35 @@ func (l *Listener) RunHBListener() {
 	go HBTimer(ln)
 	//For-loop only update the value of MemHBMap(NodeID, Time)
 	for {
-		select {
-		case <-KillHBListener:
-			KillHBTimer <- struct{}{}
-			ln.Close()
-			fmt.Println("===Listener: HBListener Leave!!")
-			return
-		default:
-			n, _, err := ln.ReadFromUDP(hbBuf)
-			if err != nil {
-				log.Println(err)
-			}
+		// select {
+		// case <-KillHBListener:
+		// 	KillHBTimer <- struct{}{}
+		// 	ln.Close()
+		// 	fmt.Println("===Listener: HBListener Leave!!")
+		// 	return
+		// default:
+		n, _, err := ln.ReadFromUDP(hbBuf)
+		if err != nil {
+			log.Println(err)
+		}
 
-			receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
+		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
 
-			if receivedMsg.MessageType != msg.HeartbeatMsg {
-				// log.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
-				continue
-			} else {
-				// log.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
-			}
-
+		if receivedMsg.MessageType == msg.HeartbeatMsg {
 			if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
 				MemHBMap[receivedMsg.NodeID] = time.Now()
 			} else {
 				// log.Println("Listener: MemHBMap doesn't contain the NodeID" + receivedMsg.NodeID)
 			}
+			// log.Println("Listener: HBlistener doesn't receive a HeartbeatMsg")
+			continue
+		} else if receivedMsg.MessageType == msg.LeaveMsg && receivedMsg.NodeID == LocalID {
+			KillHBTimer <- struct{}{}
+			ln.Close()
+			fmt.Println("===Listener: HBListener Leave!!")
+			// log.Println("Listener:Recieve Heartbeat from NodeID:", receivedMsg.NodeID)
 		}
+
+		// }
 	}
 }
