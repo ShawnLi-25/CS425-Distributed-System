@@ -71,15 +71,13 @@ func StopNode() {
 		KillIntroducer <- struct{}{}
 	}
 	Status = false
-	fmt.Println("1")
 
 	//When Leave, Clear all elements
 	//MembershipList = MembershipList[:0]
-	UpdateMemshipList(msg.Message{"Clear","",[]string{""}})
+	UpdateMemshipList(msg.Message{"Clear", "", []string{""}})
 
 	fmt.Println("Node: Stop Node...")
 	// time.Sleep(3 * time.Second)
-	// <-KillHBListener
 }
 
 //Called from main.go when the command is "List\n"

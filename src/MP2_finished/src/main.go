@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+
 	helper "./Helper"
 	node "./Node"
 )
@@ -43,7 +44,7 @@ func main() {
 			log.Println("Main: Show the current Node ID")
 			go node.ShowID()
 		default:
-			log.Println("Main: Don't support this command")
+			fmt.Println("Main: Don't support this command")
 		}
 	}
 }

@@ -12,8 +12,6 @@ import (
 type Listener struct {
 }
 
-
-
 func BuildUDPServer(ConnPort string) *net.UDPConn {
 	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+ConnPort)
 	if err != nil {
@@ -24,7 +22,7 @@ func BuildUDPServer(ConnPort string) *net.UDPConn {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("===BuildUDPServer: Listen on Port" + ConnPort)
+	fmt.Println("BuildUDPServer: Listen on Port" + ConnPort)
 
 	return ln
 }
@@ -67,7 +65,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			SendLeaveMsg(conn, senderID, contents[0])
 		}
 	case msg.IntroduceMsg:
-		updateOk := UpdateMemshipList(receivedMsg)	
+		updateOk := UpdateMemshipList(receivedMsg)
 		if updateOk {
 			log.Printf("Listener: NodeID %s join the group, welcome!\n", contents[0])
 			SendIntroduceMsg(conn, senderID, contents[0])
@@ -101,24 +99,24 @@ func HandleListenMsg(conn *net.UDPConn) {
 			// StopNode()
 			***********************************/
 			go StopNode()
-			time.Sleep(3*time.Second)
+			time.Sleep(3 * time.Second)
 			go RunNode(msg.IsIntroducer())
-		/******************************************
-		} else if FindNode(MembershipList, receivedMsg.NodeID) != -1 {
-			// fmt.Println("Fail Msg: Delete Node!!")
-			ret := FindNode(MembershipList, receivedMsg.Content[0])
-			if ret != -1 {
-				//I have a update on MemList, so this is the first time I receive the msg
-				//and I will send to other nodes this new msg!!!!!
-				log.Printf("Listener: NodeID %s is recognized as failed...\n", receivedMsg.Content[0])
-				SendFailMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
-				_ = DeleteNode(receivedMsg.Content[0])
-				UpdateMemHBMap()
-			}
-		*********************************************/
+			/******************************************
+			} else if FindNode(MembershipList, receivedMsg.NodeID) != -1 {
+				// fmt.Println("Fail Msg: Delete Node!!")
+				ret := FindNode(MembershipList, receivedMsg.Content[0])
+				if ret != -1 {
+					//I have a update on MemList, so this is the first time I receive the msg
+					//and I will send to other nodes this new msg!!!!!
+					log.Printf("Listener: NodeID %s is recognized as failed...\n", receivedMsg.Content[0])
+					SendFailMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
+					_ = DeleteNode(receivedMsg.Content[0])
+					UpdateMemHBMap()
+				}
+			*********************************************/
 		}
 	default:
-		fmt.Println("===Listener:Can't recognize the msg")
+		log.("===Listener:Can't recognize the msg")
 	}
 	log.Println("Listener: Return from HandleListenMsg ")
 }
@@ -142,7 +140,7 @@ func HBTimer(ln *net.UDPConn) {
 				_, ok := MayFailMap[NodeID]
 				if ok {
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
-						updateOk := UpdateMemshipList(msg.Message{msg.FailMsg, LocalID,[]string{NodeID}})
+						updateOk := UpdateMemshipList(msg.Message{msg.FailMsg, LocalID, []string{NodeID}})
 						if updateOk {
 							//I have a update on MemList, so this is the first time I receive the msg
 							//and I will send to other nodes this new msg!!!!!

@@ -51,7 +51,7 @@ func NewMessage(Type string, ID string, Content []string) Message {
 func MsgToJSON(message Message) []byte {
 	b, err := json.Marshal(message)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	//fmt.Println(b)
 	return b
@@ -61,7 +61,7 @@ func JSONToMsg(b []byte) Message {
 	var m Message
 	err := json.Unmarshal(b, &m)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	return m
 }
