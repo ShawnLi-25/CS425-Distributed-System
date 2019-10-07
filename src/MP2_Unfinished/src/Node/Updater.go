@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"time"
 
@@ -95,13 +96,13 @@ func SortMembershipList(list []string) []string {
 }
 
 func AddNewNode(newNodeID string) []string {
-	fmt.Println("Updater: Before ADD Current List is: ")
-	fmt.Print(MembershipList, "\n")
+	log.Println("Updater: Before ADD Current List is: ")
+	log.Print(MembershipList, "\n")
 	if FindNode(MembershipList, newNodeID) < 0 {
 		newList := append(MembershipList, newNodeID)
 		SortMembershipList(newList)
-		fmt.Print("Updater: New List is: ")
-		fmt.Print(newList, "\n")
+		log.Print("Updater: New List is: ")
+		log.Print(newList, "\n")
 		MembershipList = newList
 		return MembershipList
 	} else {
@@ -111,10 +112,10 @@ func AddNewNode(newNodeID string) []string {
 }
 
 func DeleteNode(nodeID string) []string {
-	fmt.Println("Updater: Before Delete the List is: ")
+	log.Println("Updater: Before Delete the List is: ")
 	fmt.Print(MembershipList, "\n")
 	var idx = FindNode(MembershipList, nodeID)
-	fmt.Printf("The Delete Node is in the positition: %d\n", idx)
+	log.Printf("The Delete Node is in the positition: %d\n", idx)
 	if idx != -1 {
 		if idx != len(MembershipList)-1 {
 			MembershipList = append(MembershipList[:idx], MembershipList[idx+1:]...)
@@ -123,8 +124,8 @@ func DeleteNode(nodeID string) []string {
 		}
 		newList := make([]string, len(MembershipList))
 		copy(newList, MembershipList)
-		fmt.Print("Updater: New List is: ")
-		fmt.Print(newList, "\n")
+		log.Print("Updater: New List is: ")
+		log.Print(newList, "\n")
 		// newList := MembershipList
 		return newList
 	} else {

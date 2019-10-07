@@ -24,7 +24,9 @@ var KillHBTimer chan struct{} = make(chan struct{})
 var LocalAddress string
 var LocalID string
 var Status bool
-var Rejoined bool = false
+var SelfFailTime int = 0
+
+// var Rejoined bool = false
 
 type Node struct {
 	Sender

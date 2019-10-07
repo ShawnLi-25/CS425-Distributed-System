@@ -60,19 +60,22 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
-		if receivedMsg.Content[0] == LocalID && !Rejoined {
+		if receivedMsg.Content[0] == LocalID {
 			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			log.Println("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			// time.Sleep(2 * time.Second)
-			// joinSucceed := SendJoinMsg(msg.IntroducerAddress)
-			// Rejoined = true
-			// if !joinSucceed {
-			// 	fmt.Println("Introducer is down!!")
-			// 	return
-			// }
-			StopNode()
+			if SelfFailTime == 3 {
+				joinSucceed := SendJoinMsg(msg.IntroducerAddress)
+				if !joinSucceed {
+					fmt.Println("Introducer is down!!")
+					return
+				}
+			}
+			SelfFailTime += 1
+
+			// StopNode()
 		} else {
-			fmt.Println("Fail Msg: Delete Node!!")
+			// fmt.Println("Fail Msg: Delete Node!!")
 			ret := FindNode(MembershipList, receivedMsg.Content[0])
 			if ret != -1 {
 				//I have a update on MemList, so this is the first time I receive the msg
@@ -128,7 +131,7 @@ func HBTimer(ln *net.UDPConn) {
 			curTime := time.Now()
 			for NodeID, lastTime := range MemHBMap {
 				timeDiff := curTime.Sub(lastTime)
-				fmt.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
+				// fmt.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
 				log.Printf("===HBTimer: For %d duration not received message from %s!!===\n", int64(timeDiff), NodeID)
 				_, ok := MayFailMap[NodeID]
 				if ok {
@@ -136,7 +139,7 @@ func HBTimer(ln *net.UDPConn) {
 					//Oops! This guy may fail!! Let me check
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
 						//Ahaaaaaa! You fail!!!
-						fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
+						// fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
 						newList := DeleteNode(NodeID)
 						if len(newList) != 0 {
 							//I have a update on MemList, so this is the first time I receive the msg

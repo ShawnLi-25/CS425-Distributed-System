@@ -12,8 +12,6 @@ import (
 	//"strings"
 )
 
-
-
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
 
@@ -148,8 +146,8 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
 	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-	fmt.Println("===Sender: MembershipList is")
-	fmt.Print(monitorList)
+	log.Println("===Sender: MembershipList is")
+	log.Print(monitorList)
 
 	for _, member := range monitorList {
 
@@ -178,7 +176,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
+		log.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
 	}
 	return
 
@@ -237,7 +235,7 @@ func SendFailMsg(ln *net.UDPConn, predecessorID string, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
+		log.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
 
 	return
