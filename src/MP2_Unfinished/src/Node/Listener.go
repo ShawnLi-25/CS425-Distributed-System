@@ -157,9 +157,9 @@ func (l *Listener) RunHBListener() {
 	for {
 		select {
 		case <-KillHBListener:
+			KillHBTimer <- struct{}{}
 			ln.Close()
 			fmt.Println("===Listener: HBListener Leave!!")
-			KillHBTimer <- struct{}{}
 			return
 		default:
 			n, _, err := ln.ReadFromUDP(hbBuf)

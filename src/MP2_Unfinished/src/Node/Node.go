@@ -79,9 +79,10 @@ func StopNode() {
 
 	KillHBListener <- struct{}{}
 	fmt.Println("1")
-
 	KillHBSender <- struct{}{}
-
+	if msg.IsIntroducer() {
+		KillIntroducer <- struct{}{}
+	}
 	Status = false
 	fmt.Println("1")
 
@@ -89,9 +90,6 @@ func StopNode() {
 	MembershipList = MembershipList[:0]
 	MemHBMap = make(map[string]time.Time)
 
-	if msg.IsIntroducer() {
-		KillIntroducer <- struct{}{}
-	}
 	fmt.Println("Node: Stop Node...")
 	// time.Sleep(3 * time.Second)
 	// <-KillHBListener
