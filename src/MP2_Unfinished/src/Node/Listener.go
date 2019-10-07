@@ -60,11 +60,12 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
-		if receivedMsg.Content[0] == LocalID {
+		if receivedMsg.Content[0] == LocalID && !Rejoined {
 			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
-			log.Println("Fail Msg: I'm gonna Delete myself !!")
+			log.Println("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			time.Sleep(time.Second)
 			joinSucceed := SendJoinMsg(msg.IntroducerAddress)
+			Rejoined = true
 			if !joinSucceed {
 				fmt.Println("Introducer is down!!")
 				return
