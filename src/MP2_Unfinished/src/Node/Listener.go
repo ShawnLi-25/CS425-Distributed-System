@@ -183,7 +183,7 @@ func (l *Listener) RunHBListener() {
 
 		receivedMsg := msg.JSONToMsg([]byte(string(hbBuf[:n])))
 
-		log.Printf("Received Message Type: %s...\n", receivedMsg.MessageType)
+		log.Printf("HBListener: Received Message Type: %s from %s...\n", receivedMsg.MessageType, receivedMsg.NodeID)
 
 		if receivedMsg.MessageType == msg.HeartbeatMsg {
 			if _, ok := MemHBMap[receivedMsg.NodeID]; ok {
