@@ -105,7 +105,7 @@ func HBTimer(ln *net.UDPConn) {
 	for {
 		select {
 		case <-KillHBTimer:
-			ln.Close()
+			// ln.Close()
 			fmt.Println("===Listener: Timer Leave!!")
 			// KillRoutine <- struct{}{}
 			return
