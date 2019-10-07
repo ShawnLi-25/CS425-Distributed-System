@@ -60,16 +60,22 @@ func HandleListenMsg(conn *net.UDPConn) {
 
 	switch receivedMsg.MessageType {
 	case msg.FailMsg:
-		fmt.Println("Fail Msg: Delete Node!!")
-		newList := DeleteNode(receivedMsg.Content[0])
-		UpdateMemHBMap()
-		// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
-		// retMemList := <-MemListChan
-		if len(newList) != 0 {
-			//I have a update on MemList, so this is the first time I receive the msg
-			//and I will send to other nodes this new msg!!!!!
-			log.Printf("Listener: NodeID %s is recognized as failed...\n", receivedMsg.Content[0])
-			SendFailMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
+		if receivedMsg.Content[0] == LocalID {
+			log.Println("Fail Msg: I'm gonna Delete myself !!")
+			fmt.Println("Fail Msg: I'm gonna Delete myself !!")
+			node.StopNode()
+		} else {
+			fmt.Println("Fail Msg: Delete Node!!")
+			newList := DeleteNode(receivedMsg.Content[0])
+			UpdateMemHBMap()
+			// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
+			// retMemList := <-MemListChan
+			if len(newList) != 0 {
+				//I have a update on MemList, so this is the first time I receive the msg
+				//and I will send to other nodes this new msg!!!!!
+				log.Printf("Listener: NodeID %s is recognized as failed...\n", receivedMsg.Content[0])
+				SendFailMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
+			}
 		}
 	case msg.LeaveMsg:
 		fmt.Println("Leave Msg: Delete Node!!")
