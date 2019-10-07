@@ -75,13 +75,15 @@ func StopNode() {
 	fmt.Println("1")
 	curNode.Sender.SendLeave()
 	KillMsgListener <- struct{}{}
-
-	Status = false
 	fmt.Println("1")
 
 	KillHBListener <- struct{}{}
+	fmt.Println("1")
 
 	KillHBSender <- struct{}{}
+
+	Status = false
+	fmt.Println("1")
 
 	//When Leave, Clear all elements
 	MembershipList = MembershipList[:0]
