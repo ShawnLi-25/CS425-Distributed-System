@@ -3,6 +3,7 @@ package node
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net"
 
 	msg "../Helper"
@@ -49,6 +50,12 @@ func (s *Sender) SendLeave() {
 func (s *Sender) SendHeartbeat() {
 	heartBeatMsg := msg.NewMessage(msg.HeartbeatMsg, LocalID, []string{})
 	heartBeatPkg := msg.MsgToJSON(heartBeatMsg)
+	max := 100
+	min := 0
+	test1 := 3
+	test2 := 10
+	test3 := 30
+	cnt := 0
 
 	for {
 		select {
@@ -59,27 +66,35 @@ func (s *Sender) SendHeartbeat() {
 			return
 
 		default:
-			for _, monitorID := range MonitorList {
-				monitorAddress := msg.GetIPAddressFromID(monitorID)
-				udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress+":"+msg.HeartbeatPort)
-				if err != nil {
-					log.Println(err.Error())
-					// os.Exit(1)
-				}
-				conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
-				if err != nil {
-					log.Println(err.Error())
-					// os.Exit(1)
-				}
+			randNum := rand.Int63n(max-min) + min
+			cnt += 1
+			log.Printf("Generate Heartbeat %d round..\n", cnt)
+			if randNum >= test2 {
+				for _, monitorID := range MonitorList {
+					monitorAddress := msg.GetIPAddressFromID(monitorID)
+					udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress+":"+msg.HeartbeatPort)
+					if err != nil {
+						log.Println(err.Error())
+						// os.Exit(1)
+					}
+					conn, err := net.DialUDP(msg.ConnType, nil, udpAddr)
+					if err != nil {
+						log.Println(err.Error())
+						// os.Exit(1)
+					}
 
-				_, err = conn.Write(heartBeatPkg)
-				if err != nil {
-					log.Println(err.Error())
-				}
+					_, err = conn.Write(heartBeatPkg)
+					if err != nil {
+						log.Println(err.Error())
+					}
 
-				log.Printf("===HeartBeat Message Sent to Monitor: %s !!!\n", monitorID)
-				conn.Close()
+					log.Printf("===HeartBeat Message Sent to Monitor: %s !!!\n", monitorID)
+					conn.Close()
+				}
+			} else {
+				log.Printf("Heartbeat Package Loss at %d round..\n", cnt)
 			}
+
 			time.Sleep(time.Second) //send heartbeat 1 second
 		}
 	}
