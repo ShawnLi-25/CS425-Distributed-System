@@ -65,16 +65,15 @@ func HandleListenMsg(conn *net.UDPConn) {
 			fmt.Println("Fail Msg: I'm gonna Delete myself !!")
 			StopNode()
 		} else {
-			// fmt.Println("Fail Msg: Delete Node!!")
-			// newList := DeleteNode(receivedMsg.Content[0])
-			// UpdateMemHBMap()
-			// UpQryChan <- UpdateQuery{2, receivedMsg.Content[0]}
-			// retMemList := <-MemListChan
-			if len(newList) != 0 {
+			fmt.Println("Fail Msg: Delete Node!!")
+			ret := FindNode(MembershipList, receivedMsg.Content[0])
+			if ret != -1 {
 				//I have a update on MemList, so this is the first time I receive the msg
 				//and I will send to other nodes this new msg!!!!!
 				log.Printf("Listener: NodeID %s is recognized as failed...\n", receivedMsg.Content[0])
 				SendFailMsg(conn, receivedMsg.NodeID, receivedMsg.Content[0])
+				_ = DeleteNode(receivedMsg.Content[0])
+				UpdateMemHBMap()
 			}
 		}
 	case msg.LeaveMsg:
