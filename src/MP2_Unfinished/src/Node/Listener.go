@@ -63,7 +63,13 @@ func HandleListenMsg(conn *net.UDPConn) {
 		if receivedMsg.Content[0] == LocalID {
 			log.Println("Fail Msg: I'm gonna Delete myself !!")
 			fmt.Println("Fail Msg: I'm gonna Delete myself !!")
-			StopNode()
+			time.Sleep(200 * time.Millisecond)
+			joinSucceed := SendJoinMsg(msg.IntroducerAddress)
+			if !joinSucceed {
+				fmt.Println("Introducer is down!!")
+				return
+			}
+			// StopNode()
 		} else {
 			fmt.Println("Fail Msg: Delete Node!!")
 			ret := FindNode(MembershipList, receivedMsg.Content[0])
