@@ -123,7 +123,7 @@ func HBTimer(ln *net.UDPConn) {
 						//Ahaaaaaa! You fail!!!
 						log.Printf("HBTimer: %s timeout!!\n", NodeID)
 						fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
-						newList := DeleteNode(receivedMsg.Content[0])
+						_ = DeleteNode(NodeID)
 						UpdateMemHBMap()
 						SendFailMsg(ln, "", NodeID)
 					} else {
