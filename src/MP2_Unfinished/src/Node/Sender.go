@@ -39,7 +39,7 @@ func (s *Sender) SendLeave() {
 		fmt.Println("Close Introducer Port")
 		msg.CloseIntroducePort(LocalID)
 	}
-	// msg.CloseHBPort(LocalID)
+	msg.CloseHBPort(LocalID)
 	msg.CloseConnPort(LocalID)
 	// KillMsgListener <- struct{}{}
 
