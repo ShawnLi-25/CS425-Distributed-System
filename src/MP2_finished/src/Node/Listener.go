@@ -131,7 +131,7 @@ func HBTimer(ln *net.UDPConn) {
 			// KillRoutine <- struct{}{}
 			return
 		default:
-			time.Sleep(2 * time.Second)
+			time.Sleep(time.Second)
 			curTime := time.Now()
 			for NodeID, lastTime := range MemHBMap {
 				timeDiff := curTime.Sub(lastTime)

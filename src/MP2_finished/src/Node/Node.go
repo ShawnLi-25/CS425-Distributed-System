@@ -91,13 +91,6 @@ func ShowList() {
 		for _, str := range MembershipList {
 			fmt.Println(str)
 		}
-		// fmt.Print(MembershipList, "\n")
-		// fmt.Println("The current MemHBMap is:")
-		// fmt.Print(MemHBMap, "\n")
-		// fmt.Println("The current monitor list is:")
-		// fmt.Print(MonitorList, "\n")
-
-		// fmt.Println()
 	} else {
 		fmt.Println("This server doesn't belong to a group")
 	}
