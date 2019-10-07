@@ -80,7 +80,7 @@ func (s *Sender) SendHeartbeat() {
 				log.Printf("===HeartBeat Message Sent to Monitor: %s !!!\n", monitorID)
 				conn.Close()
 			}
-			time.Sleep(500 * time.Millisecond.Seconds()) //send heartbeat 1 second
+			time.Sleep(500 * time.Millisecond) //send heartbeat 1 second
 		}
 	}
 
