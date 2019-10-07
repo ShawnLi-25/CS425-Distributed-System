@@ -122,7 +122,7 @@ func HBTimer(ln *net.UDPConn) {
 					if int64(timeDiff)-msg.TimeOut*int64(time.Millisecond) > 0 {
 						//Ahaaaaaa! You fail!!!
 						fmt.Printf("HBTimer: %s timeout!!\n", NodeID)
-						newList = DeleteNode(NodeID)
+						newList := DeleteNode(NodeID)
 						if len(newList) != 0 {
 							//I have a update on MemList, so this is the first time I receive the msg
 							//and I will send to other nodes this new msg!!!!!
