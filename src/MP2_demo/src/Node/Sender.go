@@ -141,6 +141,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
+	fmt.Printf("Sender: Node %s leave voluntarily...\n ", leaveNodeID)
 	log.Println("===Sender: MembershipList is")
 	log.Print(MonitorList)
 
@@ -181,6 +182,7 @@ func SendIntroduceMsg(ln *net.UDPConn, predecessorID string, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	fmt.Printf("Sender: Node %s is joining the group...\n ", newNodeID)
 
 	for _, member := range MonitorList {
 		// fmt.Println(i,member)
