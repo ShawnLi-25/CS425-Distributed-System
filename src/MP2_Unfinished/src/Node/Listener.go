@@ -77,7 +77,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 				fmt.Println("Introducer is down!!")
 				return
 			}
-			fmt.Println("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
+			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 
 			// StopNode()
 		} else {
@@ -109,6 +109,8 @@ func HandleListenMsg(conn *net.UDPConn) {
 	case msg.IntroduceMsg:
 		retMemList := AddNewNode(receivedMsg.Content[0])
 		UpdateMemHBMap()
+		fmt.Println("The current MemHBMap is:")
+		fmt.Print(MemHBMap, "\n")
 		// UpQryChan <- UpdateQuery{1, receivedMsg.Content[0]}
 		// retMemList := <-MemListChan
 		if len(retMemList) != 0 {
