@@ -132,15 +132,10 @@ func SendJoinMsg(introducerAddress string) bool {
 	log.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
-		curMembershipList := joinAckMsg.Content
-
-		//Copy the current membership list locally
-		for _, member := range curMembershipList {
-			_ = AddNewNode(member)
-			UpdateMemHBMap()
-			// UpQryChan <- UpdateQuery{1, member}
-			// <-MemListChan
-		}
+		MembershipList = joinAckMsg.Content
+		UpdateMemHBMap()
+		// UpQryChan <- UpdateQuery{1, member}
+		// <-MemListChan
 		return true
 	} else {
 		log.Println("Sender: Received Wrong Ack...")
