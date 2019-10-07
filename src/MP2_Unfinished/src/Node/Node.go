@@ -70,14 +70,25 @@ func StopNode() {
 	// } else {
 	// 	curNode.Sender.SendLeave(false)
 	// }
-	fmt.Println("??????...")
-	KillMsgListener <- struct{}{}
+
+
+
+	fmt.Println("1")
 	curNode.Sender.SendLeave()
+	KillMsgListener <- struct{}{}
+
 	Status = false
-	KillHBListener <- struct{}{}
-	KillHBSender <- struct{}{}
+	fmt.Println("1")
+
+	//KillHBListener <- struct{}{}
+
+	//KillHBSender <- struct{}{}
+
+
 	// KillUpdater <- struct{}{}
-	KillIntroducer <- struct{}{}
+	if msg.IsIntroducer() {
+		KillIntroducer <- struct{}{}
+	}
 	fmt.Println("Node: Stop Node...")
 	// time.Sleep(3 * time.Second)
 	// <-KillHBListener
