@@ -141,7 +141,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
-	fmt.Printf("Sender: Node %s leave voluntarily...\n ", leaveNodeID)
+	fmt.Printf("Sender: Node %s leave voluntarily...\n", leaveNodeID)
 	log.Println("===Sender: MembershipList is")
 	log.Print(MonitorList)
 
@@ -154,7 +154,7 @@ func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 		}
 
 		memberAddress := msg.GetIPAddressFromID(member)
-		fmt.Println("===Listener: Monitor is" + memberAddress)
+		log.Println("===Listener: Monitor is" + memberAddress)
 		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
 		if err != nil {
 			log.Println(err.Error())
@@ -182,7 +182,7 @@ func SendIntroduceMsg(ln *net.UDPConn, predecessorID string, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
 	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-	fmt.Printf("Sender: Node %s is joining the group...\n ", newNodeID)
+	fmt.Printf("Sender: Node %s is joining the group...\n", newNodeID)
 
 	for _, member := range MonitorList {
 		// fmt.Println(i,member)
@@ -210,7 +210,7 @@ func SendFailMsg(ln *net.UDPConn, predecessorID string, failNodeID string) {
 
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
-	fmt.Printf("Sender: Node %s is failed...\n ", failNodeID)
+	fmt.Printf("Sender: Node %s is failed...\n", failNodeID)
 
 	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
