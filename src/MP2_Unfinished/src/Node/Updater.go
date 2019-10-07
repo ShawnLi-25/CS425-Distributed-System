@@ -10,6 +10,7 @@ import (
 
 var MembershipList []string
 var MemHBMap map[string]time.Time = make(map[string]time.Time)
+var MonitorList []string
 
 type Updater struct{}
 
@@ -17,6 +18,8 @@ type UpdateQuery struct {
 	queryType int //0-GET, 1-ADD, 2-DELETE
 	ID        string
 }
+
+//func UpdateMemshipList(
 
 //Open a go routine for this function, whenever needs update, build a channel; output will be
 // func (u *Updater) UpdateMembershipList() {
