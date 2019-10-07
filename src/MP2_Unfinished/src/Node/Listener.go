@@ -64,7 +64,7 @@ func HandleListenMsg(conn *net.UDPConn) {
 			fmt.Printf("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			log.Println("Fail Msg: I'm gonna Delete myself sent from %s !!\n", receivedMsg.NodeID)
 			// time.Sleep(2 * time.Second)
-			if SelfFailTime == 3 {
+			if SelfFailTime%3 == 0 {
 				joinSucceed := SendJoinMsg(msg.IntroducerAddress)
 				if !joinSucceed {
 					fmt.Println("Introducer is down!!")
