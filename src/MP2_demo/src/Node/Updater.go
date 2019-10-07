@@ -24,7 +24,7 @@ func UpdateMemshipList(recvMsg helper.Message) bool {
 	case helper.JoinMsg:
 		updateOk = AddNode(senderID)
 	case helper.LeaveMsg:
-		if contents == LocalID {
+		if contents[0] == LocalID {
 			updateOk = true
 		} else {
 			updateOk = DeleteNode(contents[0])
