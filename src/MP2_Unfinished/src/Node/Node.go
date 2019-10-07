@@ -58,7 +58,7 @@ func RunNode(isIntroducer bool) {
 	}
 
 	go curNode.Sender.SendHeartbeat()
-	time.Sleep(time.Second)
+	// time.Sleep(time.Second)
 	go curNode.Listener.RunHBListener()
 
 }
@@ -76,10 +76,10 @@ func StopNode() {
 	curNode.Sender.SendLeave()
 	KillMsgListener <- struct{}{}
 	fmt.Println("1")
+	KillHBSender <- struct{}{}
+	fmt.Println("1")
 
 	KillHBListener <- struct{}{}
-	fmt.Println("1")
-	KillHBSender <- struct{}{}
 	if msg.IsIntroducer() {
 		KillIntroducer <- struct{}{}
 	}
