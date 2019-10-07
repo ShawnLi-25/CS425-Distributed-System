@@ -123,6 +123,8 @@ func HBTimer(ln *net.UDPConn) {
 			return
 		default:
 			time.Sleep(time.Second)
+			UpdateMemHBMap()
+
 			curTime := time.Now()
 			for NodeID, lastTime := range MemHBMap {
 				timeDiff := curTime.Sub(lastTime)
