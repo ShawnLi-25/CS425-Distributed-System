@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 
 	msg "../Helper"
 
@@ -13,35 +12,36 @@ import (
 	//"strings"
 )
 
-var MonitorList []string
-
 // Sender is a type that implements the SendHearbeat() "method"
 type Sender struct{}
 
-func (s *Sender) NodeSend(msgType string) {
+//Join the group
+func (s *Sender) SendJoin() {
+	joinSucceed := SendJoinMsg(msg.IntroducerAddress)
+
+	if !joinSucceed {
+		fmt.Println("Introducer is down!!")
+		return
+	}
+	return
+}
+
+func (s *Sender) SendLeave() {
 	// var membershipList []string
 	// var monitorList []string
 	// localHostName := msg.GetHostName()
-
-	//Join the group
-	if msgType == msg.JoinMsg {
-		joinSucceed := SendJoinMsg(msg.IntroducerAddress)
-
-		if !joinSucceed {
-			fmt.Println("Introducer is down!!")
-			return
-		}
-	} else if msgType == msg.LeaveMsg {
-		// UpQryChan <- UpdateQuery{0, ""}
-		// membershipList =<- MemListChan
-		isIntroducer := msg.IsIntroducer()
-		if isIntroducer {
-			fmt.Println("Close Introducer Port")
-			msg.CloseIntroducePort(LocalID)
-		}
-		msg.CloseHBPort(LocalID)
-		msg.CloseConnPort(LocalID)
+	// UpQryChan <- UpdateQuery{0, ""}
+	// membershipList =<- MemListChan
+	isIntroducer := msg.IsIntroducer()
+	if isIntroducer {
+		fmt.Println("Close Introducer Port")
+		msg.CloseIntroducePort(LocalID)
 	}
+	msg.CloseHBPort(LocalID)
+	msg.CloseConnPort(LocalID)
+	// KillMsgListener <- struct{}{}
+
+	fmt.Println("All Port Closed!!")
 	return
 
 }
@@ -52,18 +52,13 @@ func (s *Sender) SendHeartbeat() {
 
 	for {
 		select {
-		case <-KillRoutine:
+		case <-KillHBSender:
 			// ln.Close()
 			fmt.Println("====Heartbeat Sender: Leave!!")
-			KillRoutine <- struct{}{}
+			// KillRoutine <- struct{}{}
 			return
 
 		default:
-			UpQryChan <- UpdateQuery{0, ""}
-			membershipList := <-MemListChan
-
-			MonitorList = msg.GetMonitorList(membershipList, LocalAddress)
-
 			for _, monitorID := range MonitorList {
 				monitorAddress := msg.GetIPAddressFromID(monitorID)
 				udpAddr, err := net.ResolveUDPAddr(msg.ConnType, monitorAddress+":"+msg.HeartbeatPort)
@@ -82,10 +77,10 @@ func (s *Sender) SendHeartbeat() {
 					log.Println(err.Error())
 				}
 
-				fmt.Printf("Sender: HeartBeat Sent to: %s...\n", monitorID)
+				log.Printf("===HeartBeat Message Sent to Monitor: %s !!!\n", monitorID)
 				conn.Close()
 			}
-			time.Sleep(500 * time.Millisecond) //send heartbeat 1 second
+			time.Sleep(300 * time.Millisecond) //send heartbeat 1 second
 		}
 	}
 
@@ -110,7 +105,7 @@ func SendJoinMsg(introducerAddress string) bool {
 	_, err = conn.Write(joinPkg)
 	if err != nil {
 		log.Println(err.Error())
-		os.Exit(1)
+		// os.Exit(1)
 	}
 	log.Println("Sender: JoinMsg Sent to Introducer...")
 
@@ -130,13 +125,10 @@ func SendJoinMsg(introducerAddress string) bool {
 	log.Printf("Sender: JoinAckMsg Received from Introducer, the message type is: %s...: ", joinAckMsg.MessageType)
 
 	if joinAckMsg.MessageType == msg.JoinAckMsg {
-		curMembershipList := joinAckMsg.Content
+		UpdateMemshipList(joinAckMsg)
+		//MembershipList = joinAckMsg.Content
+		//UpdateMemHBMap()
 
-		//Copy the current membership list locally
-		for _, member := range curMembershipList {
-			UpQryChan <- UpdateQuery{1, member}
-			<-MemListChan
-		}
 		return true
 	} else {
 		log.Println("Sender: Received Wrong Ack...")
@@ -145,22 +137,24 @@ func SendJoinMsg(introducerAddress string) bool {
 	return true
 }
 
-func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
+func SendLeaveMsg(ln *net.UDPConn, predecessorID string, leaveNodeID string) {
 
 	leaveMsg := msg.NewMessage(msg.LeaveMsg, LocalID, []string{leaveNodeID})
 	leavePkg := msg.MsgToJSON(leaveMsg)
-	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
-	fmt.Println("===Listener: MembershipList is")
-	fmt.Print(monitorList)
+	fmt.Printf("Sender: Node %s leave voluntarily...\n", leaveNodeID)
+	log.Println("===Sender: MembershipList is")
+	log.Print(MonitorList)
 
-	for _, member := range monitorList {
+	for _, member := range MonitorList {
 
-		if member == LocalID {
+		if member == predecessorID {
+			//Predecessor is the node who sends me LeaveMsg
+			//I won't send back this msg to it.!!!!!!
 			continue
 		}
 
 		memberAddress := msg.GetIPAddressFromID(member)
-		fmt.Println("===Listener: Monitor is" + memberAddress)
+		log.Println("===Listener: Monitor is" + memberAddress)
 		udpAddr, err := net.ResolveUDPAddr(msg.ConnType, memberAddress+":"+msg.ConnPort)
 		if err != nil {
 			log.Println(err.Error())
@@ -178,19 +172,23 @@ func SendLeaveMsg(ln *net.UDPConn, leaveNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
+		log.Printf("Sender:LeaveMsg Sent to Monitor: %s...\n", member)
 	}
+	return
 
 }
 
-func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
+func SendIntroduceMsg(ln *net.UDPConn, predecessorID string, newNodeID string) {
 	introduceMsg := msg.NewMessage(msg.IntroduceMsg, LocalID, []string{newNodeID})
 	introducePkg := msg.MsgToJSON(introduceMsg)
-	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	fmt.Printf("Sender: Node %s is joining the group...\n", newNodeID)
 
-	for _, member := range monitorList {
+	for _, member := range MonitorList {
 		// fmt.Println(i,member)
-		if member == LocalID {
+		if member == predecessorID {
+			//My predecessor is the one who send me the failMsg
+			//I will not send back!!!!!!!!!!!!!
 			continue
 		}
 
@@ -208,16 +206,18 @@ func SendIntroduceMsg(ln *net.UDPConn, newNodeID string) {
 	}
 }
 
-func SendFailMsg(ln *net.UDPConn, failNodeID string) {
+func SendFailMsg(ln *net.UDPConn, predecessorID string, failNodeID string) {
 
 	failMsg := msg.NewMessage(msg.FailMsg, LocalID, []string{failNodeID})
 	failPkg := msg.MsgToJSON(failMsg)
-	fmt.Printf("Sender: Node %s is failed...\n ", failNodeID)
+	fmt.Printf("Sender: Node %s is failed...\n", failNodeID)
 
-	monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
+	//monitorList := msg.GetMonitorList(MembershipList, LocalAddress)
 
-	for _, member := range monitorList {
-		if member == LocalID {
+	for _, member := range MonitorList {
+		if member == predecessorID {
+			//My predecessor is the one who send me the failMsg
+			//I will not send back!!!!!!!!!!!!!
 			continue
 		}
 
@@ -232,7 +232,9 @@ func SendFailMsg(ln *net.UDPConn, failNodeID string) {
 		if wErr != nil {
 			log.Println(wErr.Error())
 		}
-		fmt.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
+		log.Printf("Sender: FailMsg Sent to Monitor: %s...\n ", memberAddress)
 	}
+
+	return
 
 }

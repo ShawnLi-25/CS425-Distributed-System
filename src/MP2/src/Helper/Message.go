@@ -15,7 +15,7 @@ const (
 	HeartbeatPort     = "8887"
 	IntroducePort     = "8886"
 	ConnlocalHost     = "localhost"
-	TimeOut           = 1
+	TimeOut           = 4100
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 
@@ -82,13 +82,15 @@ func CloseConnPort(localID string) {
 		log.Println(err.Error())
 		// os.Exit(1)
 	}
-	defer conn.Close()
 
 	_, err = conn.Write(leavePkg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
+	conn.Close()
+	fmt.Println("Conn Port Closed!!")
+
 }
 
 func CloseIntroducePort(localID string) {
@@ -107,18 +109,21 @@ func CloseIntroducePort(localID string) {
 		log.Println(err.Error())
 		// os.Exit(1)
 	}
-	defer conn.Close()
 	_, err = conn.Write(leavePkg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
+
+	conn.Close()
+	fmt.Println("Introducer Port Closed!!")
+
 }
 
 func CloseHBPort(localID string) {
 
 	//Send Leave Msg to local listener to close connection
-	leaveMsg := NewMessage(LeaveMsg, localID, []string{})
+	leaveMsg := NewMessage(LeaveMsg, localID, []string{localID})
 	leavePkg := MsgToJSON(leaveMsg)
 
 	udpAddr, err := net.ResolveUDPAddr(ConnType, ":"+HeartbeatPort)
@@ -131,10 +136,12 @@ func CloseHBPort(localID string) {
 		log.Println(err.Error())
 		// os.Exit(1)
 	}
-	defer conn.Close()
 	_, err = conn.Write(leavePkg)
 	if err != nil {
 		log.Println(err.Error())
 		os.Exit(1)
 	}
+	conn.Close()
+	fmt.Println("HB Port Closed!!")
+
 }

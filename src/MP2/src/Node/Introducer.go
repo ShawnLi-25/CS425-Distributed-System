@@ -14,33 +14,25 @@ type Introducer struct{}
 //Called from Node.go when the node type is Introducer
 func (i *Introducer) NodeHandleJoin() {
 	//Add Introducer itself to MemList
-	UpQryChan <- UpdateQuery{1, LocalID}
-	<-MemListChan
+	ok := AddNode(LocalID)
+	if !ok {
+		fmt.Printf("Introducer %s already exits\n", LocalID)
+		return
+	}
 
-	//Set up UDP connection for upcoming JoinMsg
-	udpAddr, err := net.ResolveUDPAddr(msg.ConnType, ":"+msg.IntroducePort)
-	if err != nil {
-		log.Println(err.Error())
-	}
 	fmt.Println("Introducer: Start Listening for New-Join Node...")
-	ln, err := net.ListenUDP(msg.ConnType, udpAddr)
-	if err != nil {
-		log.Println(err.Error())
-		// os.Exit(1)
-	}
-	log.Println("Introducer: Listening on port " + msg.IntroducePort)
+	ln := BuildUDPServer(msg.IntroducePort)
 
 	//Handle JoinMsg
-
 	for {
 		select {
-		case <-KillRoutine:
+		case <-KillIntroducer:
 			ln.Close()
-			log.Println("====Introducer: Leave!!")
-			KillRoutine <- struct{}{}
+			fmt.Println("====Introducer: Leave!!")
+			// KillRoutine <- struct{}{}
 			return
 		default:
-			log.Println("====Introducer: Works!!")
+			fmt.Println("====Introducer: Works!!")
 			HandleJoinMsg(ln)
 		}
 	}
@@ -58,21 +50,15 @@ func HandleJoinMsg(ln *net.UDPConn) {
 
 	if joinMsg.MessageType == msg.JoinMsg {
 		log.Printf("Introducer: JoinMsg Received from Node: %s...\n", joinMsg.NodeID)
+		
 
 		//Send Introduce Message to Other node
-		SendIntroduceMsg(ln, joinMsg.NodeID)
+		SendIntroduceMsg(ln, "", joinMsg.NodeID)
 
-		//Add new node to introducer's merbership list
-		UpQryChan <- UpdateQuery{1, joinMsg.NodeID}
-		newMembershipList := <-MemListChan
-
-		/*For debugging: print full MemList*/
-		// for _, str := range newMembershipList {
-		// 	fmt.Println("Introducer: Current Membership List is: " + str)
-		// }
+		UpdateMemshipList(joinMsg)
 
 		//Send full membershiplist to new join node
-		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, newMembershipList)
+		joinAckMsg := msg.NewMessage(msg.JoinAckMsg, LocalID, MembershipList)
 		joinAckPkg := msg.MsgToJSON(joinAckMsg)
 
 		_, err := ln.WriteToUDP(joinAckPkg, joinAddr)
