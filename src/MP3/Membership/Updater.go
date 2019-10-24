@@ -5,6 +5,9 @@ import (
 	"sort"
 	"time"
 	"fmt"
+	"encoding/json"
+	"io/ioutil"
+	"os"
 
 	MP "../MsgProtocol"
 )
@@ -21,22 +24,22 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	var updateOk bool
 	switch msgType {
 	case MP.JoinMsg:
-		updateOk = AddNode(senderID)
+		updateOk = addNode(senderID)
 	case MP.LeaveMsg:
 		if contents[0] == LocalID {
 			updateOk = true
 		} else {
-			updateOk = DeleteNode(contents[0])
+			updateOk = deleteNode(contents[0])
 		}
 	case MP.FailMsg:
-		updateOk = DeleteNode(contents[0])
+		updateOk = deleteNode(contents[0])
 	case MP.IntroduceMsg:
-		updateOk = AddNode(contents[0])
+		updateOk = addNode(contents[0])
 	case MP.JoinAckMsg:
 		updateOk = true
 		MembershipList = contents
 	case "Clear":
-		MembershipList = []string{""}
+		MembershipList = []string{}
 		updateOk = true
 	default:
 		updateOk = false
@@ -47,6 +50,33 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	}
 	return updateOk
 }
+
+func WriteMemtableToJsonFile(fileAddr string) error{
+	file, _ := json.MarshalIndent(MembershipList,""," ")
+	err := ioutil.WriteFile(fileAddr, file, 0644)
+	return err
+}
+
+func ReadMemtableFromJsonFile(fileAddr string) ([]string, error){
+	jsonFile, err := os.Open(fileAddr)
+	if err != nil {
+		log.Println(err)
+		return []string{},err
+	}
+
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	
+	var oldMemtable []string
+
+	json.Unmarshal(byteValue, &oldMemtable)
+
+	return oldMemtable, nil
+}
+
+
+/////////////////////////////////////////////////////////////////////////
 
 func getListByRelateIndex(idxList []int) []string{
 	var newList []string
@@ -94,11 +124,11 @@ func updateMemHBMap() {
 	}
 }
 
-func AddNode(newNodeID string) bool {
-	log.Printf("AddNode(): Adding nodeID %s...\n",newNodeID)
-	_, found := FindNode(newNodeID)
+func addNode(newNodeID string) bool {
+	log.Printf("addNode(): Adding nodeID %s...\n",newNodeID)
+	_, found := findNode(newNodeID)
 	if !found {
-		log.Println("AddNode(): Successfully added!")
+		log.Println("addNode(): Successfully added!")
 		fmt.Printf("NodeID: %s join the group, welcome!\n", newNodeID)
 		MembershipList = append(MembershipList, newNodeID)
 		sort.Strings(MembershipList)
@@ -106,19 +136,19 @@ func AddNode(newNodeID string) bool {
 		log.Print(MembershipList, "\n")
 		return true
 	} else {
-		log.Println("AddNode(): Add error: nodeID already exists")
+		log.Println("addNode(): Add error: nodeID already exists")
 		return false
 	}
 
 }
 
-func DeleteNode(nodeID string) bool {
-	log.Printf("DeleteNode(): Deleting nodeID %s...\n", nodeID)
+func deleteNode(nodeID string) bool {
+	log.Printf("deleteNode(): Deleting nodeID %s...\n", nodeID)
 	if nodeID == LocalID {
-		log.Println("DeleteNode(): Delete error: nodeID == LocalID")
+		log.Println("deleteNode(): Delete error: nodeID == LocalID")
 		return false
 	}
-	idx, found := FindNode(nodeID)
+	idx, found := findNode(nodeID)
 	if found {
 		fmt.Printf("NodeID %s may fail or leave the group\n", nodeID)
 		if idx != len(MembershipList)-1 {
@@ -126,15 +156,15 @@ func DeleteNode(nodeID string) bool {
 		} else {
 			MembershipList = MembershipList[:idx]
 		}
-		log.Println("DeleteNode(): Successfully deleted!")
+		log.Println("deleteNode(): Successfully deleted!")
 		return true
 	} else {
-		log.Println("DeleteNode(): Delete error: nodeID not found")
+		log.Println("deleteNode(): Delete error: nodeID not found")
 		return false
 	}
 }
 
-func FindNode(nodeID string) (int, bool) {
+func findNode(nodeID string) (int, bool) {
 	for i, c := range MembershipList {
 		if c == nodeID {
 			return i, true
