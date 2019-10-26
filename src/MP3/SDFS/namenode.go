@@ -9,11 +9,17 @@ type Namenode struct{
 	Filemap map[string][]string = make(map[string][]string)
 }
 
+//////////////////////////////////////////Functions////////////////////////////////////////////
+
+func RunNamenodeServer(Port string) {
+	//TODO
+}
+
 ///////////////////////////////////RPC Methods////////////////////////////
 /*
 	Given a request, return response containing a list of all Datanodes who has the file
 */
-func (n *Namenode) GetDatanodeList (req *FindRequest, resp *FindResponse) error {
+func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 	if val, ok := Filemap[FindRequest.Filename]; ok {
 		return Filemap[FindRequest.Filename]
 	} 
@@ -25,7 +31,7 @@ func (n *Namenode) GetDatanodeList (req *FindRequest, resp *FindResponse) error 
 	Insert pair (sdfsfilename, datanodeList) into Filemap
 	Send datanodeList back to InsertResponse
 */
-func (n *Namenode) InsertFile (req *InsertRequest, resp *InsertResponse) error {
+func (n *Namenode) InsertFile(req *InsertRequest, resp *InsertResponse) error {
 	
 	datanodeList := Mem.getListByRelateIndex([]int{-2,-1,1}, InsertRequest.LocalID)
 
@@ -65,8 +71,4 @@ func (n *Namenode) Update() {
 }
 
 
-//////////////////////////////////////////Functions////////////////////////////////////////////
 
-func RunNamenodeServer(Port string) {
-	//TODO
-}
