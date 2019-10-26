@@ -22,6 +22,9 @@ type Client struct {
 	rpcClient  *rpc.Client
 }
 
+///////////////////////////////////RPC Calls////////////////////////////
+
+
 func NewClient(addr string) *Client {
 	return &Client{Addr:addr}
 }
@@ -56,121 +59,6 @@ func (c *Client) InsertFile(filename string) ([]string, int) {
 	}
 
 	return res.DatanodeList, len(res.DatanodeList)
-}
-
-
-func (c *Client) Put(localfilename string, sdfsfilename string) error{
-
-	localfilepath := Config.GetLocalfilePath(localfilename)
-
-	//Get filesize and total blocks	
-	fileStat, err := os.Stat(localfilepath)
-	if err != nil {
-		return err
-	}
-
-	fileSize := fileStat.Size()
-
-	totalblock := int(fileSize/Config.BLOCK_SIZE)
-	if fileSize%Config.BLOCK_SIZE != 0 {
-		totalblock += 1
-	}
-
-	fi := FileInfo{Filename   : sdfsfilename,
-		       Filesize   : fileSize,
-		       Totalblock : totalblock,}
-
-	//Open the file
-	localfile, err := os.Open(localfilepath)
-	if err != nil {
-		log.Printf("os.Open() can't open file %s", localfilepath)
-		return err
-	}
-	defer localfile.Close()
-
-	//Send file by blocks
-	buf := make([]byte, Config.BLOCK_SIZE)
-	for blockIdx := 0; blockIdx < totalblock; blockIdx++ {
-		n, err := localfile.ReadAt(buf, int64(blockIdx)*Config.BLOCK_SIZE)
-		if err != nil && err != io.EOF {
-			return err
-		}
-
-		block := Block{Idx    : blockIdx,
-			       Size   : int64(n),
-			       Content: buf[:n],}//TODO: Test: n or n+1
-		req := PutRequest{FileInfo : fi,
-				  Block    : block,}
-
-		var res PutResponse
-		if err = c.rpcClient.Call("Datanode.Put", req, &res); err != nil{
-			return err
-		}
-
-		if res.Err != nil {
-			return res.Err
-		}
-	}
-
-	return nil
-}
-
-func (c *Client) Get() () {
-	//TODO
-}
-
-func (c *Client) Delete() () {
-	//TODO
-}
-
-
-///////////////////////////////////Helper functions/////////////////////////////////////////
-
-func listFile(dirPath string) {
-	fmt.Printf("%s contains following files:\n", dirPath)
-
-	files, err := ioutil.ReadDir(dirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-}
-
-func PutFileAt(localfilename string, sdfsfilename string, addr string, port string, respCountPt *int){
-	client := NewClient(addr + ":" + port)
-	client.Dial()
-
-	client.Put(localfilename, sdfsfilename)
-	(*respCountPt)++          //TODO: This line is a critical section, use mutex
-
-	client.Close()
-}
-
-func GetFileAt() {
-
-}
-
-
-func DeleteFileAt() {
-
-}
-
-func GetNamenodeAddr() string{
-	var resp string
-
-	client := NewClient("localhost" + ":" + Config.DatanodePort)
-	client.Dial()
-
-	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil{
-		return ""
-	}
-
-	client.Close()
-
-	return resp
 }
 
 /////////////////////Functions Called from main.go////////////////////////
@@ -313,3 +201,123 @@ func ShowFile() {
 	//List files in "MP3/SDFS/sdfsFile"
 	listFile(Config.SdfsfileDir)
 }
+
+
+
+
+/////////////////////////////////// Methods////////////////////////////
+
+func (c *Client) Put(localfilename string, sdfsfilename string) error{
+
+	localfilepath := Config.GetLocalfilePath(localfilename)
+
+	//Get filesize and total blocks	
+	fileStat, err := os.Stat(localfilepath)
+	if err != nil {
+		return err
+	}
+
+	fileSize := fileStat.Size()
+
+	totalblock := int(fileSize/Config.BLOCK_SIZE)
+	if fileSize%Config.BLOCK_SIZE != 0 {
+		totalblock += 1
+	}
+
+	fi := FileInfo{Filename   : sdfsfilename,
+		       Filesize   : fileSize,
+		       Totalblock : totalblock,}
+
+	//Open the file
+	localfile, err := os.Open(localfilepath)
+	if err != nil {
+		log.Printf("os.Open() can't open file %s", localfilepath)
+		return err
+	}
+	defer localfile.Close()
+
+	//Send file by blocks
+	buf := make([]byte, Config.BLOCK_SIZE)
+	for blockIdx := 0; blockIdx < totalblock; blockIdx++ {
+		n, err := localfile.ReadAt(buf, int64(blockIdx)*Config.BLOCK_SIZE)
+		if err != nil && err != io.EOF {
+			return err
+		}
+
+		block := Block{Idx    : blockIdx,
+			       Size   : int64(n),
+			       Content: buf[:n],}//TODO: Test: n or n+1
+		req := PutRequest{FileInfo : fi,
+				  Block    : block,}
+
+		var res PutResponse
+		if err = c.rpcClient.Call("Datanode.Put", req, &res); err != nil{
+			return err
+		}
+
+		if res.Err != nil {
+			return res.Err
+		}
+	}
+
+	return nil
+}
+
+func (c *Client) Get() () {
+	//TODO
+}
+
+func (c *Client) Delete() () {
+	//TODO
+}
+
+
+///////////////////////////////////Helper functions/////////////////////////////////////////
+
+func listFile(dirPath string) {
+	fmt.Printf("%s contains following files:\n", dirPath)
+
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		fmt.Println(file.Name())
+	}
+}
+
+func PutFileAt(localfilename string, sdfsfilename string, addr string, port string, respCountPt *int){
+	client := NewClient(addr + ":" + port)
+	client.Dial()
+
+	client.Put(localfilename, sdfsfilename)
+	(*respCountPt)++          //TODO: This line is a critical section, use mutex
+
+	client.Close()
+}
+
+func GetFileAt() {
+
+}
+
+
+func DeleteFileAt() {
+
+}
+
+func GetNamenodeAddr() string{
+	var resp string
+
+	client := NewClient("localhost" + ":" + Config.DatanodePort)
+	client.Dial()
+
+	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil{
+		return ""
+	}
+
+	client.Close()
+
+	return resp
+}
+
