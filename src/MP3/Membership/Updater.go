@@ -102,11 +102,11 @@ func GetListByRelateIndex(idxList []int, curID string) []string{
 }
 
 func updateMonitorList() {
-	MonitorList = getListByRelateIndex([]int{-1,1,2}, LocalID)
+	MonitorList = GetListByRelateIndex([]int{-1,1,2}, LocalID)
 }
 
 func updateMemHBMap() {
-	MemHBList := getListByRelateIndex([]int{-2,-1,1}, LocalID)
+	MemHBList := GetListByRelateIndex([]int{-2,-1,1}, LocalID)
 	if len(MemHBMap) == 0 {
 		for _, c := range MemHBList {
 			MemHBMap[c] = time.Now()
