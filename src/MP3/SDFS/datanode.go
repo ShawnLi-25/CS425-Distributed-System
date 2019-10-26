@@ -46,12 +46,12 @@ func RunDatanodeServer (Port string) {
 
 func (d *Datanode) GetNamenodeAddr(req string, resp *string) error{
 	//No namenode right now, start a selection process
-	// if d.NamenodeAddr == "" {
-		
+	if d.NamenodeAddr == "" {
+		d.startElection()
 
-	// } else {
+	} else {
 
-	// }
+	}
 	
 	*resp = d.NamenodeAddr
 	return nil
@@ -90,4 +90,7 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error{
 	return nil
 }
 
+func (d *Datanode) StartElection() {
+
+}
 

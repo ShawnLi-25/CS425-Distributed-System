@@ -140,3 +140,15 @@ func SendIntroduceMsg(ln *net.UDPConn, predecessorID string, newNodeID string) {
 func SendFailMsg(ln *net.UDPConn, predecessorID string, failNodeID string) {
 	sendMsg(ln, predecessorID, MP.FailMsg, failNodeID)
 }
+
+func SendElectionMsg(ln *net.UDPConn) {
+	msg := MP.NewMessage(MP.ElectionMsg, LocalID, "New Election")
+	for _, nodeID := range MembershipList {
+		nodeAddress 
+	}
+	sendMsg(ln, predecessorID, MP.ElectionMsg, failNodeID)
+}
+
+func SendElectedMsg(ln *net.UDPConn, electID string) {
+	sendMsg(ln, predecessorID, MP.BullyMsg, failNodeID)
+}
