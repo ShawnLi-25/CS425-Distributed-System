@@ -1,40 +1,54 @@
 package sdfs
 
 import(
+	"fmt"
+	Mem "../Membership"
 )
 
 type Namenode struct{
-	Filemap map[string][]string
+	Filemap map[string][]string = make(map[string][]string)
 }
 
-////////////////////////////////////////Methods////////////////////////////
-
+///////////////////////////////////RPC Methods////////////////////////////
+/*
+	Given a request, return response containing a list of all Datanodes who has the file
+*/
 func (n *Namenode) GetDatanodeList (req *FindRequest, resp *FindResponse) error {
-	//TODO
-	//Given a request, return response containing a list of all
-	//Datanodes who has the file
+	if val, ok := Filemap[FindRequest.Filename]; ok {
+		return Filemap[FindRequest.Filename]
+	} 
 	return nil
 }
 
+/*
+	Figure out the value of Filamap[sdfsfilename] (use Mmonitoring List AKA MemHBList)
+	Insert pair (sdfsfilename, datanodeList) into Filemap
+	Send datanodeList back to InsertResponse
+*/
 func (n *Namenode) InsertFile (req *InsertRequest, resp *InsertResponse) error {
-	//TODO
-	//Figure out the value of Filamap[sdfsfilename]
-	//i.e. find datanodes who should save the file
-	//Insert pair (sdfsfilename, datanodeList) into Filemap
-	//Send datanodeList back to InsertResponse
-	return nil
+	
+	datanodeList := Mem.getListByRelateIndex([]int{-2,-1,1}, InsertRequest.LocalID)
+
+	for i, datanodeID := range datanodeList {
+		Filemap[InsertRequest.Filename] = append(Filemap[InsertRequest.Filename], datanodeID) 
+	}
+	Filemap[InsertRequest.Filename] = datanodeList
+
+	return datanodeList
 }
 
 
-func (n *Namenode) Add() {
-	//TODO
-	//add a new item into filemap
-	//return added key and value
+///////////////////////////////////Member Function////////////////////////////
+
+//***Function: Simply add a new entry into Filemap, return added key and value
+func (n *Namenode) Add(string nodeID, string sdfsfilename) {
+
+	
 }
 
 func (n *Namenode) Delete() {
 	//TODO
-	//delete a item from filemap by key
+	//delete an item from filemap by key
 	//return deleted key and value
 }
 
@@ -44,7 +58,7 @@ func (n *Namenode) Find() {
 	//return value if found or nil
 }
 
-func (n *Namenode) Edit() {
+func (n *Namenode) Update() {
 	//TODO
 	//modify value by key
 	//return modified key and value

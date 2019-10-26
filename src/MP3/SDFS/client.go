@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"time"
 	"os"
-
+	Mem "../Membership"
 	Config "../Config"
 )
 
@@ -50,7 +50,7 @@ func (c *Client) GetDatanodeList(filename string) ([]string, int) {
 
 func (c *Client) InsertFile(filename string) ([]string, int) {
 	var res InsertResponse
-	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename}, &res); err != nil{
+	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename, LocalID: Mem.LocalID}, &res); err != nil{
 		return []string{}, 0
 	}
 

@@ -119,7 +119,8 @@ DeleteResponse: Err       error
 
 ### 10.26
 ```
-TODO: Everything marked "TODO".
+NameNode Class Definition - xiangl14
+Election Process -xiangl14
 ```
 
 

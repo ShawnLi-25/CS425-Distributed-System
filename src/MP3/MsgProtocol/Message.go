@@ -13,6 +13,8 @@ const (
 	IntroduceMsg = "Introduce" // Content will include new-join node's ID
 	JoinAckMsg   = "JoinAck"   // Content will include full membership list
 	IntroducerRejoinMsg = "IntroducerRejoin" //Content is empty
+	MasterMsg	 = "Master"
+	ElectionMsg  = "Election"
 )
 
 type Message struct {

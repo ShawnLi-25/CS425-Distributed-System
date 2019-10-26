@@ -78,13 +78,13 @@ func ReadMemtableFromJsonFile(fileAddr string) ([]string, error){
 
 /////////////////////////////////////////////////////////////////////////
 
-func getListByRelateIndex(idxList []int) []string{
+func getListByRelateIndex(idxList []int, curID string) []string{
 	var newList []string
 	memListLen := len(MembershipList)
 	
 	if memListLen >= (len(idxList) + 1) {
 		for i, nodeID := range MembershipList {
-			if nodeID == LocalID{
+			if nodeID == curID{
 				for _, idx := range idxList {
 					newList = append(newList, MembershipList[(i+idx+memListLen)%memListLen])
 				}
@@ -93,7 +93,7 @@ func getListByRelateIndex(idxList []int) []string{
 		}
 	} else {
 		for _, nodeID := range MembershipList {
-			if nodeID != LocalID{
+			if nodeID != curID{
 				newList = append(newList, nodeID)
 			}
 		}
@@ -102,11 +102,11 @@ func getListByRelateIndex(idxList []int) []string{
 }
 
 func updateMonitorList() {
-	MonitorList = getListByRelateIndex([]int{-1,1,2})
+	MonitorList = getListByRelateIndex([]int{-1,1,2}, LocalID)
 }
 
 func updateMemHBMap() {
-	MemHBList := getListByRelateIndex([]int{-2,-1,1})
+	MemHBList := getListByRelateIndex([]int{-2,-1,1}, LocalID)
 	if len(MemHBMap) == 0 {
 		for _, c := range MemHBList {
 			MemHBMap[c] = time.Now()
