@@ -6,13 +6,31 @@ import(
 )
 
 type Namenode struct{
-	Filemap map[string][]string = make(map[string][]string)
+	Filemap map[string][]string 
 }
 
 //////////////////////////////////////////Functions////////////////////////////////////////////
 
 func RunNamenodeServer(Port string) {
-	//TODO
+	var namenode = new(Namenode)
+
+	err := rpc.Register(namenode)
+	if err != nil {
+		log.Fatal("Register(namenode) error:", err)
+	}
+
+	rpc.HandleHTTP()
+
+	listener, err := net.Listen("tcp", ":" + Port)
+	if err != nil {
+		log.Fatal("Listen error", err)
+	}
+	
+	fmt.Printf("===RunNamenodeServer: Listen on port %s\n", Port)
+	err = http.Serve(listener, nil)
+	if err != nil {
+		log.Fatal("Serve(listener, nil) error: ", err)
+	}
 }
 
 ///////////////////////////////////RPC Methods////////////////////////////
@@ -20,8 +38,8 @@ func RunNamenodeServer(Port string) {
 	Given a request, return response containing a list of all Datanodes who has the file
 */
 func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
-	if val, ok := Filemap[FindRequest.Filename]; ok {
-		return Filemap[FindRequest.Filename]
+	if val, ok := n.Filemap[FindRequest.Filename]; ok {
+		return n.Filemap[FindRequest.Filename]
 	} 
 	return nil
 }
@@ -33,12 +51,12 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 */
 func (n *Namenode) InsertFile(req *InsertRequest, resp *InsertResponse) error {
 	
-	datanodeList := Mem.getListByRelateIndex([]int{-2,-1,1}, InsertRequest.LocalID)
+	datanodeList := Mem.GetListByRelateIndex([]int{-2,-1,1}, InsertRequest.LocalID)
 
 	for i, datanodeID := range datanodeList {
-		Filemap[InsertRequest.Filename] = append(Filemap[InsertRequest.Filename], datanodeID) 
+		n.Filemap[InsertRequest.Filename] = append(n.Filemap[InsertRequest.Filename], datanodeID) 
 	}
-	Filemap[InsertRequest.Filename] = datanodeList
+	// n.Filemap[InsertRequest.Filename] = datanodeList
 
 	return datanodeList
 }

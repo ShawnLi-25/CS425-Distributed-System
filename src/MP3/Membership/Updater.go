@@ -78,7 +78,7 @@ func ReadMemtableFromJsonFile(fileAddr string) ([]string, error){
 
 /////////////////////////////////////////////////////////////////////////
 
-func getListByRelateIndex(idxList []int, curID string) []string{
+func GetListByRelateIndex(idxList []int, curID string) []string{
 	var newList []string
 	memListLen := len(MembershipList)
 	

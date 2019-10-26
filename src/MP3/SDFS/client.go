@@ -61,6 +61,21 @@ func (c *Client) InsertFile(filename string) ([]string, int) {
 	return res.DatanodeList, len(res.DatanodeList)
 }
 
+func GetNamenodeAddr() string{
+	var resp string
+
+	client := NewClient("localhost" + ":" + Config.DatanodePort)
+	client.Dial()
+
+	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil{
+		return ""
+	}
+
+	client.Close()
+
+	return resp
+}
+
 /////////////////////Functions Called from main.go////////////////////////
 
 func PutFile(filenames []string){
@@ -306,18 +321,5 @@ func DeleteFileAt() {
 
 }
 
-func GetNamenodeAddr() string{
-	var resp string
 
-	client := NewClient("localhost" + ":" + Config.DatanodePort)
-	client.Dial()
-
-	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil{
-		return ""
-	}
-
-	client.Close()
-
-	return resp
-}
 
