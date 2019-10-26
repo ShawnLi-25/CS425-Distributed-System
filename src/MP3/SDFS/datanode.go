@@ -45,7 +45,14 @@ func RunDatanodeServer (Port string) {
 //////////////////////////////////////Methods///////////////////////////////////
 
 func (d *Datanode) GetNamenodeAddr(req string, resp *string) error{
-	if d.NamenodeAddr
+	//No namenode right now, start a selection process
+	// if d.NamenodeAddr == "" {
+		
+
+	// } else {
+
+	// }
+	
 	*resp = d.NamenodeAddr
 	return nil
 }
