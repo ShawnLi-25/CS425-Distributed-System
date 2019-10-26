@@ -8,6 +8,14 @@ import (
 )
 
 const (
+	LocalfilePath     = "SDFS/localFile"
+	SdfsfilePath      = "SDFS/sdfsFile"
+	DatanodePort      = "8885"
+	NamenodePort      = "8884"
+	BLOCK_SIZE        =  512
+)
+
+const (
 	ConnHostName      = "fa19-cs425-g73-%02d.cs.illinois.edu"
 	ConnType          = "udp"
 	ConnPort          = "8888"
