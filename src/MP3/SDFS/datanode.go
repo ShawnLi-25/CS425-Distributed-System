@@ -7,6 +7,7 @@ import(
 	"net/rpc"
 	"net/http"
 	"os"
+	"io"
 
 	Config "../Config"
 )
@@ -19,23 +20,34 @@ type Datanode struct{
 
 /////////////////////////////////////////Functions////////////////////////////////
 
-func RunDatanodeServer (Port string) {
+func RunDatanodeServer () {
 	var datanode = new(Datanode)
+	datanodeServer := rpc.NewServer()
 
-	err := rpc.Register(datanode)
+	err := datanodeServer.Register(datanode)
 	if err != nil {
 		log.Fatal("Register(datanode) error:", err)
 	}
 
-	rpc.HandleHTTP()
+	//======For multiple servers=====
+	oldMux := http.DefaultServeMux
+	mux := http.NewServeMux()
+	http.DefaultServeMux = mux
+	//===============================
 
-	listener, err := net.Listen("tcp", ":" + Port)
+	datanodeServer.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
+
+	//=======For multiple servers=====
+	http.DefaultServeMux = oldMux
+	//================================
+
+	listener, err := net.Listen("tcp", ":" + Config.DatanodePort)
 	if err != nil {
 		log.Fatal("Listen error", err)
 	}
 	
-	fmt.Printf("===RunDatanodeServer: Listen on port %s\n", Port)
-	err = http.Serve(listener, nil)
+	fmt.Printf("===RunDatanodeServer: Listen on port %s\n", Config.DatanodePort)
+	err = http.Serve(listener, mux)
 	if err != nil {
 		log.Fatal("Serve(listener, nil) error: ", err)
 	}
@@ -46,7 +58,7 @@ func RunDatanodeServer (Port string) {
 func (d *Datanode) GetNamenodeAddr(req string, resp *string) error{
 	//No namenode right now, start a selection process
 	if d.NamenodeAddr == "" {
-		d.startElection()
+		d.NamenodeAddr = StartElection()
 	}
 	
 	*resp = d.NamenodeAddr
@@ -54,9 +66,11 @@ func (d *Datanode) GetNamenodeAddr(req string, resp *string) error{
 }
 
 func (d *Datanode) Put(req PutRequest, resp *PutResponse) error{
-	sdfsfilepath := Config.SdfsfileDir + "/" + req.FileInfo.Filename
+	Config.CreateDirIfNotExist(Config.SdfsfileDir)
 
-	sdfsfile, err := os.OpenFile(sdfsfilepath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	sdfsfilepath := Config.SdfsfileDir + "/" + req.Filename
+
+	sdfsfile, err := os.OpenFile(sdfsfilepath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
 		resp.Err = err
@@ -64,7 +78,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error{
 	}
 
 	if _, err = sdfsfile.WriteAt(req.Block.Content, int64(req.Block.Idx) * req.Block.Size); err != nil {
-		log.Println("sdfsfile.WriteAt() error")
+		log.Println("sdfsfile.WriteAt() error",err)
 		resp.Err = err
 		return err
 	}
@@ -94,7 +108,7 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error{
 		}
 	}
 	
-	resp.Content = buf[:n] //TODO: test n or n + 1
+	resp.Content = buf[:n]
 
 	return nil
 }
@@ -108,8 +122,8 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error{
 	return nil
 }
 
-func (d *Datanode) StartElection() {
+func StartElection() string{
 	//TODO modify it
-	d.NamenodeAddr = "fa19-cs425-g73-01.cs.illinois.edu"
+	return "fa19-cs425-g73-01.cs.illinois.edu"
 }
 
