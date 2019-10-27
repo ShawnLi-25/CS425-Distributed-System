@@ -14,7 +14,7 @@ import (
 
 const (
 	R = 1
-	W = 3
+	W = 4
 )
 
 type Client struct {
@@ -76,155 +76,10 @@ func GetNamenodeAddr() string{
 	return resp
 }
 
-/////////////////////Functions Called from main.go////////////////////////
-
-func PutFile(filenames []string){
-
-	localfilename := filenames[0]
-	sdfsfilename  := filenames[1]
-
-	//Check if localfile exists
-	localfilePath := Config.GetLocalfilePath(localfilename)
-	if _, err := os.Stat(localfilePath); os.IsNotExist(err) {
-		fmt.Printf("%s dose not exsit!\n", localfilePath)
-		return
-	}
-
-	namenodeAddr := GetNamenodeAddr()
-	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
-	client.Dial()
-
-	//RPC Namenode
-	//Check if sdfsfile exist
-	datanodeList, n := client.GetDatanodeList(sdfsfilename)
-
-	if n == 0 {
-		//Not exist
-		datanodeList, n = client.InsertFile(sdfsfilename)
-		if n == 0 {
-			log.Println("====Insert sdfsfile error")
-			return
-		}
-	}
-
-	//RPC each Datanode from the list
-	//When W datanode(s) send finished, return
-
-	var respCount int 
-
-	for _, datanodeID := range datanodeList {
-		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		//Question: Synchronizely uploading?
-		go PutFileAt(localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
-	}
-
-	for (respCount < W) {
-		//Waiting for W response(s)
-		//Check the condition every second
-		//TODO: Set up timeout in case of no response causing forever waiting
-		time.Sleep(time.Second)
-	}
-	
-	client.Close()
-
-	log.Println("PutFile successfully return")
-	return
-}
-
-func GetFile(filenames []string){
-
-	//localfilename := filenames[1]
-	sdfsfilename  := filenames[0]
-
-	namenodeAddr := GetNamenodeAddr()
-	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
-	client.Dial()
-
-	//RPC Namenode
-	//Namenode send back datanodes who is currently storing the file
-	datanodeList, n := client.GetDatanodeList(sdfsfilename)
-	fmt.Println(datanodeList)
-
-	if n > 0 {
-		//Exist
-		//TODO Download sdfsfile from each datanod and name it localfilename
-		//When R datanode(s) send back the file, return
-	} else {
-		//Not exist
-		fmt.Printf("Get error: no such sdfsfile %s\n", sdfsfilename)
-	}
-
-	client.Close()
-}
-
-func DeleteFile(filenames []string){
-	//RPC Namenode
-	//Namenode send back datanodes who save the file
-	sdfsfilename := filenames[0]
-
-	namenodeAddr := GetNamenodeAddr()
-	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
-	client.Dial()
-
-	datanodeList, n := client.GetDatanodeList(sdfsfilename)
-
-	if n == 0 {
-		fmt.Printf("Delete error: no such sdfsfile %s\n", sdfsfilename)
-	}
-
-
-	//RPC each datanode from the list
-	for _, datanodeID := range datanodeList{
-		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		fmt.Println(datanodeAddr)
-		//TODO RPC datanode
-	}
-	//TODO: When ALL datanodes send finished, return
-	//Question: Is "ALL" neccessary?
-
-	client.Close()
-}
-
-func ShowDatanode(filenames []string){
-	//RPC Namenode
-	//Namenode send back datanodes who save the file
-	sdfsfilename := filenames[0]
-
-	namenodeAddr := GetNamenodeAddr()
-	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
-	client.Dial()
-
-	datanodeList, n := client.GetDatanodeList(sdfsfilename)
-	if n == 0 {
-		fmt.Printf("Find error: no sdfsfile %s\n", sdfsfilename)
-		return
-	}
-	
-	//Print the list
-	fmt.Printf("Servers who save the file %s:\n", sdfsfilename)
-	for _, datanodeID := range datanodeList {
-		fmt.Println(datanodeID)
-	}
-
-	client.Close()
-}
-
-func ShowFile() {
-	//List files in "MP3/SDFS/localFile"
-	listFile(Config.LocalfileDir)
-
-	//List files in "MP3/SDFS/sdfsFile"
-	listFile(Config.SdfsfileDir)
-}
-
-
-
-
-/////////////////////////////////// Methods////////////////////////////
 
 func (c *Client) Put(localfilename string, sdfsfilename string) error{
 
-	localfilepath := Config.GetLocalfilePath(localfilename)
+	localfilepath := Config.LocalfileDir + "/" + localfilename
 
 	//Get filesize and total blocks	
 	fileStat, err := os.Stat(localfilepath)
@@ -246,7 +101,7 @@ func (c *Client) Put(localfilename string, sdfsfilename string) error{
 	//Open the file
 	localfile, err := os.Open(localfilepath)
 	if err != nil {
-		log.Printf("os.Open() can't open file %s", localfilepath)
+		log.Printf("os.Open() can't open file %s\n", localfilepath)
 		return err
 	}
 	defer localfile.Close()
@@ -278,12 +133,198 @@ func (c *Client) Put(localfilename string, sdfsfilename string) error{
 	return nil
 }
 
-func (c *Client) Get() () {
-	//TODO
+func (c *Client) Get(sdfsfilename string, localfilename string, addr string) error{
+	Config.CreateDirIfNotExist(Config.TempfileDir)
+	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
+
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE|os.APPEND, 0755)
+	if err != nil {
+		log.Println("os.OpenFile() error")
+		return err
+	}
+
+	for blockIdx := 0; !eof; blockIdx++ {
+		req := GetRequest{sdfsfilename, int64(blockIdx) * Config.BLOCK_SIZE, BLOCK_SIZE}
+		var res GetResponse
+		if err := c.rpcClient.Call("Datanode.Get", req, &res); err != nil{
+			return err
+		}
+
+		eof = res.Eof
+		
+		if _, err = tempfile.WriteAt(res.Content, int64(blockIdx) * Config.BLOCK_SIZE); err != nil {
+			log.Prinln("tempfile.WriteAt() error")
+			return err
+		}
+	}
+
+	os.Rename(tempfilePath, Config.LocalfileDir + "/" + localfilename)
+	return nil
 }
 
-func (c *Client) Delete() () {
-	//TODO
+func (c *Client) Delete(sdfsfilename string) error{
+	req := DeleteRequest{sdfsfilename}
+	var res DeleteReponse
+
+	if err := c.rpcClient.Call("Datanode.Delete", req, &res); err != nil{
+		return err
+	}
+	return nil
+}
+
+
+
+
+/////////////////////Functions Called from main.go////////////////////////
+
+func PutFile(filenames []string){
+
+	localfilename := filenames[0]
+	sdfsfilename  := filenames[1]
+
+	//Check if localfile exists
+	localfilePath := Config.LocalfileDir + "/" + localfilename
+	if _, err := os.Stat(localfilePath); os.IsNotExist(err) {
+		fmt.Printf("%s dose not exsit!\n", localfilePath)
+		return
+	}
+
+	//Check if sdfsfile exist
+	namenodeAddr := GetNamenodeAddr()
+	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
+	client.Dial()
+
+	datanodeList, n := client.GetDatanodeList(sdfsfilename)
+
+	if n == 0 {
+		//No datanode store this sdfsfile, insert it
+		datanodeList, n = client.InsertFile(sdfsfilename)
+		if n == 0 {
+			log.Println("====Insert sdfsfile error")
+			return
+		}
+	}
+
+	//Upload localfile to datanodes
+	var respCount int 
+
+	for _, datanodeID := range datanodeList {
+		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
+		go RpcOperationAt("put", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+	}
+
+	for (respCount < W && respCount < n) {
+		//TODO: Set up timeout in case of no response causing forever waiting
+		time.Sleep(time.Second)
+	}
+	
+	client.Close()
+
+	log.Println("PutFile successfully return")
+	return
+}
+
+func GetFile(filenames []string){
+
+	localfilename := filenames[1]
+	sdfsfilename  := filenames[0]
+
+	//Check if sdfsfile exist
+	namenodeAddr := GetNamenodeAddr()
+	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
+	client.Dial()
+
+	datanodeList, n := client.GetDatanodeList(sdfsfilename)
+
+	if n == 0{
+		//No datanode store sdfsfile, return
+		log.Printf("Get error: no such sdfsfile %s\n", sdfsfilename)
+	}
+
+	//Download sdfsfile from datanode
+	var respCount int
+
+	for _, datanodeID := range datanodeList {
+		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
+		go RpcOperationAt("get", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+	}
+
+	for (resCount < R && resCount < n){
+		//TODO timeout
+		time.Sleep(time.Second)
+	}
+
+	client.Close()
+
+	//Clear all .tmp file
+	err := os.RemoveAll(Config.TempFileDir)
+	if err != nil {
+		log.Println("RemoveAll() error: can't remove tempFileDir")
+	}
+
+	log.Println("GetFile successfully return")
+	return
+}
+
+func DeleteFile(filenames []string){
+	
+	sdfsfilename := filenames[0]
+
+	//Check if sdfsfile exist
+	namenodeAddr := GetNamenodeAddr()
+	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
+	client.Dial()
+
+	datanodeList, n := client.GetDatanodeList(sdfsfilename)
+	if n == 0 {
+		log.Printf("Delete error: no such sdfsfile %s\n", sdfsfilename)
+		return
+	}
+
+	//Delete sdfsfile in each datanode
+	var respCount int
+
+	for _, datanodeID := range datanodeList{
+		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
+		go RpcOperationAt("delete", "", sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+	}
+	
+	for respCount < n {
+		//TODO timeout
+		time.Sleep(time.Second)
+	}
+
+	client.Close()
+	log.Println("DeleteFile() successfully return")
+	return
+}
+
+func ShowDatanode(filenames []string){
+	//Rpc Namenode which send back datanodeList
+	sdfsfilename := filenames[0]
+
+	namenodeAddr := GetNamenodeAddr()
+	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
+	client.Dial()
+
+	datanodeList, n := client.GetDatanodeList(sdfsfilename)
+	if n == 0 {
+		fmt.Printf("Find error: no sdfsfile %s\n", sdfsfilename)
+		return
+	}
+	
+	//Print the list
+	fmt.Printf("Servers who save the file %s:\n", sdfsfilename)
+	for _, datanodeID := range datanodeList {
+		fmt.Println(datanodeID)
+	}
+
+	client.Close()
+}
+
+func ShowFile() {
+	//listFile(Config.LocalfileDir)
+	listFile(Config.SdfsfileDir)
 }
 
 
@@ -302,23 +343,24 @@ func listFile(dirPath string) {
 	}
 }
 
-func PutFileAt(localfilename string, sdfsfilename string, addr string, port string, respCountPt *int){
+func RpcOperationAt(operation string, localfilename string, sdfsfilename string, addr string, port string, respCount *int){
 	client := NewClient(addr + ":" + port)
 	client.Dial()
 
-	client.Put(localfilename, sdfsfilename)
+	switch operation {
+		case "put":
+			client.Put(localfilename, sdfsfilename)
+		case "get":
+			client.Get(sdfsfilename, localfilename, addr)
+		case "delete":
+			client.Delete(sdfsfilename)
+		default:
+			log.Println("RpcOperationAt(): Don't support this operation")
+	}
+
 	(*respCountPt)++          //TODO: This line is a critical section, use mutex
 
 	client.Close()
-}
-
-func GetFileAt() {
-
-}
-
-
-func DeleteFileAt() {
-
 }
 
 
