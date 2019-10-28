@@ -81,18 +81,16 @@ func (c *Client) Put(localfilename string, sdfsfilename string) error{
 
 	localfilepath := Config.LocalfileDir + "/" + localfilename
 
-	//Get filesize and total blocks	
-	fileStat, err := os.Stat(localfilepath)
+	//Get fileInfo
+	fileInfo, err := os.Stat(localfilepath)
 	if err != nil {
 		return err
 	}
 
-	fileSize := fileStat.Size()
+	fileSize := fileInfo.Size()
+	fmt.Printf("Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
+	log.Printf("====Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
 
-	totalblock := int(fileSize/Config.BLOCK_SIZE)
-	if fileSize%Config.BLOCK_SIZE != 0 {
-		totalblock += 1
-	}
 
 	//Open the file
 	localfile, err := os.Open(localfilepath)
@@ -104,25 +102,31 @@ func (c *Client) Put(localfilename string, sdfsfilename string) error{
 
 	//Send file by blocks
 	buf := make([]byte, Config.BLOCK_SIZE)
-	for blockIdx := 0; blockIdx < totalblock; blockIdx++ {
-		n, err := localfile.ReadAt(buf, int64(blockIdx)*Config.BLOCK_SIZE)
-		if err != nil && err != io.EOF {
-			return err
+	eof := false
+	hostname := Config.GetHostName()
+
+	for blockIdx := 0; !eof ; blockIdx++ {
+		offset := int64(blockIdx) * Config.BLOCK_SIZE
+		
+		n, err := localfile.ReadAt(buf, offset)
+		if err != nil {
+			if err != io.EOF{
+				return err
+			} else {
+				eof = true
+			}
 		}
 
-		block := Block{Idx    : blockIdx,
-			       Size   : int64(n),
-			       Content: buf[:n],}
-
-		req := PutRequest{sdfsfilename,block}
+		req := PutRequest{sdfsfilename,eof,offset,buf[:n],hostname}
 
 		var res PutResponse
 		if err = c.rpcClient.Call("Datanode.Put", req, &res); err != nil{
 			return err
 		}
 
-		if res.Err != nil {
-			return res.Err
+		if res.Response != "ok" {
+			log.Println(res.Response)
+			break
 		}
 	}
 
@@ -157,9 +161,16 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 		}
 	}
 
-	Config.CreateDirIfNotExist(Config.LocalfileDir)
+	localfilePath := Config.LocalfileDir + "/" + localfilename
+	fi, _ := tempfile.Stat()
+	filesize := int(fi.Size())
 
-	os.Rename(tempfilePath, Config.LocalfileDir + "/" + localfilename)
+	Config.CreateDirIfNotExist(Config.LocalfileDir)
+	os.Rename(tempfilePath, localfilePath)
+
+	fmt.Printf("Get localfile: filename = %s, size = %d, source = %s\n", localfilePath, filesize, addr)
+	log.Printf("Get localfile: filename = %s, size = %d, source = %s\n", localfilePath, filesize, addr)
+
 	return nil
 }
 
@@ -227,6 +238,8 @@ func PutFile(filenames []string){
 	client.Close()
 
 	fmt.Println("PutFile successfully return")
+	log.Println("====PutFile successfully return")
+	
 	return
 }
 
@@ -266,6 +279,8 @@ func GetFile(filenames []string){
 
 	client.Close()
 
+	//TODO: multiple downloads???
+
 	//Clear all .tmp file
 	err := os.RemoveAll(Config.TempfileDir)
 	if err != nil {
@@ -273,6 +288,8 @@ func GetFile(filenames []string){
 	}
 
 	fmt.Println("GetFile successfully return")
+	log.Println("====GetFile successfully return")
+
 	return
 }
 
@@ -309,6 +326,8 @@ func DeleteFile(filenames []string){
 
 	client.Close()
 	fmt.Println("DeleteFile successfully return")
+	log.Println("DeleteFile successfully return")
+	
 	return
 }
 
@@ -359,6 +378,7 @@ func Clear() {
 func listFile(dirPath string) {
 	Config.CreateDirIfNotExist(dirPath)
 	fmt.Printf("%s contains following files:\n", dirPath)
+	fmt.Println("filename   size")
 
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -366,7 +386,7 @@ func listFile(dirPath string) {
 	}
 
 	for _, file := range files {
-		fmt.Println(file.Name())
+		fmt.Printf("%s    %d\n",file.Name(), int(file.Size()))
 	}
 }
 

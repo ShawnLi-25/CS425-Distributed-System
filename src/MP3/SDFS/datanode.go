@@ -66,22 +66,33 @@ func (d *Datanode) GetNamenodeAddr(req string, resp *string) error{
 }
 
 func (d *Datanode) Put(req PutRequest, resp *PutResponse) error{
-	Config.CreateDirIfNotExist(Config.SdfsfileDir)
+	Config.CreateDirIfNotExist(Config.TempfileDir)
+	tempfilePath := Config.TempfileDir + "/" + req.Filename + "." + req.Hostname
 
-	sdfsfilepath := Config.SdfsfileDir + "/" + req.Filename
-
-	sdfsfile, err := os.OpenFile(sdfsfilepath, os.O_RDWR|os.O_CREATE, 0644)
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
-		resp.Err = err
 		return err
 	}
 
-	if _, err = sdfsfile.WriteAt(req.Block.Content, int64(req.Block.Idx) * req.Block.Size); err != nil {
+	if _, err = tempfile.WriteAt(req.Content, req.Offset); err != nil {
 		log.Println("sdfsfile.WriteAt() error",err)
-		resp.Err = err
 		return err
 	}
+	
+
+	if req.Eof {
+		fi, _ := tempfile.Stat()
+		filesize := int(fi.Size())
+		Config.CreateDirIfNotExist(Config.SdfsfileDir)
+		sdfsfilePath := Config.SdfsfileDir + "/" + req.Filename
+		os.Rename(tempfilePath, sdfsfilePath)
+		fmt.Printf("Store sdfsfile: filename = %s, size = %d, source = %s\n", sdfsfilePath, filesize, req.Hostname)
+		log.Printf("====Store sdfsfile: filename = %s, size = %d, source = %s\n", sdfsfilePath, filesize, req.Hostname)
+	}
+
+	resp.Response = "ok"
+
 	return nil
 }
 
