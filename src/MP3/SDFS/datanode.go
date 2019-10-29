@@ -51,6 +51,12 @@ func RunDatanodeServer() {
 	}
 }
 
+//***TODO: Start a new election and return new namnode's address
+func StartElection() string {
+	//
+	return "fa19-cs425-g73-01.cs.illinois.edu"
+}
+
 //////////////////////////////////////Methods///////////////////////////////////
 
 func (d *Datanode) GetNamenodeAddr(req string, resp *string) error {
@@ -130,9 +136,4 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 		return err
 	}
 	return nil
-}
-
-func StartElection() string {
-	//TODO modify it
-	return "fa19-cs425-g73-01.cs.illinois.edu"
 }

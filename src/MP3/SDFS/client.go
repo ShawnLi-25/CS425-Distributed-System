@@ -62,21 +62,6 @@ func (c *Client) InsertFile(filename string) ([]string, int) {
 	return res.DatanodeList, len(res.DatanodeList)
 }
 
-func GetNamenodeAddr() string {
-	var resp string
-
-	client := NewClient("localhost" + ":" + Config.DatanodePort)
-	client.Dial()
-
-	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil {
-		return ""
-	}
-
-	client.Close()
-
-	return resp
-}
-
 func (c *Client) Put(localfilename string, sdfsfilename string) error {
 
 	localfilepath := Config.LocalfileDir + "/" + localfilename
@@ -210,6 +195,7 @@ func PutFile(filenames []string, fromLocal bool) {
 
 	//Check if sdfsfile exist
 	namenodeAddr := GetNamenodeAddr()
+
 	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
 	client.Dial()
 
@@ -379,6 +365,21 @@ func Clear() {
 }
 
 ///////////////////////////////////Helper functions/////////////////////////////////////////
+
+func GetNamenodeAddr() string {
+	var resp string
+
+	client := NewClient("localhost" + ":" + Config.DatanodePort)
+	client.Dial()
+
+	if err := client.rpcClient.Call("Datanode.GetNamenodeAddr", "", &resp); err != nil {
+		return ""
+	}
+
+	client.Close()
+
+	return resp
+}
 
 func listFile(dirPath string) {
 	Config.CreateDirIfNotExist(dirPath)

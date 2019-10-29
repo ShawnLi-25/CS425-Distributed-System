@@ -9,15 +9,14 @@ import (
 	"reflect"
 
 	Config "../Config"
-	Mem "../Membership"
 )
 
 var namenode = new(Namenode)
-var membershipList []string
 
 type Namenode struct {
-	Filemap map[string][]string //Key: sdfsFileName  Value: Arraylist of replica node
-	Nodemap map[string][]string //Key: NodeID  Value: Arraylist of sdfsFileName
+	Filemap        map[string][]string //Key: sdfsFileName  Value: Arraylist of replica node
+	Nodemap        map[string][]string //Key: NodeID  Value: Arraylist of sdfsFileName
+	MembershipList []string
 }
 
 //////////////////////////////////////////Functions////////////////////////////////////////////
@@ -56,53 +55,86 @@ func RunNamenodeServer() {
 }
 
 //***Todo: Check if it's correct
-func updateNameNode(newMemList []string) {
+func UpdateNameNode(newMemList []string) {
 	for {
 		var addList, deleteList []string
-		mapEq := reflect.DeepEqual(newMemList, membershipList)
+		mapEq := reflect.DeepEqual(newMemList, namenode.MembershipList)
 		if !mapEq {
-			for newIdx, oldIdx := 0, 0; newIdx < len(newMemList) && oldIdx < len(membershipList); {
-				if newMemList[newIdx] == membershipList[oldIdx] {
+			var newIdx, oldIdx int
+			for newIdx, oldIdx = 0, 0; newIdx < len(newMemList) && oldIdx < len(namenode.MembershipList); {
+				if newMemList[newIdx] == namenode.MembershipList[oldIdx] {
 					newIdx++
 					oldIdx++
 				} else {
-					//
-					if newMemList[newIdx] < membershipList[oldIdx] {
+					//*** Todo: check validity
+					if newMemList[newIdx] < namenode.MembershipList[oldIdx] {
 						addList = append(addList, newMemList[newIdx])
 						log.Printf("===New Added Node:%s\n", newMemList[newIdx])
 						newIdx++
 					} else {
-						deleteList = append(deleteList, membershipList[oldIdx])
-						log.Printf("===Deleted Node:%s\n", membershipList[oldIdx])
+						deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+						log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 						oldIdx++
 					}
 				}
 			}
-		}
-		updateMap(addList, deleteList)
-		reReplicate(deleteList)
-		membershipList = newMemList
-	}
-}
-
-//***Todo: Update two essential map
-func updateMap(addList []string, deleteList []string) {
-
-}
-
-//Todo: Rereplicate files for deleting Node
-func reReplicate(deleteList []string) {
-	reFileSet := make(map[string]bool)
-	for _, nodeID := range deleteList {
-		for _, fileName := range namenode.Nodemap[nodeID] {
-			if _, ok := reFileSet[fileName]; !ok {
-				reFileSet[fileName] = true
-				//***Todo: Replicate from sdfsfile?
-				fmt.Printf("===Re-replicate file: %s!!!\n", fileName)
-				PutFile([]string{fileName, fileName}, false)
+			for ;newIdx < len(newMemList); newIdx++ {
+				addList = append(addList, newMemList[newIdx])
+				log.Printf("===New Added Node:%s\n", newMemList[newIdx])
+			}
+			for ;oldIdx < len(namenode.MembershipList); oldIdx++ {
+				deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+				log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 			}
 		}
 
+		namenode.MembershipList = newMemList
+		repFileSet := updateMap(addList, deleteList)
+		reReplicate(repFileSet)
+	}
+}
+
+//***Todo: Update two essential maps
+func updateMap(addList []string, deleteList []string) map[string]bool{
+	//Set of sdfsfile to be re-replicated
+	repFileSet := make(map[string]bool)
+	for _, nodeID := range deleteList {
+		for _, fileName := range namenode.Nodemap[nodeID] {
+			if _, ok := repFileSet[fileName]; !ok {
+				repFileSet[fileName] = true
+			}
+		}
+		delete(namenode.Nodemap, nodeID)
+		log.Printf("updateMap: Remove nodeID: %s from NodeMap!!!\n", nodeID)
+	}
+	
+	//Reassign replicas for this file
+	for sdfsFileName, _ := range repFileSet {
+		for _, nodeID := range namenode.Filemap[sdfsFileName] {
+			//***ToDo: Pick any correct node as LocalID
+			if _, ok := namenode.Nodemap[nodeID]; ok {
+				namenode.Filemap[sdfsFileName] = Config.GetReplica(nodeID, namenode.MembershipList)
+				//Add entry for new-add node list
+				for _, addNodeID := range addList {
+					if _, ok := namenode.Filemap[sdfsFileName][addNodeID]; ok {
+						namenode.Nodemap[addNodeID] = append(namenode.Nodemap[addNodeID], sdfsFileName)
+					} 
+				}
+				break
+			}
+		}
+	}
+	
+	retrun repFileSet
+}
+
+//Todo: Rereplicate files for deleting Node
+func reReplicate(repFileSet map[string]bool) {
+	//Only re-replicate for each file once
+	for sdfsFileName, _ := range repFileSet {
+		//***Replicate from sdfsfile?
+		fmt.Printf("===Re-replicate file: %s!!!\n", sdfsFileName)
+		PutFile([]string{sdfsFileName, sdfsFileName}, false)
 	}
 }
 
@@ -146,9 +178,9 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
-	datanodeList := Mem.GetListByRelateIndex([]int{-2, -1, 1}, InsertRequest.LocalID)
+	datanodeList := Config.GetReplica(InsertRequest.LocalID, namenode.MembershipList)
 
-	for i, datanodeID := range datanodeList {
+	for _, datanodeID := range datanodeList {
 		fmt.Fprintf("**namenode**: Insert sdfsfile: %s to %s from %s\n", InsertRequest.Filename, datanodeID, InsertRequest.LocalID)
 		log.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", InsertRequest.Filename, datanodeID, InsertRequest.LocalID)
 		n.Filemap[InsertRequest.Filename] = append(n.Filemap[InsertRequest.Filename], datanodeID)
@@ -157,6 +189,7 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	// n.Filemap[InsertRequest.Filename] = datanodeList
 
 	resp.DatanodeList = datanodeList
+	return nil
 }
 
 //TODO
