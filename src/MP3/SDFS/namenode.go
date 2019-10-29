@@ -120,6 +120,9 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 				//New Replicas set for one sdfsFile
 				namenode.Filemap[sdfsFileName] = Config.GetReplica(nodeID, namenode.MembershipList)
 
+				//Namenode Caches all re-replicated files
+				GetFile([]string{sdfsFileName, sdfsFileName}, false)
+
 				//Add entry for new-add node list
 				for _, val := range namenode.Filemap[sdfsFileName] {
 					for _, addNodeID := range addList {
@@ -144,6 +147,7 @@ func reReplicate(repFileSet map[string]bool) {
 	for sdfsFileName := range repFileSet {
 		//***Replicate from sdfsfile?
 		fmt.Printf("===Re-replicate file: %s!!!\n", sdfsFileName)
+		//****Todo: Not namenode call!!!
 		PutFile([]string{sdfsFileName, sdfsFileName}, false)
 	}
 }

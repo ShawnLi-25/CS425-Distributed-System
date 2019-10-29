@@ -117,7 +117,7 @@ func (c *Client) Put(localfilename string, sdfsfilename string) error {
 	return nil
 }
 
-func (c *Client) Get(sdfsfilename string, localfilename string, addr string) error {
+func (c *Client) Get(sdfsfilename string, localfilename string, toLocal bool, addr string) error {
 	Config.CreateDirIfNotExist(Config.TempfileDir)
 
 	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
@@ -145,7 +145,13 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 		}
 	}
 
-	localfilePath := Config.LocalfileDir + "/" + localfilename
+	var localfilePath string
+	if toLocal {
+		localfilePath = Config.LocalfileDir + "/" + localfilename
+	} else {
+		localfilePath = Config.SdfsfileDir + "/" + localfilename
+	}
+
 	fi, _ := tempfile.Stat()
 	filesize := int(fi.Size())
 
@@ -170,26 +176,29 @@ func (c *Client) Delete(sdfsfilename string) error {
 
 /////////////////////Functions Called from main.go////////////////////////
 
+//put command: put [localfilename] [sdfsfilename]
 func PutFile(filenames []string, fromLocal bool) {
 
 	if len(filenames) < 2 {
-		fmt.Println("Format: put [localfilename] [sdfsfilename]")
+		fmt.Println("Wrong Format!! It should be: put [localfilename] [sdfsfilename]")
 		return
 	}
 
+	//localfilename or sdfsfilename
 	localfilename := filenames[0]
 	sdfsfilename := filenames[1]
 	var localfilePath string
 
-	//Check if localfile exists
 	if fromLocal {
+		//Check if localfile exists
 		localfilePath = Config.LocalfileDir + "/" + localfilename
 	} else {
 		localfilePath = Config.SdfsfileDir + "/" + localfilename
 	}
+
 	if _, err := os.Stat(localfilePath); os.IsNotExist(err) {
-		fmt.Printf("===Error: %s does not exsit!\n", localfilePath)
-		log.Printf("===Error: %s does not exsit!\n", localfilePath)
+		fmt.Printf("===Error: %s does not exsit in local!\n", localfilePath)
+		log.Printf("===Error: %s does not exsit in local!\n", localfilePath)
 		return
 	}
 
@@ -217,7 +226,7 @@ func PutFile(filenames []string, fromLocal bool) {
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		go RpcOperationAt("put", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+		go RpcOperationAt("put", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, fromLocal, &respCount)
 	}
 
 	for respCount < W && respCount < n {
@@ -233,9 +242,10 @@ func PutFile(filenames []string, fromLocal bool) {
 	return
 }
 
-func GetFile(filenames []string) {
+//get command: get [sdfsfilename] [localfilename]
+func GetFile(filenames []string, toLocal bool) {
 	if len(filenames) < 2 {
-		fmt.Println("Format: get [sdfsfilename] [localfilename]")
+		fmt.Println("Wrong Format!! It should be: get [sdfsfilename] [localfilename]")
 		return
 	}
 
@@ -260,7 +270,7 @@ func GetFile(filenames []string) {
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
 		//Todo:
-		go RpcOperationAt("get", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+		go RpcOperationAt("get", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, toLocal, &respCount)
 	}
 
 	for respCount < R && respCount < n {
@@ -284,6 +294,7 @@ func GetFile(filenames []string) {
 	return
 }
 
+// delete command: delete sdfsfilename
 func DeleteFile(filenames []string) {
 	if len(filenames) < 1 {
 		fmt.Println("Format: delete [sdfsfilename]")
@@ -307,7 +318,7 @@ func DeleteFile(filenames []string) {
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		go RpcOperationAt("delete", "", sdfsfilename, datanodeAddr, Config.DatanodePort, &respCount)
+		go RpcOperationAt("delete", "", sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount)
 	}
 
 	for respCount < n {
@@ -322,6 +333,7 @@ func DeleteFile(filenames []string) {
 	return
 }
 
+//ls sdfsfilename command: list all machine (VM) addresses where this file is currently being stored
 func ShowDatanode(filenames []string) {
 	if len(filenames) < 1 {
 		fmt.Println("Format: ls [sdfsfilename]")
@@ -342,6 +354,7 @@ func ShowDatanode(filenames []string) {
 
 	//Print the list
 	fmt.Printf("Servers who save the file %s:\n", sdfsfilename)
+	log.Printf("Servers who save the file %s:\n", sdfsfilename)
 	for _, datanodeID := range datanodeList {
 		fmt.Println(datanodeID)
 	}
@@ -349,12 +362,13 @@ func ShowDatanode(filenames []string) {
 	client.Close()
 }
 
+//store command: At any machine, list all files currently being stored at this machine
 func ShowFile() {
 	listFile(Config.LocalfileDir) //TODO: Only for debugging, comment OUT in demo!
 	listFile(Config.SdfsfileDir)
 }
 
-//Remove all sdfsfiles stored in "SDFS/sdfsFile"
+//clear command: Remove all sdfsfiles stored in "SDFS/sdfsFile"
 func Clear() {
 	err := os.RemoveAll(Config.SdfsfileDir)
 	if err != nil {
@@ -396,7 +410,7 @@ func listFile(dirPath string) {
 	}
 }
 
-func RpcOperationAt(operation string, localfilename string, sdfsfilename string, addr string, port string, respCount *int) {
+func RpcOperationAt(operation string, localfilename string, sdfsfilename string, addr string, port string, isLocal bool, respCount *int) {
 	client := NewClient(addr + ":" + port)
 	client.Dial()
 
@@ -404,7 +418,7 @@ func RpcOperationAt(operation string, localfilename string, sdfsfilename string,
 	case "put":
 		client.Put(localfilename, sdfsfilename)
 	case "get":
-		client.Get(sdfsfilename, localfilename, addr)
+		client.Get(sdfsfilename, localfilename, isLocal, addr)
 	case "delete":
 		client.Delete(sdfsfilename)
 	default:

@@ -64,7 +64,7 @@ func main() {
 			go Sdfs.PutFile(parsedcmd[1:], true) //"SDFS/client.go"
 		case "get":
 			log.Println("Main: Get sdfsfilename localfilename")
-			go Sdfs.GetFile(parsedcmd[1:]) //"SDFS/client.go"
+			go Sdfs.GetFile(parsedcmd[1:], true) //"SDFS/client.go"
 		case "delete":
 			log.Println("Main: Delete sdfsfile")
 			go Sdfs.DeleteFile(parsedcmd[1:]) //"SDFS/client.go"
