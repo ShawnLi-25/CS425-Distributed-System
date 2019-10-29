@@ -111,17 +111,23 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	}
 
 	//Reassign replicas for this file
-	for sdfsFileName, _ := range repFileSet {
+	for sdfsFileName := range repFileSet {
 		for _, nodeID := range namenode.Filemap[sdfsFileName] {
 			//***ToDo: Pick any correct node as LocalID
 			if _, ok := namenode.Nodemap[nodeID]; ok {
 				fmt.Printf("updateMap: Reassign nodeID: %s for sdfsfile: %s!!!\n", nodeID, sdfsFileName)
 				log.Printf("updateMap: Reassign nodeID: %s for sdfsfile: %s!!!\n", nodeID, sdfsFileName)
+				//New Replicas set for one sdfsFile
 				namenode.Filemap[sdfsFileName] = Config.GetReplica(nodeID, namenode.MembershipList)
+
 				//Add entry for new-add node list
-				for _, addNodeID := range addList {
-					if _, ok := namenode.Filemap[sdfsFileName][addNodeID]; ok {
-						namenode.Nodemap[addNodeID] = append(namenode.Nodemap[addNodeID], sdfsFileName)
+				for _, val := range namenode.Filemap[sdfsFileName] {
+					for _, addNodeID := range addList {
+						if val == addNodeID {
+							fmt.Printf("updateMap: Add entry for nodeID: %s for sdfsfile: %s!!!\n", addNodeID, sdfsFileName)
+							log.Printf("updateMap: Add entry for nodeID: %s for sdfsfile: %s!!!\n", addNodeID, sdfsFileName)
+							namenode.Nodemap[addNodeID] = append(namenode.Nodemap[addNodeID], sdfsFileName)
+						}
 					}
 				}
 				break
@@ -135,7 +141,7 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 //Todo: Rereplicate files for deleting Node
 func reReplicate(repFileSet map[string]bool) {
 	//Only re-replicate for each file once
-	for sdfsFileName, _ := range repFileSet {
+	for sdfsFileName := range repFileSet {
 		//***Replicate from sdfsfile?
 		fmt.Printf("===Re-replicate file: %s!!!\n", sdfsFileName)
 		PutFile([]string{sdfsFileName, sdfsFileName}, false)
@@ -163,11 +169,9 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	return nil
 }
 */
-
 func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
-
-	if val, ok := n.Filemap[FindRequest.Filename]; ok {
-		resp.DatanodeList = n.Filemap[FindRequest.Filename]
+	if _, ok := n.Filemap[req.Filename]; ok {
+		resp.DatanodeList = n.Filemap[req.Filename]
 	} else {
 		resp.DatanodeList = []string{}
 	}
@@ -179,16 +183,15 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 	Insert pair (sdfsfilename, datanodeList) into Filemap
 	Send datanodeList back to InsertResponse
 */
-
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
-	datanodeList := Config.GetReplica(InsertRequest.LocalID, namenode.MembershipList)
+	datanodeList := Config.GetReplica(req.LocalID, namenode.MembershipList)
 
 	for _, datanodeID := range datanodeList {
-		fmt.Fprintf("**namenode**: Insert sdfsfile: %s to %s from %s\n", InsertRequest.Filename, datanodeID, InsertRequest.LocalID)
-		log.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", InsertRequest.Filename, datanodeID, InsertRequest.LocalID)
-		n.Filemap[InsertRequest.Filename] = append(n.Filemap[InsertRequest.Filename], datanodeID)
-		n.Nodemap[datanodeID] = append(n.Nodemap[datanodeID], InsertRequest.Filename)
+		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
+		log.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
+		n.Filemap[req.Filename] = append(n.Filemap[req.Filename], datanodeID)
+		n.Nodemap[datanodeID] = append(n.Nodemap[datanodeID], req.Filename)
 	}
 	// n.Filemap[InsertRequest.Filename] = datanodeList
 
