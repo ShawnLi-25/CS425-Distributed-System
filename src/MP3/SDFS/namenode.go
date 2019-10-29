@@ -78,11 +78,11 @@ func UpdateNameNode(newMemList []string) {
 					}
 				}
 			}
-			for ;newIdx < len(newMemList); newIdx++ {
+			for ; newIdx < len(newMemList); newIdx++ {
 				addList = append(addList, newMemList[newIdx])
 				log.Printf("===New Added Node:%s\n", newMemList[newIdx])
 			}
-			for ;oldIdx < len(namenode.MembershipList); oldIdx++ {
+			for ; oldIdx < len(namenode.MembershipList); oldIdx++ {
 				deleteList = append(deleteList, namenode.MembershipList[oldIdx])
 				log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 			}
@@ -95,9 +95,10 @@ func UpdateNameNode(newMemList []string) {
 }
 
 //***Todo: Update two essential maps
-func updateMap(addList []string, deleteList []string) map[string]bool{
+func updateMap(addList []string, deleteList []string) map[string]bool {
 	//Set of sdfsfile to be re-replicated
 	repFileSet := make(map[string]bool)
+
 	for _, nodeID := range deleteList {
 		for _, fileName := range namenode.Nodemap[nodeID] {
 			if _, ok := repFileSet[fileName]; !ok {
@@ -105,27 +106,30 @@ func updateMap(addList []string, deleteList []string) map[string]bool{
 			}
 		}
 		delete(namenode.Nodemap, nodeID)
+		fmt.Printf("updateMap: Remove nodeID: %s from NodeMap!!!\n", nodeID)
 		log.Printf("updateMap: Remove nodeID: %s from NodeMap!!!\n", nodeID)
 	}
-	
+
 	//Reassign replicas for this file
 	for sdfsFileName, _ := range repFileSet {
 		for _, nodeID := range namenode.Filemap[sdfsFileName] {
 			//***ToDo: Pick any correct node as LocalID
 			if _, ok := namenode.Nodemap[nodeID]; ok {
+				fmt.Printf("updateMap: Reassign nodeID: %s for sdfsfile: %s!!!\n", nodeID, sdfsFileName)
+				log.Printf("updateMap: Reassign nodeID: %s for sdfsfile: %s!!!\n", nodeID, sdfsFileName)
 				namenode.Filemap[sdfsFileName] = Config.GetReplica(nodeID, namenode.MembershipList)
 				//Add entry for new-add node list
 				for _, addNodeID := range addList {
 					if _, ok := namenode.Filemap[sdfsFileName][addNodeID]; ok {
 						namenode.Nodemap[addNodeID] = append(namenode.Nodemap[addNodeID], sdfsFileName)
-					} 
+					}
 				}
 				break
 			}
 		}
 	}
-	
-	retrun repFileSet
+
+	return repFileSet
 }
 
 //Todo: Rereplicate files for deleting Node
