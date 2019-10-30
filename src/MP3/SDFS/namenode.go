@@ -22,6 +22,10 @@ type Namenode struct {
 //////////////////////////////////////////Functions////////////////////////////////////////////
 
 func RunNamenodeServer() {
+
+	namenode.Filemap = make(map[string][]string)
+	namenode.Nodemap = make(map[string][]string)
+
 	namenodeServer := rpc.NewServer()
 
 	err := namenodeServer.Register(namenode)
