@@ -97,14 +97,16 @@ func UpdateNameNode(newMemList []string) {
 
 	namenode.MembershipList = newMemList
 	fmt.Printf("namenode.MembershipList'size is %d!!\n", len(namenode.MembershipList))
-	// repFileSet := updateMap(addList, deleteList)
-	// reReplicate(repFileSet)
+	repFileSet := updateMap(addList, deleteList)
+	reReplicate(repFileSet)
 }
 
 //***Todo: Update two essential maps
 func updateMap(addList []string, deleteList []string) map[string]bool {
 	//Set of sdfsfile to be re-replicated
 	repFileSet := make(map[string]bool)
+	fmt.Printf("addList'size is %d!!\n", len(addList))
+	fmt.Printf("deleteList'size is %d!!\n", len(deleteList))
 
 	for _, nodeID := range deleteList {
 		for _, fileName := range namenode.Nodemap[nodeID] {
@@ -116,6 +118,8 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 		fmt.Printf("updateMap: Remove nodeID: %s from NodeMap!!!\n", nodeID)
 		log.Printf("updateMap: Remove nodeID: %s from NodeMap!!!\n", nodeID)
 	}
+
+	fmt.Printf("repFileSet'size is %d!!\n", len(repFileSet))
 
 	//Reassign replicas for this file
 	for sdfsFileName := range repFileSet {
@@ -197,8 +201,8 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
 	datanodeList := Config.GetReplica(req.LocalID, namenode.MembershipList)
-	fmt.Println("GetReplica succeed! datanodeList'size is: %d \n", len(datanodeList))
-	log.Println("GetReplica succeed! datanodeList'size is: %d \n", len(datanodeList))
+	fmt.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
+	log.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
 
 	for _, datanodeID := range datanodeList {
 		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
