@@ -10,7 +10,7 @@ import (
 	"time"
 
 	MP "../MsgProtocol"
-	sdfs "../sdfs"
+	SDFS "../sdfs"
 	Config "../Config"
 )
 
