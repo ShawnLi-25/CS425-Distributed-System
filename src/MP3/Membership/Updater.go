@@ -9,6 +9,7 @@ import (
 	"sort"
 	"time"
 
+	Config "../Config"
 	MP "../MsgProtocol"
 	sdfs "../SDFS"
 )
@@ -48,7 +49,10 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	if updateOk {
 		updateMemHBMap()
 		updateMonitorList()
-		sdfs.UpdateNameNode(MembershipList)
+		
+		if Config.IsMaster() {
+			sdfs.UpdateNameNode(MembershipList)
+		}
 	}
 	return updateOk
 }

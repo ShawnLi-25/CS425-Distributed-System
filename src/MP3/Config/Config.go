@@ -27,6 +27,7 @@ const (
 	ConnlocalHost     = "localhost"
 	TimeOut           = 4100
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
+	MasterAddress     = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 
 func GetLocalfilePath(localfilename string) string {
@@ -80,6 +81,11 @@ func GetVMNumber() int {
 func IsIntroducer() bool {
 	hostName := GetHostName()
 	return hostName == IntroducerAddress
+}
+
+func IsMaster() bool {
+	hostName := GetHostName()
+	return hostName == MasterAddress
 }
 
 //Clock-wise order: next 3 successors plus itself as replicas

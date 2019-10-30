@@ -54,7 +54,7 @@ func RunDatanodeServer() {
 //***TODO: Start a new election and return new namnode's address
 func StartElection() string {
 	//
-	return "fa19-cs425-g73-01.cs.illinois.edu"
+	return Config.MasterAddress
 }
 
 //////////////////////////////////////Methods///////////////////////////////////
