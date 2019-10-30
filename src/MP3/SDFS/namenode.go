@@ -60,47 +60,45 @@ func RunNamenodeServer() {
 
 //***Todo: Check if it's correct
 func UpdateNameNode(newMemList []string) {
-	for {
-		var addList, deleteList []string
-		mapEq := reflect.DeepEqual(newMemList, namenode.MembershipList)
-		if !mapEq {
-			var newIdx, oldIdx int
-			for newIdx, oldIdx = 0, 0; newIdx < len(newMemList) && oldIdx < len(namenode.MembershipList); {
-				if newMemList[newIdx] == namenode.MembershipList[oldIdx] {
+	var addList, deleteList []string
+	mapEq := reflect.DeepEqual(newMemList, namenode.MembershipList)
+	if !mapEq {
+		var newIdx, oldIdx int
+		for newIdx, oldIdx = 0, 0; newIdx < len(newMemList) && oldIdx < len(namenode.MembershipList); {
+			if newMemList[newIdx] == namenode.MembershipList[oldIdx] {
+				newIdx++
+				oldIdx++
+			} else {
+				//*** Todo: check validity
+				if newMemList[newIdx] < namenode.MembershipList[oldIdx] {
+					addList = append(addList, newMemList[newIdx])
+					fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
+					log.Printf("===New Added Node:%s\n", newMemList[newIdx])
 					newIdx++
-					oldIdx++
 				} else {
-					//*** Todo: check validity
-					if newMemList[newIdx] < namenode.MembershipList[oldIdx] {
-						addList = append(addList, newMemList[newIdx])
-						fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
-						log.Printf("===New Added Node:%s\n", newMemList[newIdx])
-						newIdx++
-					} else {
-						deleteList = append(deleteList, namenode.MembershipList[oldIdx])
-						fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
-						log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
-						oldIdx++
-					}
+					deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+					fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
+					log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
+					oldIdx++
 				}
 			}
-			for ; newIdx < len(newMemList); newIdx++ {
-				addList = append(addList, newMemList[newIdx])
-				fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
-				log.Printf("===New Added Node:%s\n", newMemList[newIdx])
-			}
-			for ; oldIdx < len(namenode.MembershipList); oldIdx++ {
-				deleteList = append(deleteList, namenode.MembershipList[oldIdx])
-				fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
-				log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
-			}
 		}
-
-		namenode.MembershipList = newMemList
-		fmt.Printf("namenode.MembershipList'size is %d!!\n", len(namenode.MembershipList))
-		// repFileSet := updateMap(addList, deleteList)
-		// reReplicate(repFileSet)
+		for ; newIdx < len(newMemList); newIdx++ {
+			addList = append(addList, newMemList[newIdx])
+			fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
+			log.Printf("===New Added Node:%s\n", newMemList[newIdx])
+		}
+		for ; oldIdx < len(namenode.MembershipList); oldIdx++ {
+			deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+			fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
+			log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
+		}
 	}
+
+	namenode.MembershipList = newMemList
+	fmt.Printf("namenode.MembershipList'size is %d!!\n", len(namenode.MembershipList))
+	// repFileSet := updateMap(addList, deleteList)
+	// reReplicate(repFileSet)
 }
 
 //***Todo: Update two essential maps
@@ -200,6 +198,7 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
 	datanodeList := Config.GetReplica(req.LocalID, namenode.MembershipList)
 	fmt.Println("GetReplica succeed! datanodeList'size is: %d \n", len(datanodeList))
+	log.Println("GetReplica succeed! datanodeList'size is: %d \n", len(datanodeList))
 
 	for _, datanodeID := range datanodeList {
 		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
