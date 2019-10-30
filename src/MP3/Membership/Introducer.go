@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 
-	Config "../Config"
-	Conn "../Connection"
 	MP "../MsgProtocol"
+	Conn "../Connection"
+	Config "../Config"
 )
 
 type Introducer struct{}
@@ -15,12 +15,12 @@ type Introducer struct{}
 func (i *Introducer) NodeHandleJoin() {
 	//Get old membertable up to last leave/fail
 	Memtable, err := ReadMemtableFromJsonFile("Config/Memtable.json")
-	if err != nil {
+	if err!= nil {
 		log.Fatal("Unable to get old Memtable", err)
 	}
 
 	//Create a rejoin msg
-	rejoinMsg := MP.NewMessage(MP.IntroducerRejoinMsg, LocalID, []string{""})
+	rejoinMsg := MP.NewMessage(MP.IntroducerRejoinMsg, LocalID, []string{""})	
 	rejoinPkg := MP.MsgToJSON(rejoinMsg)
 	var oldGroupExist bool = false
 
@@ -39,11 +39,11 @@ func (i *Introducer) NodeHandleJoin() {
 
 		n, joinAck := Conn.ReadUDP(conn)
 		if n == -1 {
-			fmt.Printf("%s is down, try next one...\n", oldMemberID)
+			fmt.Printf("OldMember %s is down, try next one...\n", oldMemberID)
 			continue
 		} else {
 			joinAckMsg := MP.JSONToMsg([]byte(string(joinAck[:n])))
-			if joinAckMsg.MessageType == MP.JoinAckMsg {
+			if joinAckMsg.MessageType == MP.JoinAckMsg{
 				oldGroupExist = true
 				UpdateMemshipList(joinAckMsg)
 				fmt.Println("Found old group!")
@@ -52,13 +52,15 @@ func (i *Introducer) NodeHandleJoin() {
 		}
 	}
 
+	
+
 	//Add Introducer itself to MemList
-	ok := UpdateMemshipList(MP.Message{MP.JoinMsg, LocalID, []string{""}})
+	ok := UpdateMemshipList(MP.Message{MP.JoinMsg,LocalID,[]string{""}})
 	if !ok {
 		log.Fatal("Unable to add Introducer itself to Memtable", err)
 		return
 	}
-
+	
 	err = WriteMemtableToJsonFile("Config/Memtable.json")
 	if err != nil {
 		log.Println("Writing to JsonFile is unable")
@@ -97,7 +99,7 @@ func HandleJoinMsg(ln *net.UDPConn, stop *bool) {
 	if joinMsg.MessageType == MP.JoinMsg {
 		log.Printf("Introducer: JoinMsg Received from Node: %s...\n", joinMsg.NodeID)
 		fmt.Printf("====Introducer: JoinMsg Received from Node: %s...\n", joinMsg.NodeID)
-
+		
 		//Send Introduce Message to Other node
 		SendIntroduceMsg(ln, "", joinMsg.NodeID)
 
