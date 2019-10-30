@@ -47,10 +47,10 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	if updateOk {
 		updateMemHBMap()
 		updateMonitorList()
-
-		// if Config.IsMaster() {
-		// 	sdfs.UpdateNameNode(MembershipList)
-		// }
+		//Todo: Should not go into this logic when there's no master
+		if Config.IsMaster() {
+			sdfs.UpdateNameNode(MembershipList)
+		}
 	}
 	return updateOk
 }

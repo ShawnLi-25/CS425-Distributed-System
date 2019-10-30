@@ -97,8 +97,9 @@ func UpdateNameNode(newMemList []string) {
 		}
 
 		namenode.MembershipList = newMemList
-		repFileSet := updateMap(addList, deleteList)
-		reReplicate(repFileSet)
+		fmt.Printf("namenode.MembershipList'size is %d!!\n", len(namenode.MembershipList))
+		// repFileSet := updateMap(addList, deleteList)
+		// reReplicate(repFileSet)
 	}
 }
 
@@ -198,6 +199,7 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
 	datanodeList := Config.GetReplica(req.LocalID, namenode.MembershipList)
+	fmt.Println("GetReplica succeed! datanodeList'size is: %d \n", len(datanodeList))
 
 	for _, datanodeID := range datanodeList {
 		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
