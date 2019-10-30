@@ -73,10 +73,12 @@ func UpdateNameNode(newMemList []string) {
 					//*** Todo: check validity
 					if newMemList[newIdx] < namenode.MembershipList[oldIdx] {
 						addList = append(addList, newMemList[newIdx])
+						fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
 						log.Printf("===New Added Node:%s\n", newMemList[newIdx])
 						newIdx++
 					} else {
 						deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+						fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 						log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 						oldIdx++
 					}
@@ -84,10 +86,12 @@ func UpdateNameNode(newMemList []string) {
 			}
 			for ; newIdx < len(newMemList); newIdx++ {
 				addList = append(addList, newMemList[newIdx])
+				fmt.Printf("===New Added Node:%s\n", newMemList[newIdx])
 				log.Printf("===New Added Node:%s\n", newMemList[newIdx])
 			}
 			for ; oldIdx < len(namenode.MembershipList); oldIdx++ {
 				deleteList = append(deleteList, namenode.MembershipList[oldIdx])
+				fmt.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 				log.Printf("===Deleted Node:%s\n", namenode.MembershipList[oldIdx])
 			}
 		}
