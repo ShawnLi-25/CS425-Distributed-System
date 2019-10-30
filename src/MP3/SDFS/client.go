@@ -204,11 +204,13 @@ func PutFile(filenames []string, fromLocal bool) {
 
 	//Check if sdfsfile exist
 	namenodeAddr := GetNamenodeAddr()
+	fmt.Println("GetNamenodeAddr works!!")
 
 	client := NewClient(namenodeAddr + ":" + Config.NamenodePort)
 	client.Dial()
 
 	datanodeList, n := client.GetDatanodeList(sdfsfilename)
+	fmt.Println("GetDatanodeList works!!")
 
 	if n == 0 {
 		//No datanode store this sdfsfile, insert it
