@@ -10,6 +10,8 @@ import (
 	"time"
 
 	MP "../MsgProtocol"
+	sdfs "../sdfs"
+	Config "../Config"
 )
 
 var MembershipList []string
