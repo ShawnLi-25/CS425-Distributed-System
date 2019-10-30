@@ -161,6 +161,9 @@ func reReplicate(repFileSet map[string]bool) {
 		//****Todo: Not namenode call!!!
 		PutFile([]string{sdfsFileName, sdfsFileName}, false)
 	}
+	fmt.Printf("===Re-replicate returned!!\n")
+	log.Printf("===Re-replicate returned!!\n")
+
 }
 
 ///////////////////////////////////RPC Methods////////////////////////////
