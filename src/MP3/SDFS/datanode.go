@@ -61,7 +61,8 @@ func UpdataDatanode(newMemList []string) {
 func UpdateMaster() {
 	//Todo: Prune this algorithm?
 	//For now, Always set the first in MembershipList as Master
-	datanode.NamenodeAddr = datanode.MembershipList[0]
+	datanode.NamenodeAddr = Config.GetIPAddressFromID(datanode.MembershipList[0])
+
 }
 
 //Check if is this datanode is namenode

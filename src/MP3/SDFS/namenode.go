@@ -180,6 +180,7 @@ func reReplicate(repFileSet map[string]bool) {
 */
 
 func (n *Namenode) GetDatanodeList(req FindRequest, resp *FindResponse) error {
+	fmt.Printf("***namenode*** Enter GetDatanodeList! Filemap length is: %d!\n", len(n.Filemap))
 	if _, ok := n.Filemap[req.Filename]; ok {
 		resp.DatanodeList = n.Filemap[req.Filename]
 	} else {
