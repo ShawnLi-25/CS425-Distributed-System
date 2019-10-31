@@ -372,7 +372,7 @@ func DeleteFile(filenames []string) {
 		time.Sleep(time.Second)
 	}
 
-	if err := client.DeleteFileMetadata(sdfsfilename); err {
+	if err := client.DeleteFileMetadata(sdfsfilename); err != nil {
 		log.Println("DeleteFileMetedata() error")
 		return
 	}
