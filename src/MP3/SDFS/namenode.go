@@ -118,7 +118,7 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	fmt.Printf("deleteList'size is %d!!\n", len(deleteList))
 
 	for _, nodeID := range deleteList {
-		fmt.Printf("Length of nodemap[%s] is: %d!!\n", nodeID, len(namenode.Nodemap[nodeID])
+		fmt.Printf("Length of nodemap[%s] is: %d!!\n", nodeID, len(namenode.Nodemap[nodeID]))
 		if len(namenode.Nodemap[nodeID]) == 0 {
 			fmt("Nothing to be delete for node %s\n!!", nodeID)
 			continue
