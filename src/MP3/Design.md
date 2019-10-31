@@ -48,16 +48,16 @@ GetDatanodeList -> Namenode.GetDatanodeList	-> return DatanodeList
 
 #### namenode.go
 ```
-GetDatanodeList //TODO
+GetDatanodeList 
 
-RunNamenodeServer //TODO
+RunNamenodeServer
 ```
 #### datanode.go
 ```
-Put 	//TODO
-Get 	//TODO
-Delete	//TODO
-Find	//TODO
+Put 	
+Get 	
+Delete	
+Find	
 
 RunNamenodeServer
 ```

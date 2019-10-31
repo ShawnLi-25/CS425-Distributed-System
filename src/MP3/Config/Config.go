@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -108,5 +109,6 @@ func GetReplica(localID string, memList []string) []string {
 			replicaList = append(replicaList, nodeID)
 		}
 	}
+	fmt.Printf("RelicaList Len is: %d!!!\n", len(replicaList))
 	return replicaList
 }
