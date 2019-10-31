@@ -113,14 +113,18 @@ func UpdateNameNode(newMemList []string) {
 func updateMap(addList []string, deleteList []string) map[string]bool {
 	//Set of sdfsfile to be re-replicated
 	repFileSet := make(map[string]bool)
+	// repFileSet := []string
 	fmt.Printf("addList'size is %d!!\n", len(addList))
 	fmt.Printf("deleteList'size is %d!!\n", len(deleteList))
 
 	for _, nodeID := range deleteList {
 		for _, fileName := range namenode.Nodemap[nodeID] {
-			if _, ok := repFileSet[fileName]; !ok {
-				fmt.Printf("What???? Find file %s in node %s??\n", fileName, nodeID)
+			if ifExist, ok := repFileSet[fileName]; !ok && !ifExist {
 				repFileSet[fileName] = true
+				ifExist = true
+				fmt.Printf("What???? Find file %s in node %s??\n", ifExist, nodeID)
+			} else {
+				log.Printf("file alreay exist in repFileSet!\n")
 			}
 		}
 		delete(namenode.Nodemap, nodeID)
