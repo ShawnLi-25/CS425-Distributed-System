@@ -53,9 +53,9 @@ func (c *Client) GetDatanodeList(filename string) ([]string, int) {
 	return res.DatanodeList, len(res.DatanodeList)
 }
 
-func (c *Client) InsertFile(filename string) ([]string, int) {
+func (c *Client) InsertFile(filename string, localname string) ([]string, int) {
 	var res InsertResponse
-	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename}, &res); err != nil {
+	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename, Hostname: localname}, &res); err != nil {
 		return []string{}, 0
 	}
 
@@ -212,9 +212,11 @@ func PutFile(filenames []string, fromLocal bool) {
 	datanodeList, n := client.GetDatanodeList(sdfsfilename)
 	fmt.Println("GetDatanodeList works!!")
 
+	localName := Config.GetHostName()
+
 	if n == 0 {
 		//No datanode store this sdfsfile, insert it
-		datanodeList, n = client.InsertFile(sdfsfilename)
+		datanodeList, n = client.InsertFile(sdfsfilename, localName)
 		if n == 0 {
 			log.Println("====Insert sdfsfile error")
 			return

@@ -16,7 +16,7 @@ type FindResponse struct {
 
 type InsertRequest struct {
 	Filename string
-	LocalID  string
+	Hostname string
 }
 
 type InsertResponse struct {

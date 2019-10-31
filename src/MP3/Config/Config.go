@@ -89,14 +89,14 @@ func IsMaster() bool {
 }
 
 //Clock-wise order: next 3 successors plus itself as replicas
-func GetReplica(localID string, memList []string) []string {
+func GetReplica(localname string, memList []string) []string {
 	var replicaList []string
 
 	memListLen := len(memList)
 
 	if memListLen >= 4 {
 		for i, nodeID := range memList {
-			if nodeID == localID {
+			if strings.Contains(nodeID, localname) {
 				for j := 0; j < 4; j++ {
 					replicaList = append(replicaList, memList[(i+j+memListLen)%memListLen])
 				}
