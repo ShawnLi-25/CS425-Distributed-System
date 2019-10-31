@@ -79,7 +79,7 @@ func (d *Datanode) GetNamenodeAddr(req string, resp *string) error {
 
 		// d.NamenodeAddr = NewElection()
 	}
-	fmt.Printf("Namenode Address is: %s1!!\n", d.NamenodeAddr)
+	fmt.Printf("Namenode Address is: %s!!\n", d.NamenodeAddr)
 	*resp = d.NamenodeAddr
 	return nil
 }
