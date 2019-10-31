@@ -217,10 +217,10 @@ func (n *Namenode) DeleteFile(req DeleteRequest, resp *DeleteResponse) error {
 
 	var findFlag bool = false
 	delete(n.Filemap, req.Filename)
-	for _, nodeID := range n.Nodemap {
-		for idx, fileName := range n.Nodemap[nodeID] {
+	for _, nodeFile := range n.Nodemap {
+		for idx, fileName := range nodeFile {
 			if req.Filename == fileName {
-				n.Nodemap[nodeID] = append(n.Nodemap[nodeID][:idx], MembershipList[idx+1:]...)
+				nodeFile = append(nodeFile[:idx], nodeFile[idx+1:]...)
 				findFlag = true
 				break
 			}
