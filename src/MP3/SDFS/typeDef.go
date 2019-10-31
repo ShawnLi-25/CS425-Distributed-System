@@ -23,6 +23,11 @@ type InsertResponse struct {
 	DatanodeList []string
 }
 
+type PermissionRequest struct {
+	Filename  string
+	MustWrite bool
+}
+
 type PutRequest struct {
 	Filename string
 	Eof      bool
