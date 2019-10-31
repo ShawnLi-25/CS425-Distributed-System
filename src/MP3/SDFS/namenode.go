@@ -119,6 +119,7 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	for _, nodeID := range deleteList {
 		for _, fileName := range namenode.Nodemap[nodeID] {
 			if _, ok := repFileSet[fileName]; !ok {
+				fmt.Printf("What???? Find file %s in node %s??\n", fileName, nodeID)
 				repFileSet[fileName] = true
 			}
 		}
@@ -128,6 +129,9 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	}
 
 	fmt.Printf("repFileSet'size is %d!!\n", len(repFileSet))
+	for _, fileName := range repFileSet {
+		fmt.Printf("file %s will be re-Replicate!!\n", fileName)
+	}
 
 	//Reassign replicas for this file
 	for sdfsFileName := range repFileSet {
@@ -222,6 +226,7 @@ func (n *Namenode) DeleteFile(req DeleteRequest, resp *DeleteResponse) error {
 			if req.Filename == fileName {
 				fmt.Printf("Delete Entry for File %s in %s!!\n", fileName, nodeID)
 				nodeFile = append(nodeFile[:idx], nodeFile[idx+1:]...)
+				fmt.Printf("NodeMap for nodeID %s is: %d!!\n", nodeID, len(nodeFile))
 				findFlag = true
 				break
 			}
