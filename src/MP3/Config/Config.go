@@ -108,5 +108,5 @@ func GetReplica(localID string, memList []string) []string {
 			replicaList = append(replicaList, nodeID)
 		}
 	}
-	return memList
+	return replicaList
 }
