@@ -19,6 +19,9 @@ const (
 	W = 4
 )
 
+var KillTimeOut30s chan string = make(chan string)
+var YESorNOChannal chan bool = make(chan bool)
+
 type Client struct {
 	Addr      string
 	rpcClient *rpc.Client
@@ -53,14 +56,39 @@ func (c *Client) GetDatanodeList(filename string) ([]string, int) {
 	return res.DatanodeList, len(res.DatanodeList)
 }
 
-func (c *Client) InsertFile(filename string, localname string) ([]string, int) {
+func (c *Client) InsertFile(filename string) ([]string, int) {
 	var res InsertResponse
-	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename, Hostname: localname}, &res); err != nil {
+	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename}, &res); err != nil {
 		return []string{}, 0
 	}
 
 	return res.DatanodeList, len(res.DatanodeList)
 }
+
+
+func (c *Client) GetWritePermission(sdfsfilename string) bool {
+	var permitted bool
+	if err := c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, false}, &permitted); err != nil {
+		return false
+	}
+	
+	if !permitted {
+		fmt.Println("Last write is within 60s. Do you still want to write? Please response in 30s. (y/n)")
+		go TimeOut30s
+		MustWrite := <- YESorNOChannal
+		if MustWrite {
+			err = c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, true}, &permitted)
+			if err != nil {
+				return false
+			}
+		}
+	}
+
+	return permitted
+}
+
+
+
 
 func (c *Client) Put(localfilename string, sdfsfilename string) error {
 
@@ -212,16 +240,21 @@ func PutFile(filenames []string, fromLocal bool) {
 	datanodeList, n := client.GetDatanodeList(sdfsfilename)
 	fmt.Println("GetDatanodeList works!!")
 
-	localName := Config.GetHostName()
-
 	if n == 0 {
 		//No datanode store this sdfsfile, insert it
-		datanodeList, n = client.InsertFile(sdfsfilename, localName)
+		datanodeList, n = client.InsertFile(sdfsfilename)
 		if n == 0 {
 			log.Println("====Insert sdfsfile error")
 			return
 		}
 	}
+
+
+	//Before writing, RPC namenode to get write permission
+	if canWrite := c.GetWritePermission(sdfsfilename); !canWrite {
+		return
+	}
+
 
 	//Shared Variable: Write Quorum for uploading localfile to datanodes
 	var respCount int = 0
@@ -383,6 +416,21 @@ func Clear() {
 }
 
 ///////////////////////////////////Helper functions/////////////////////////////////////////
+func TimeOut30s() {
+	for n := 0; n < 30; n++ {
+		select {
+		case <- KillTimeOut30s:
+			return
+		default:
+			time.Sleep(time.Second)
+		}
+	}
+	if n == 30 {
+		fmt.Println("30s times out!")
+		YESorNOChannal <- false
+	}
+}
+
 
 func GetNamenodeAddr() string {
 	var resp string
@@ -398,6 +446,7 @@ func GetNamenodeAddr() string {
 
 	return resp
 }
+
 
 func listFile(dirPath string) {
 	Config.CreateDirIfNotExist(dirPath)
