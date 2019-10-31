@@ -12,14 +12,16 @@ import (
 	Config "../Config"
 )
 
+var datanode = new(Datanode)
+
 type Datanode struct {
-	NamenodeAddr string
+	NamenodeAddr   string
+	MembershipList []string
 }
 
 /////////////////////////////////////////Functions////////////////////////////////
 
 func RunDatanodeServer() {
-	var datanode = new(Datanode)
 	datanodeServer := rpc.NewServer()
 
 	err := datanodeServer.Register(datanode)
@@ -51,10 +53,21 @@ func RunDatanodeServer() {
 	}
 }
 
+func UpdataDatanode(newMemList []string) {
+	datanode.MembershipList = newMemList
+}
+
 //***TODO: Start a new election and return new namnode's address
-func StartElection() string {
-	//
-	return Config.MasterAddress
+func UpdateMaster() {
+	//Todo: Prune this algorithm?
+	//For now, Always set the first in MembershipList as Master
+	datanode.NamenodeAddr = datanode.MembershipList[0]
+}
+
+//Check if is this datanode is namenode
+func IsMaster() bool {
+	hostName := Config.GetHostName()
+	return hostName == datanode.NamenodeAddr
 }
 
 //////////////////////////////////////Methods///////////////////////////////////
@@ -62,7 +75,8 @@ func StartElection() string {
 func (d *Datanode) GetNamenodeAddr(req string, resp *string) error {
 	//No namenode right now, start a selection process
 	if d.NamenodeAddr == "" {
-		d.NamenodeAddr = StartElection()
+		fmt.Println("Error!! no master!! Namenode Field is empty")
+		// d.NamenodeAddr = NewElection()
 	}
 
 	*resp = d.NamenodeAddr

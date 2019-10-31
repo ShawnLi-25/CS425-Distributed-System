@@ -83,11 +83,6 @@ func IsIntroducer() bool {
 	return hostName == IntroducerAddress
 }
 
-func IsMaster() bool {
-	hostName := GetHostName()
-	return hostName == MasterAddress
-}
-
 //Clock-wise order: next 3 successors plus itself as replicas
 func GetReplica(localname string, memList []string) []string {
 	var replicaList []string
@@ -110,4 +105,8 @@ func GetReplica(localname string, memList []string) []string {
 	}
 	// fmt.Printf("RelicaList Len is: %d!!!\n", len(replicaList))
 	return replicaList
+}
+
+func ElectNewMaster() {
+
 }
