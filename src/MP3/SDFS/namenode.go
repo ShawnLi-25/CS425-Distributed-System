@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	Config "../Config"
+	membership "../Merbership"
 )
 
 var namenode = new(Namenode)
