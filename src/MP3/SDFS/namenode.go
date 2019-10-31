@@ -208,8 +208,8 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	log.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
 
 	for _, datanodeID := range datanodeList {
-		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
-		log.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.LocalID)
+		fmt.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.Hostname)
+		log.Printf("**namenode**: Insert sdfsfile: %s to %s from %s\n", req.Filename, datanodeID, req.Hostname)
 		n.Filemap[req.Filename] = append(n.Filemap[req.Filename], datanodeID)
 		n.Nodemap[datanodeID] = append(n.Nodemap[datanodeID], req.Filename)
 	}
