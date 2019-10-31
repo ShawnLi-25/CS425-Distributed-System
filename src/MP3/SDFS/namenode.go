@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	Config "../Config"
+	Mem "../Membership"
 )
 
 var namenode = new(Namenode)
@@ -203,7 +204,7 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 */
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
-	datanodeList := membership.getListByRelateIndex([]int{1, 2, 3})
+	datanodeList := Mem.getListByRelateIndex([]int{1, 2, 3})
 	datanodeList = append(datanodeList, LocalID)
 	fmt.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
 	log.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
