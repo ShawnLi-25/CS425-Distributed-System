@@ -120,7 +120,7 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	for _, nodeID := range deleteList {
 		fmt.Printf("Length of nodemap[%s] is: %d!!\n", nodeID, len(namenode.Nodemap[nodeID]))
 		if len(namenode.Nodemap[nodeID]) == 0 {
-			fmt("Nothing to be delete for node %s\n!!", nodeID)
+			fmt.Printf("Nothing to be delete for node %s\n!!", nodeID)
 			continue
 		}
 		for _, fileName := range namenode.Nodemap[nodeID] {
