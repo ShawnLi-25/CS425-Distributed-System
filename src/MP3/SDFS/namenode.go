@@ -203,7 +203,8 @@ func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
 */
 func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 
-	datanodeList := Config.GetReplica(req.LocalID, namenode.MembershipList)
+	datanodeList := membership.getListByRelateIndex([]int{1, 2, 3})
+	datanodeList = append(datanodeList, LocalID)
 	fmt.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
 	log.Println("GetReplica succeed! datanodeList'size is: %d!!\n", len(datanodeList))
 
