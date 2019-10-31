@@ -118,11 +118,16 @@ func updateMap(addList []string, deleteList []string) map[string]bool {
 	fmt.Printf("deleteList'size is %d!!\n", len(deleteList))
 
 	for _, nodeID := range deleteList {
+		fmt.Printf("Length of nodemap[%s] is: %d!!\n", nodeID, len(namenode.Nodemap[nodeID])
+		if len(namenode.Nodemap[nodeID] == 0 {
+			fmt("Nothing to be delete for node %s", nodeID)
+			continue
+		}
 		for _, fileName := range namenode.Nodemap[nodeID] {
 			if ifExist, ok := repFileSet[fileName]; !ok && !ifExist {
 				repFileSet[fileName] = true
 				ifExist = true
-				fmt.Printf("What???? Find file %s in node %s??\n", ifExist, nodeID)
+				fmt.Printf("What???? Find file %s in node %s??\n", fileName, nodeID)
 			} else {
 				log.Printf("file alreay exist in repFileSet!\n")
 			}
