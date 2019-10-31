@@ -74,10 +74,10 @@ func (c *Client) GetWritePermission(sdfsfilename string) bool {
 	
 	if !permitted {
 		fmt.Println("Last write is within 60s. Do you still want to write? Please response in 30s. (y/n)")
-		go TimeOut30s
+		go TimeOut30s()
 		MustWrite := <- YESorNOChannal
 		if MustWrite {
-			err = c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, true}, &permitted)
+			err := c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, true}, &permitted)
 			if err != nil {
 				return false
 			}
@@ -251,7 +251,7 @@ func PutFile(filenames []string, fromLocal bool) {
 
 
 	//Before writing, RPC namenode to get write permission
-	if canWrite := c.GetWritePermission(sdfsfilename); !canWrite {
+	if canWrite := client.GetWritePermission(sdfsfilename); !canWrite {
 		return
 	}
 
@@ -417,7 +417,8 @@ func Clear() {
 
 ///////////////////////////////////Helper functions/////////////////////////////////////////
 func TimeOut30s() {
-	for n := 0; n < 30; n++ {
+	n := 0
+	for ; n < 30; n++ {
 		select {
 		case <- KillTimeOut30s:
 			return
