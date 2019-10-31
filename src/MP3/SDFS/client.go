@@ -58,24 +58,24 @@ func (c *Client) GetDatanodeList(filename string) ([]string, int) {
 
 func (c *Client) InsertFile(filename string) ([]string, int) {
 	var res InsertResponse
-	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename}, &res); err != nil {
+	hostName := Config.GetHostName()
+	if err := c.rpcClient.Call("Namenode.InsertFile", InsertRequest{Filename: filename, Hostname: hostName}, &res); err != nil {
 		return []string{}, 0
 	}
 
 	return res.DatanodeList, len(res.DatanodeList)
 }
 
-
 func (c *Client) GetWritePermission(sdfsfilename string) bool {
 	var permitted bool
 	if err := c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, false}, &permitted); err != nil {
 		return false
 	}
-	
+
 	if !permitted {
 		fmt.Println("Last write is within 60s. Do you still want to write? Please response in 30s. (y/n)")
 		go TimeOut30s()
-		MustWrite := <- YESorNO
+		MustWrite := <-YESorNO
 		if MustWrite {
 			err := c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, true}, &permitted)
 			if err != nil {
@@ -86,9 +86,6 @@ func (c *Client) GetWritePermission(sdfsfilename string) bool {
 
 	return permitted
 }
-
-
-
 
 func (c *Client) Put(localfilename string, sdfsfilename string) error {
 
@@ -202,7 +199,7 @@ func (c *Client) Delete(sdfsfilename string) error {
 	return nil
 }
 
-func (c *Client) DeleteFileMetadata(sdfsfilename string) error{
+func (c *Client) DeleteFileMetadata(sdfsfilename string) error {
 	req := DeleteRequest{sdfsfilename}
 	var res DeleteResponse
 
@@ -263,7 +260,6 @@ func PutFile(filenames []string, fromLocal bool) {
 			return
 		}
 	}
-
 
 	//Shared Variable: Write Quorum for uploading localfile to datanodes
 	var respCount int = 0
@@ -434,7 +430,7 @@ func TimeOut30s() {
 	n := 0
 	for ; n < 30; n++ {
 		select {
-		case <- KillTimeOut30s:
+		case <-KillTimeOut30s:
 			return
 		default:
 			time.Sleep(time.Second)
@@ -445,7 +441,6 @@ func TimeOut30s() {
 		YESorNO <- false
 	}
 }
-
 
 func GetNamenodeAddr() string {
 	var resp string
@@ -461,7 +456,6 @@ func GetNamenodeAddr() string {
 
 	return resp
 }
-
 
 func listFile(dirPath string) {
 	Config.CreateDirIfNotExist(dirPath)
