@@ -202,6 +202,16 @@ func (c *Client) Delete(sdfsfilename string) error {
 	return nil
 }
 
+func (c *Client) DeleteFileMetadata(sdfsfilename string) error{
+	req := DeleteRequest{sdfsfilename}
+	var res DeleteResponse
+
+	if err := c.rpcClient.Call("Namenode.DeleteFile", req, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 /////////////////////Functions Called from main.go////////////////////////
 
 //put command: put [localfilename] [sdfsfilename]
@@ -360,6 +370,11 @@ func DeleteFile(filenames []string) {
 	for respCount < n {
 		//TODO timeout
 		time.Sleep(time.Second)
+	}
+
+	if err := client.DeleteFileMetadata(sdfsfilename); err {
+		log.Println("DeleteFileMetedata() error")
+		return
 	}
 
 	client.Close()
