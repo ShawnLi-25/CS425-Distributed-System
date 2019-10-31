@@ -20,7 +20,7 @@ const (
 )
 
 var KillTimeOut30s chan string = make(chan string)
-var YESorNOChannal chan bool = make(chan bool)
+var YESorNO chan bool = make(chan bool)
 
 type Client struct {
 	Addr      string
@@ -75,7 +75,7 @@ func (c *Client) GetWritePermission(sdfsfilename string) bool {
 	if !permitted {
 		fmt.Println("Last write is within 60s. Do you still want to write? Please response in 30s. (y/n)")
 		go TimeOut30s()
-		MustWrite := <- YESorNOChannal
+		MustWrite := <- YESorNO
 		if MustWrite {
 			err := c.rpcClient.Call("Namenode.GetWritePermission", PermissionRequest{sdfsfilename, true}, &permitted)
 			if err != nil {
@@ -247,12 +247,11 @@ func PutFile(filenames []string, fromLocal bool) {
 			log.Println("====Insert sdfsfile error")
 			return
 		}
-	}
-
-
-	//Before writing, RPC namenode to get write permission
-	if canWrite := client.GetWritePermission(sdfsfilename); !canWrite {
-		return
+	} else {
+		//Before writing, RPC namenode to get write permission
+		if canWrite := client.GetWritePermission(sdfsfilename); !canWrite {
+			return
+		}
 	}
 
 
@@ -428,7 +427,7 @@ func TimeOut30s() {
 	}
 	if n == 30 {
 		fmt.Println("30s times out!")
-		YESorNOChannal <- false
+		YESorNO <- false
 	}
 }
 
