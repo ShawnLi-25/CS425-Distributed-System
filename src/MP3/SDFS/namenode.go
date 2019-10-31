@@ -213,8 +213,8 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	return nil
 }
 
-func (n *Namenode) DeleteFile(req DeleteRequest resp *DeleteResponse) error {
-	
+func (n *Namenode) DeleteFile(req DeleteRequest, resp *DeleteResponse) error {
+
 	var findFlag bool = false
 	delete(n.Filemap, req.Filename)
 	for _, nodeID := range n.Nodemap {
