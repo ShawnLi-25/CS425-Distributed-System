@@ -76,7 +76,6 @@ func (d *Datanode) GetNamenodeAddr(req string, resp *string) error {
 	//No namenode right now, start a selection process
 	if d.NamenodeAddr == "" {
 		fmt.Println("Error!! no master!! Namenode Field is empty")
-
 		// d.NamenodeAddr = NewElection()
 	}
 	fmt.Printf("Namenode Address is: %s!!\n", d.NamenodeAddr)

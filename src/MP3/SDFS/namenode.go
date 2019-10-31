@@ -20,7 +20,7 @@ type Metadata struct {
 }
 
 type Namenode struct {
-	Filemap	       map[string][]string //Key: sdfsFileName  Value: Arraylist of datanode
+	Filemap        map[string][]string //Key: sdfsFileName  Value: Arraylist of datanode
 	Nodemap        map[string][]string //Key: NodeID  Value: Arraylist of sdfsFileName
 	MembershipList []string
 	Filetime       map[string]time.Time
@@ -179,7 +179,7 @@ func reReplicate(repFileSet map[string]bool) {
 	Given a request, return response containing a list of all Datanodes who has the file
 */
 
-func (n *Namenode) GetDatanodeList(req *FindRequest, resp *FindResponse) error {
+func (n *Namenode) GetDatanodeList(req FindRequest, resp *FindResponse) error {
 	if _, ok := n.Filemap[req.Filename]; ok {
 		resp.DatanodeList = n.Filemap[req.Filename]
 	} else {
@@ -216,7 +216,7 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	First check if the client MUST write to file. If not, check Filemap
 	and calculate time difference to dicide whether give write permission.
 */
-func (n *Namenode) GetWritePermission (req PermissionRequest, res *bool) error{
+func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 	if req.MustWrite {
 		*res = true
 		n.Filetime[req.Filename] = time.Now()
@@ -226,7 +226,7 @@ func (n *Namenode) GetWritePermission (req PermissionRequest, res *bool) error{
 		lastWrtTime := n.Filetime[req.Filename]
 		timeDiff := curTime.Sub(lastWrtTime)
 
-		if int64(timeDiff) - int64(60*time.Second) > 0 {
+		if int64(timeDiff)-int64(60*time.Second) > 0 {
 			*res = true
 			n.Filetime[req.Filename] = curTime
 		} else {
@@ -236,4 +236,3 @@ func (n *Namenode) GetWritePermission (req PermissionRequest, res *bool) error{
 
 	return nil
 }
-
