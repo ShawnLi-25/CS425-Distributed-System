@@ -213,6 +213,25 @@ func (n *Namenode) InsertFile(req InsertRequest, resp *InsertResponse) error {
 	return nil
 }
 
+func (n *Namenode) DeleteFile(req DeleteRequest resp *DeleteResponse) error {
+	
+	var findFlag bool = false
+	delete(n.Filemap, req.Filename)
+	for _, nodeID := range n.Nodemap {
+		for idx, fileName := range n.Nodemap[nodeID] {
+			if req.Filename == fileName {
+				n.Nodemap[nodeID] = append(n.Nodemap[nodeID][:idx], MembershipList[idx+1:]...)
+				findFlag = true
+				break
+			}
+		}
+	}
+	if !findFlag {
+		resp.Statement = "No such File??"
+	}
+	return nil
+}
+
 /*
 	First check if the client MUST write to file. If not, check Filemap
 	and calculate time difference to dicide whether give write permission.
