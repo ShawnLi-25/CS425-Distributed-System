@@ -240,6 +240,7 @@ func (n *Namenode) DeleteFile(req DeleteRequest, resp *DeleteResponse) error {
 				break
 			}
 		}
+		n.Nodemap[nodeID] = nodeFile
 	}
 	if !findFlag {
 		resp.Statement = "No such File??"
