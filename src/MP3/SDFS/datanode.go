@@ -57,7 +57,7 @@ func UpdataDatanode(newMemList []string) {
 	datanode.MembershipList = newMemList
 }
 
-//***TODO: Start a new election and return new namnode's address
+//When former master fails/leaves, update master/ start new election
 func UpdateMaster() {
 	//Todo: Prune this algorithm?
 	//For now, Always set the first in MembershipList as Master
