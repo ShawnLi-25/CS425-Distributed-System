@@ -48,7 +48,7 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	if updateOk {
 		updateMemHBMap()
 		updateMonitorList()
-		//Todo: Should not go into this logic when there's no master
+		//Todo: Test if this works
 		sdfs.UpdataDatanode(MembershipList)
 		sdfs.UpdateMaster()
 		if sdfs.IsMaster() {
