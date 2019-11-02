@@ -15,6 +15,7 @@ const (
 	TempfileDir  = "SDFS/tempFile"
 	DatanodePort = "8885"
 	NamenodePort = "8884"
+	ReplicaNum   = 4
 	BLOCK_SIZE   = 512 * 1024
 )
 
@@ -83,30 +84,3 @@ func IsIntroducer() bool {
 	return hostName == IntroducerAddress
 }
 
-//Clock-wise order: next 3 successors plus itself as replicas
-func GetReplica(localname string, memList []string) []string {
-	var replicaList []string
-
-	memListLen := len(memList)
-
-	if memListLen >= 4 {
-		for i, nodeID := range memList {
-			if strings.Contains(nodeID, localname) {
-				for j := 0; j < 4; j++ {
-					replicaList = append(replicaList, memList[(i+j+memListLen)%memListLen])
-				}
-				break
-			}
-		}
-	} else {
-		for _, nodeID := range memList {
-			replicaList = append(replicaList, nodeID)
-		}
-	}
-	// fmt.Printf("RelicaList Len is: %d!!!\n", len(replicaList))
-	return replicaList
-}
-
-func ElectNewMaster() {
-
-}
