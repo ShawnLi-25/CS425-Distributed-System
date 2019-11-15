@@ -1,0 +1,806 @@
+2019/10/29 11:55:13 Main: Join the group
+2019/10/29 11:55:13 read udp 172.22.152.246:42811->172.22.154.242:8888: read: connection refused
+2019/10/29 11:55:13 read udp 172.22.152.246:40689->172.22.156.242:8888: read: connection refused
+2019/10/29 11:55:13 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029115513...
+2019/10/29 11:55:13 addNode(): Successfully added!
+2019/10/29 11:55:13 Updater: New List is: 
+2019/10/29 11:55:13 [fa19-cs425-g73-01.cs.illinois.edu:20191029115513]
+2019/10/29 11:55:13 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029115513
+2019/10/29 14:20:55 Main: Join the group
+2019/10/29 14:20:55 read udp 172.22.152.246:37150->172.22.154.242:8888: read: connection refused
+2019/10/29 14:20:55 read udp 172.22.152.246:51628->172.22.156.242:8888: read: connection refused
+2019/10/29 14:20:55 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029142055...
+2019/10/29 14:20:55 addNode(): Successfully added!
+2019/10/29 14:20:55 Updater: New List is: 
+2019/10/29 14:20:55 [fa19-cs425-g73-01.cs.illinois.edu:20191029142055]
+2019/10/29 14:20:55 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029142055
+2019/10/29 14:21:02 Main: Leave the group
+2019/10/29 14:21:02 Listener: Recieve Leave message from Node: fa19-cs425-g73-01.cs.illinois.edu:20191029142055
+2019/10/29 14:21:06 Main: Join the group
+2019/10/29 14:21:06 Listen errorlisten tcp :8884: bind: address already in use
+2019/10/29 14:21:15 Main: Join the group
+2019/10/29 14:21:15 read udp 172.22.152.246:36059->172.22.154.242:8888: read: connection refused
+2019/10/29 14:21:15 read udp 172.22.152.246:53698->172.22.156.242:8888: read: connection refused
+2019/10/29 14:21:15 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029142115...
+2019/10/29 14:21:15 addNode(): Successfully added!
+2019/10/29 14:21:15 Updater: New List is: 
+2019/10/29 14:21:15 [fa19-cs425-g73-01.cs.illinois.edu:20191029142115]
+2019/10/29 14:21:15 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029142115
+2019/10/29 14:21:20 Main: Leave the group
+2019/10/29 14:21:20 Listener: Recieve Leave message from Node: fa19-cs425-g73-01.cs.illinois.edu:20191029142115
+2019/10/29 14:21:26 Main: Join the group
+2019/10/29 14:21:26 Listen errorlisten tcp :8884: bind: address already in use
+2019/10/29 23:42:04 Main: Join the group
+2019/10/29 23:42:04 read udp 172.22.152.246:60143->172.22.154.242:8888: read: connection refused
+2019/10/29 23:42:04 read udp 172.22.152.246:45225->172.22.156.242:8888: read: connection refused
+2019/10/29 23:42:04 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029234204...
+2019/10/29 23:42:04 addNode(): Successfully added!
+2019/10/29 23:42:04 Updater: New List is: 
+2019/10/29 23:42:04 [fa19-cs425-g73-01.cs.illinois.edu:20191029234204]
+2019/10/29 23:42:04 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029234204
+2019/10/29 23:44:08 Main: Join the group
+2019/10/29 23:44:08 read udp 172.22.152.246:45112->172.22.154.242:8888: read: connection refused
+2019/10/29 23:44:08 read udp 172.22.152.246:58539->172.22.156.242:8888: read: connection refused
+2019/10/29 23:44:08 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029234408...
+2019/10/29 23:44:08 addNode(): Successfully added!
+2019/10/29 23:44:08 Updater: New List is: 
+2019/10/29 23:44:08 [fa19-cs425-g73-01.cs.illinois.edu:20191029234408]
+2019/10/29 23:44:08 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029234408
+2019/10/29 23:47:04 Main: Join the group
+2019/10/29 23:47:04 read udp 172.22.152.246:60478->172.22.154.242:8888: read: connection refused
+2019/10/29 23:47:04 read udp 172.22.152.246:39595->172.22.156.242:8888: read: connection refused
+2019/10/29 23:47:04 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029234704...
+2019/10/29 23:47:04 addNode(): Successfully added!
+2019/10/29 23:47:04 Updater: New List is: 
+2019/10/29 23:47:04 [fa19-cs425-g73-01.cs.illinois.edu:20191029234704]
+2019/10/29 23:47:04 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029234704
+2019/10/29 23:47:17 Main: Show the current Membership List
+2019/10/29 23:47:30 Main: clear directory sdfsFile
+2019/10/29 23:49:13 Main: Show the current Membership List
+2019/10/29 23:51:39 Main: Show the current Membership List
+2019/10/29 23:52:57 Main: Join the group
+2019/10/29 23:52:57 Listen errorlisten tcp :8884: bind: address already in use
+2019/10/29 23:53:08 Main: Join the group
+2019/10/29 23:53:08 read udp 172.22.152.246:34582->172.22.154.242:8888: read: connection refused
+2019/10/29 23:53:08 read udp 172.22.152.246:51906->172.22.156.242:8888: read: connection refused
+2019/10/29 23:53:08 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191029235308...
+2019/10/29 23:53:08 addNode(): Successfully added!
+2019/10/29 23:53:08 Updater: New List is: 
+2019/10/29 23:53:08 [fa19-cs425-g73-01.cs.illinois.edu:20191029235308]
+2019/10/29 23:53:08 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191029235308
+2019/10/29 23:54:42 Main: Put localfilename sdfsfilename
+2019/10/29 23:54:43 **namenode**: Insert sdfsfile: r1 to fa19-cs425-g73-01.cs.illinois.edu:20191029235308 from 
+2019/10/30 00:07:52 Main: Join the group
+2019/10/30 00:07:52 read udp 172.22.152.246:45470->172.22.154.242:8888: read: connection refused
+2019/10/30 00:07:52 read udp 172.22.152.246:46182->172.22.156.242:8888: read: connection refused
+2019/10/30 00:07:52 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030000752...
+2019/10/30 00:07:52 addNode(): Successfully added!
+2019/10/30 00:07:52 Updater: New List is: 
+2019/10/30 00:07:52 [fa19-cs425-g73-01.cs.illinois.edu:20191030000752]
+2019/10/30 00:12:18 Main: Join the group
+2019/10/30 00:12:18 read udp 172.22.152.246:37447->172.22.154.242:8888: read: connection refused
+2019/10/30 00:12:18 read udp 172.22.152.246:36199->172.22.156.242:8888: read: connection refused
+2019/10/30 00:12:18 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030001218...
+2019/10/30 00:12:18 addNode(): Successfully added!
+2019/10/30 00:12:18 Updater: New List is: 
+2019/10/30 00:12:18 [fa19-cs425-g73-01.cs.illinois.edu:20191030001218]
+2019/10/30 00:17:43 Main: Join the group
+2019/10/30 00:17:43 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030001743...
+2019/10/30 00:17:43 addNode(): Successfully added!
+2019/10/30 00:17:43 Updater: New List is: 
+2019/10/30 00:17:43 [fa19-cs425-g73-01.cs.illinois.edu:20191030001743]
+2019/10/30 00:17:43 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030001743
+2019/10/30 00:23:36 Main: Show the current Membership List
+2019/10/30 00:31:31 Main: Join the group
+2019/10/30 00:31:31 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030003131...
+2019/10/30 00:31:31 addNode(): Successfully added!
+2019/10/30 00:31:31 Updater: New List is: 
+2019/10/30 00:31:31 [fa19-cs425-g73-01.cs.illinois.edu:20191030003131]
+2019/10/30 00:31:31 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030003131
+2019/10/30 00:37:20 Main: Join the group
+2019/10/30 00:37:20 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030003720...
+2019/10/30 00:37:20 addNode(): Successfully added!
+2019/10/30 00:37:20 Updater: New List is: 
+2019/10/30 00:37:20 [fa19-cs425-g73-01.cs.illinois.edu:20191030003720]
+2019/10/30 00:37:20 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030003720
+2019/10/30 00:40:37 Main: Join the group
+2019/10/30 00:40:37 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030004037...
+2019/10/30 00:40:37 addNode(): Successfully added!
+2019/10/30 00:40:37 Updater: New List is: 
+2019/10/30 00:40:37 [fa19-cs425-g73-01.cs.illinois.edu:20191030004037]
+2019/10/30 00:40:59 Main: Put localfilename sdfsfilename
+2019/10/30 00:40:59 ====Insert sdfsfile error
+2019/10/30 00:45:18 Main: Join the group
+2019/10/30 00:45:18 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030004518...
+2019/10/30 00:45:18 addNode(): Successfully added!
+2019/10/30 00:45:18 Updater: New List is: 
+2019/10/30 00:45:18 [fa19-cs425-g73-01.cs.illinois.edu:20191030004518]
+2019/10/30 00:45:31 Main: Put localfilename sdfsfilename
+2019/10/30 00:45:31 ====Insert sdfsfile error
+2019/10/30 00:52:40 Main: Join the group
+2019/10/30 00:52:40 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030005240...
+2019/10/30 00:52:40 addNode(): Successfully added!
+2019/10/30 00:52:40 Updater: New List is: 
+2019/10/30 00:52:40 [fa19-cs425-g73-01.cs.illinois.edu:20191030005240]
+2019/10/30 00:52:40 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030005240
+2019/10/30 00:54:37 Main: Join the group
+2019/10/30 00:54:37 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030005437...
+2019/10/30 00:54:37 addNode(): Successfully added!
+2019/10/30 00:54:37 Updater: New List is: 
+2019/10/30 00:54:37 [fa19-cs425-g73-01.cs.illinois.edu:20191030005437]
+2019/10/30 00:54:37 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030005437
+2019/10/30 00:54:45 Main: Put localfilename sdfsfilename
+2019/10/30 00:54:45 GetReplica succeed! datanodeList'size is: %d 
+ 1
+2019/10/30 00:54:45 **namenode**: Insert sdfsfile: g1 to fa19-cs425-g73-01.cs.illinois.edu:20191030005437 from 
+2019/10/30 00:54:45 ====Put: filename = SDFS/localFile/f1, size = 2097152, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/10/30 00:54:45 ====Store sdfsfile: filename = SDFS/sdfsFile/g1, size = 2097152, source = fa19-cs425-g73-01.cs.illinois.edu
+2019/10/30 00:54:46 ====PutFile successfully return
+2019/10/30 00:57:36 Main: Join the group
+2019/10/30 00:57:36 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030005736...
+2019/10/30 00:57:36 addNode(): Successfully added!
+2019/10/30 00:57:36 Updater: New List is: 
+2019/10/30 00:57:36 [fa19-cs425-g73-01.cs.illinois.edu:20191030005736]
+2019/10/30 00:57:36 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030005736
+2019/10/30 00:58:44 Main: Join the group
+2019/10/30 00:58:44 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191030005844...
+2019/10/30 00:58:44 addNode(): Successfully added!
+2019/10/30 00:58:44 Updater: New List is: 
+2019/10/30 00:58:44 [fa19-cs425-g73-01.cs.illinois.edu:20191030005844]
+2019/10/30 00:58:44 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191030005844
+2019/10/30 00:58:44 ===Re-replicate returned!!
+2019/10/30 00:58:51 Main: Put localfilename sdfsfilename
+2019/10/30 00:58:51 GetReplica succeed! datanodeList'size is: %d!!
+ 1
+2019/10/30 00:58:51 **namenode**: Insert sdfsfile: g2 to fa19-cs425-g73-01.cs.illinois.edu:20191030005844 from 
+2019/10/30 00:58:51 ====Put: filename = SDFS/localFile/f2, size = 4194304, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/10/30 00:58:51 ====Store sdfsfile: filename = SDFS/sdfsFile/g2, size = 4194304, source = fa19-cs425-g73-01.cs.illinois.edu
+2019/10/30 00:58:52 ====PutFile successfully return
+2019/10/30 00:58:57 Main: Leave the group
+2019/10/30 00:58:57 Listener: Recieve Leave message from Node: fa19-cs425-g73-01.cs.illinois.edu:20191030005844
+2019/10/30 00:58:57 ===Re-replicate returned!!
+2019/10/30 00:58:57 Listener: NodeID fa19-cs425-g73-01.cs.illinois.edu:20191030005844 is recognized as leave...
+2019/10/30 00:58:57 Listener: Return from HandleListenMsg 
+2019/10/30 00:58:57 Introducer: Introducer Leave... Close Port:8886...
+2019/10/30 00:58:57 ===Deleted Node:fa19-cs425-g73-01.cs.illinois.edu:20191030005844
+2019/10/30 00:58:57 updateMap: Remove nodeID: fa19-cs425-g73-01.cs.illinois.edu:20191030005844 from NodeMap!!!
+2019/10/30 00:58:58 ====PutFile successfully return
+2019/10/30 00:58:58 ===Re-replicate returned!!
+2019/10/30 00:59:14 Main: Show the current Membership List
+2019/10/31 19:25:29 Main: Join the group
+2019/10/31 19:25:29 read udp 172.22.152.246:38707->172.22.154.242:8888: read: connection refused
+2019/10/31 19:25:29 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191031192529...
+2019/10/31 19:25:29 addNode(): Successfully added!
+2019/10/31 19:25:29 Updater: New List is: 
+2019/10/31 19:25:29 [fa19-cs425-g73-01.cs.illinois.edu:20191031192529]
+2019/10/31 19:25:29 ===New Added Node:fa19-cs425-g73-01.cs.illinois.edu:20191031192529
+2019/10/31 19:25:29 ===Re-replicate returned!!
+2019/10/31 19:26:06 Introducer: JoinMsg Received from Node: fa19-cs425-g73-04.cs.illinois.edu:20191031192606...
+2019/10/31 19:26:06 addNode(): Adding nodeID fa19-cs425-g73-04.cs.illinois.edu:20191031192606...
+2019/10/31 19:26:06 addNode(): Successfully added!
+2019/10/31 19:26:06 Updater: New List is: 
+2019/10/31 19:26:06 [fa19-cs425-g73-01.cs.illinois.edu:20191031192529 fa19-cs425-g73-04.cs.illinois.edu:20191031192606]
+2019/10/31 19:26:06 ===New Added Node:fa19-cs425-g73-04.cs.illinois.edu:20191031192606
+2019/10/31 19:26:06 ===Re-replicate returned!!
+2019/10/31 19:26:06 Introducer: JoinAck Sent to Node: fa19-cs425-g73-04.cs.illinois.edu:20191031192606...
+2019/10/31 19:26:18 Main: Show all files
+2019/10/31 19:26:24 Main: clear directory sdfsFile
+2019/10/31 19:26:27 Main: Show all files
+2019/10/31 19:26:49 GetReplica succeed! datanodeList'size is: %d!!
+ 2
+2019/10/31 19:26:49 **namenode**: Insert sdfsfile: r1 to fa19-cs425-g73-01.cs.illinois.edu:20191031192529 from fa19-cs425-g73-04.cs.illinois.edu
+2019/10/31 19:26:49 **namenode**: Insert sdfsfile: r1 to fa19-cs425-g73-04.cs.illinois.edu:20191031192606 from fa19-cs425-g73-04.cs.illinois.edu
+2019/10/31 19:26:49 ====Store sdfsfile: filename = SDFS/sdfsFile/r1, size = 2097152, source = fa19-cs425-g73-04.cs.illinois.edu
+2019/10/31 19:27:05 Delete Entry for File r1 in fa19-cs425-g73-04.cs.illinois.edu:20191031192606!!
+2019/10/31 19:27:05 NodeMap for nodeID fa19-cs425-g73-04.cs.illinois.edu:20191031192606 is: 0!!
+2019/10/31 19:27:05 Delete Entry for File r1 in fa19-cs425-g73-01.cs.illinois.edu:20191031192529!!
+2019/10/31 19:27:05 NodeMap for nodeID fa19-cs425-g73-01.cs.illinois.edu:20191031192529 is: 0!!
+2019/10/31 19:27:54 Introducer: JoinMsg Received from Node: fa19-cs425-g73-06.cs.illinois.edu:20191031192754...
+2019/10/31 19:27:54 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191031192606...
+2019/10/31 19:27:54 addNode(): Adding nodeID fa19-cs425-g73-06.cs.illinois.edu:20191031192754...
+2019/10/31 19:27:54 addNode(): Successfully added!
+2019/10/31 19:27:54 Updater: New List is: 
+2019/10/31 19:27:54 [fa19-cs425-g73-01.cs.illinois.edu:20191031192529 fa19-cs425-g73-04.cs.illinois.edu:20191031192606 fa19-cs425-g73-06.cs.illinois.edu:20191031192754]
+2019/10/31 19:27:54 ===New Added Node:fa19-cs425-g73-06.cs.illinois.edu:20191031192754
+2019/10/31 19:27:54 ===Re-replicate returned!!
+2019/10/31 19:27:54 Introducer: JoinAck Sent to Node: fa19-cs425-g73-06.cs.illinois.edu:20191031192754...
+2019/11/03 14:57:51 Main: Join the group
+2019/11/03 14:57:51 read udp 172.22.152.246:46045->172.22.154.242:8888: read: connection refused
+2019/11/03 14:57:51 read udp 172.22.152.246:34880->172.22.156.242:8888: read: connection refused
+2019/11/03 14:57:51 read udp 172.22.152.246:37738->172.22.154.243:8888: read: connection refused
+2019/11/03 14:57:51 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191103145751...
+2019/11/03 14:57:51 addNode(): Successfully added!
+2019/11/03 14:57:51 Updater: New List is: 
+2019/11/03 14:57:51 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751]
+2019/11/03 14:58:28 Introducer: JoinMsg Received from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 14:58:28 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 14:58:28 addNode(): Successfully added!
+2019/11/03 14:58:28 Updater: New List is: 
+2019/11/03 14:58:28 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103145828]
+2019/11/03 14:58:28 Introducer: JoinAck Sent to Node: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 14:59:28 Introducer: JoinMsg Received from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 14:59:28 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 14:59:28 addNode(): Adding nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 14:59:28 addNode(): Successfully added!
+2019/11/03 14:59:28 Updater: New List is: 
+2019/11/03 14:59:28 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103145828 fa19-cs425-g73-06.cs.illinois.edu:20191103145928]
+2019/11/03 14:59:28 Introducer: JoinAck Sent to Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:00:26 Introducer: JoinMsg Received from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:26 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 15:00:26 Listener: Recieve Introduce message from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928
+2019/11/03 15:00:26 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:26 addNode(): Successfully added!
+2019/11/03 15:00:26 Updater: New List is: 
+2019/11/03 15:00:26 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103145828 fa19-cs425-g73-06.cs.illinois.edu:20191103145928 fa19-cs425-g73-08.cs.illinois.edu:20191103150026]
+2019/11/03 15:00:26 Listener: NodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026 join the group, welcome!
+2019/11/03 15:00:26 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:26 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 15:00:26 Listener: Return from HandleListenMsg 
+2019/11/03 15:00:31 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:00:31 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:31 addNode(): Add error: nodeID already exists
+2019/11/03 15:00:31 Introducer: JoinAck Sent to Node: fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:32 Listener: Recieve Fail message from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928
+2019/11/03 15:00:32 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:32 deleteNode(): Successfully deleted!
+2019/11/03 15:00:32 Listener: NodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026 is detected as fail...
+2019/11/03 15:00:32 Sender:Sent Fail to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 15:00:32 Listener: Return from HandleListenMsg 
+2019/11/03 15:00:32 Listener: Recieve Fail message from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103145828
+2019/11/03 15:00:32 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150026...
+2019/11/03 15:00:32 deleteNode(): Delete error: nodeID not found
+2019/11/03 15:00:32 Listener: Return from HandleListenMsg 
+2019/11/03 15:00:41 Introducer: JoinMsg Received from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:00:41 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 15:00:41 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:00:41 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:00:41 addNode(): Successfully added!
+2019/11/03 15:00:41 Updater: New List is: 
+2019/11/03 15:00:41 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103145828 fa19-cs425-g73-06.cs.illinois.edu:20191103145928 fa19-cs425-g73-08.cs.illinois.edu:20191103150041]
+2019/11/03 15:00:41 Introducer: JoinAck Sent to Node: fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:02:30 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103145828...
+2019/11/03 15:02:30 deleteNode(): Successfully deleted!
+2019/11/03 15:02:30 HBTimer: fa19-cs425-g73-02.cs.illinois.edu:20191103145828 timeout!! timeDiff is 7.46349566s
+2019/11/03 15:02:30 Sender:Sent Fail to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:02:30 Sender:Sent Fail to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:02:53 Introducer: JoinMsg Received from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:02:53 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:02:53 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:02:53 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:02:53 addNode(): Successfully added!
+2019/11/03 15:02:53 Updater: New List is: 
+2019/11/03 15:02:53 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103150253 fa19-cs425-g73-06.cs.illinois.edu:20191103145928 fa19-cs425-g73-08.cs.illinois.edu:20191103150041]
+2019/11/03 15:02:53 Introducer: JoinAck Sent to Node: fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:03:09 ====Store sdfsfile: filename = SDFS/sdfsFile//1, size = 20971520, source = fa19-cs425-g73-02.cs.illinois.edu
+2019/11/03 15:04:55 Main: clear directory sdfsFile
+2019/11/03 15:05:00 Main: Put localfilename sdfsfilename
+2019/11/03 15:05:00 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/11/03 15:05:00 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-08.cs.illinois.edu:8885
+2019/11/03 15:05:00 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 15:05:00 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 15:05:00 os.OpenFile() error
+2019/11/03 15:05:00 ====PutFile successfully return
+2019/11/03 15:05:24 Main: Show all files
+2019/11/03 15:05:30 Main: Put localfilename sdfsfilename
+2019/11/03 15:05:32 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/11/03 15:05:32 os.OpenFile() error
+2019/11/03 15:05:32 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 15:05:32 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 15:05:32 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-08.cs.illinois.edu:8885
+2019/11/03 15:05:32 ====PutFile successfully return
+2019/11/03 15:05:53 Main: Put localfilename sdfsfilename
+2019/11/03 15:05:53 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/11/03 15:05:53 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-08.cs.illinois.edu:8885
+2019/11/03 15:05:53 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 15:05:53 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 15:05:54 ====Store sdfsfile: filename = SDFS/sdfsFile/s, size = 20971520, source = fa19-cs425-g73-01.cs.illinois.edu
+2019/11/03 15:05:54 ====PutFile successfully return
+2019/11/03 15:07:18 Introducer: JoinMsg Received from Node: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:07:18 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:07:18 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:07:18 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:07:18 addNode(): Adding nodeID fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:07:18 addNode(): Successfully added!
+2019/11/03 15:07:18 Updater: New List is: 
+2019/11/03 15:07:18 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103150253 fa19-cs425-g73-06.cs.illinois.edu:20191103145928 fa19-cs425-g73-08.cs.illinois.edu:20191103150041 fa19-cs425-g73-09.cs.illinois.edu:20191103150718]
+2019/11/03 15:07:18 Introducer: JoinAck Sent to Node: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:08:44 Introducer: JoinMsg Received from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:08:44 Sender:Sent Introduce to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:08:44 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:08:44 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:08:44 addNode(): Adding nodeID fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:08:44 addNode(): Successfully added!
+2019/11/03 15:08:44 Updater: New List is: 
+2019/11/03 15:08:44 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103150253 fa19-cs425-g73-04.cs.illinois.edu:20191103150844 fa19-cs425-g73-06.cs.illinois.edu:20191103145928 fa19-cs425-g73-08.cs.illinois.edu:20191103150041 fa19-cs425-g73-09.cs.illinois.edu:20191103150718]
+2019/11/03 15:08:44 Introducer: JoinAck Sent to Node: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:08:44 Listener: Recieve Introduce message from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103150041
+2019/11/03 15:08:44 addNode(): Adding nodeID fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:08:44 addNode(): Add error: nodeID already exists
+2019/11/03 15:08:44 Listener: Return from HandleListenMsg 
+2019/11/03 15:08:59 Main: Put localfilename sdfsfilename
+2019/11/03 15:08:59 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/11/03 15:08:59 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 15:08:59 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 15:08:59 ====Put: filename = SDFS/localFile/20MB, size = 20971520, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 15:08:59 ====Store sdfsfile: filename = SDFS/sdfsFile/store, size = 20971520, source = fa19-cs425-g73-01.cs.illinois.edu
+2019/11/03 15:08:59 ====PutFile successfully return
+2019/11/03 15:09:07 Main: Show all files
+2019/11/03 15:09:14 Main: Show all files
+2019/11/03 15:09:36 Listener: Recieve Fail message from Node: fa19-cs425-g73-09.cs.illinois.edu:20191103150718
+2019/11/03 15:09:36 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:09:36 deleteNode(): Successfully deleted!
+2019/11/03 15:09:36 Listener: NodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150041 is detected as fail...
+2019/11/03 15:09:36 Sender:Sent Fail to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:09:36 Sender:Sent Fail to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:09:36 Listener: Return from HandleListenMsg 
+2019/11/03 15:09:36 Listener: Recieve Fail message from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928
+2019/11/03 15:09:36 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103150041...
+2019/11/03 15:09:36 deleteNode(): Delete error: nodeID not found
+2019/11/03 15:09:36 Listener: Return from HandleListenMsg 
+2019/11/03 15:09:36 ====Put: filename = SDFS/sdfsFile/s, size = 20971520, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 15:11:21 Main: Don't support this command
+2019/11/03 15:11:25 Main: List all servers who save the file
+2019/11/03 15:11:25 Datanodes who save the file s:
+2019/11/03 15:11:28 Main: List all servers who save the file
+2019/11/03 15:11:28 Datanodes who save the file store:
+2019/11/03 15:11:40 Main: Show the current Membership List
+2019/11/03 15:11:46 Main: Don't support this command
+2019/11/03 15:11:52 Listener: Recieve Fail message from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103150844
+2019/11/03 15:11:52 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:11:52 deleteNode(): Successfully deleted!
+2019/11/03 15:11:52 Listener: NodeID fa19-cs425-g73-02.cs.illinois.edu:20191103150253 is detected as fail...
+2019/11/03 15:11:52 Sender:Sent Fail to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:11:52 Sender:Sent Fail to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:11:52 Listener: Return from HandleListenMsg 
+2019/11/03 15:11:52 Listener: Recieve Fail message from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103145928
+2019/11/03 15:11:52 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:11:52 deleteNode(): Delete error: nodeID not found
+2019/11/03 15:11:52 Listener: Return from HandleListenMsg 
+2019/11/03 15:11:52 Listener: Recieve Fail message from Node: fa19-cs425-g73-09.cs.illinois.edu:20191103150718
+2019/11/03 15:11:52 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103150253...
+2019/11/03 15:11:52 deleteNode(): Delete error: nodeID not found
+2019/11/03 15:11:52 Listener: Return from HandleListenMsg 
+2019/11/03 15:11:52 ====Put: filename = SDFS/sdfsFile/s, size = 20971520, destination = fa19-cs425-g73-09.cs.illinois.edu:8885
+2019/11/03 15:11:52 ====Put: filename = SDFS/sdfsFile/store, size = 20971520, destination = fa19-cs425-g73-09.cs.illinois.edu:8885
+2019/11/03 15:15:38 Listener: Recieve Fail message from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103150844
+2019/11/03 15:15:38 deleteNode(): Deleting nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:15:38 deleteNode(): Successfully deleted!
+2019/11/03 15:15:38 Listener: NodeID fa19-cs425-g73-06.cs.illinois.edu:20191103145928 is detected as fail...
+2019/11/03 15:15:38 Sender:Sent Fail to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:15:38 Listener: Return from HandleListenMsg 
+2019/11/03 15:15:38 Listener: Recieve Fail message from Node: fa19-cs425-g73-09.cs.illinois.edu:20191103150718
+2019/11/03 15:15:38 deleteNode(): Deleting nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103145928...
+2019/11/03 15:15:38 deleteNode(): Delete error: nodeID not found
+2019/11/03 15:15:38 Listener: Return from HandleListenMsg 
+2019/11/03 15:16:00 Main: List all servers who save the file
+2019/11/03 15:16:00 Datanodes who save the file s:
+2019/11/03 15:16:03 Main: Show the current Membership List
+2019/11/03 15:16:07 Main: List all servers who save the file
+2019/11/03 15:16:07 Datanodes who save the file store:
+2019/11/03 15:16:48 Introducer: JoinMsg Received from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103151648...
+2019/11/03 15:16:48 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:16:48 Sender:Sent Introduce to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:16:48 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103151648...
+2019/11/03 15:16:48 addNode(): Successfully added!
+2019/11/03 15:16:48 Updater: New List is: 
+2019/11/03 15:16:48 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103151648 fa19-cs425-g73-04.cs.illinois.edu:20191103150844 fa19-cs425-g73-09.cs.illinois.edu:20191103150718]
+2019/11/03 15:16:48 Introducer: JoinAck Sent to Node: fa19-cs425-g73-02.cs.illinois.edu:20191103151648...
+2019/11/03 15:16:54 Introducer: JoinMsg Received from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103151654...
+2019/11/03 15:16:54 Sender:Sent Introduce to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:16:54 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103151648...
+2019/11/03 15:16:54 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:16:54 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103151654...
+2019/11/03 15:16:54 addNode(): Successfully added!
+2019/11/03 15:16:54 Updater: New List is: 
+2019/11/03 15:16:54 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103151648 fa19-cs425-g73-04.cs.illinois.edu:20191103150844 fa19-cs425-g73-08.cs.illinois.edu:20191103151654 fa19-cs425-g73-09.cs.illinois.edu:20191103150718]
+2019/11/03 15:16:54 Introducer: JoinAck Sent to Node: fa19-cs425-g73-08.cs.illinois.edu:20191103151654...
+2019/11/03 15:17:14 Introducer: JoinMsg Received from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103151714...
+2019/11/03 15:17:14 Sender:Sent Introduce to Monitor: fa19-cs425-g73-09.cs.illinois.edu:20191103150718...
+2019/11/03 15:17:14 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103151648...
+2019/11/03 15:17:14 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103150844...
+2019/11/03 15:17:14 addNode(): Adding nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103151714...
+2019/11/03 15:17:14 addNode(): Successfully added!
+2019/11/03 15:17:14 Updater: New List is: 
+2019/11/03 15:17:14 [fa19-cs425-g73-01.cs.illinois.edu:20191103145751 fa19-cs425-g73-02.cs.illinois.edu:20191103151648 fa19-cs425-g73-04.cs.illinois.edu:20191103150844 fa19-cs425-g73-06.cs.illinois.edu:20191103151714 fa19-cs425-g73-08.cs.illinois.edu:20191103151654 fa19-cs425-g73-09.cs.illinois.edu:20191103150718]
+2019/11/03 15:17:14 Introducer: JoinAck Sent to Node: fa19-cs425-g73-06.cs.illinois.edu:20191103151714...
+2019/11/03 15:17:14 Listener: Recieve Introduce message from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103151654
+2019/11/03 15:17:14 addNode(): Adding nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103151714...
+2019/11/03 15:17:14 addNode(): Add error: nodeID already exists
+2019/11/03 15:17:14 Listener: Return from HandleListenMsg 
+2019/11/03 18:57:33 Main: Join the group
+2019/11/03 18:57:33 read udp 172.22.152.246:53056->172.22.154.242:8888: read: connection refused
+2019/11/03 18:57:33 read udp 172.22.152.246:52951->172.22.152.247:8888: read: connection refused
+2019/11/03 18:57:33 read udp 172.22.152.246:51887->172.22.156.243:8888: read: connection refused
+2019/11/03 18:57:33 read udp 172.22.152.246:49395->172.22.154.244:8888: read: connection refused
+2019/11/03 18:57:33 read udp 172.22.152.246:37087->172.22.156.244:8888: read: connection refused
+2019/11/03 18:57:33 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191103185733...
+2019/11/03 18:57:33 addNode(): Successfully added!
+2019/11/03 18:57:33 Updater: New List is: 
+2019/11/03 18:57:33 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733]
+2019/11/03 18:57:52 Introducer: JoinMsg Received from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 18:57:52 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 18:57:52 addNode(): Successfully added!
+2019/11/03 18:57:52 Updater: New List is: 
+2019/11/03 18:57:52 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733 fa19-cs425-g73-08.cs.illinois.edu:20191103185752]
+2019/11/03 18:57:52 Introducer: JoinAck Sent to Node: fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 18:58:24 Introducer: JoinMsg Received from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 18:58:24 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 18:58:24 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 18:58:24 addNode(): Successfully added!
+2019/11/03 18:58:24 Updater: New List is: 
+2019/11/03 18:58:24 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733 fa19-cs425-g73-02.cs.illinois.edu:20191103185824 fa19-cs425-g73-08.cs.illinois.edu:20191103185752]
+2019/11/03 18:58:24 Introducer: JoinAck Sent to Node: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:00:59 Main: Show the current Membership List
+2019/11/03 19:02:52 Main: Show the current Membership List
+2019/11/03 19:05:13 Introducer: JoinMsg Received from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:05:13 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:05:13 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 19:05:13 addNode(): Adding nodeID fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:05:13 addNode(): Successfully added!
+2019/11/03 19:05:13 Updater: New List is: 
+2019/11/03 19:05:13 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733 fa19-cs425-g73-02.cs.illinois.edu:20191103185824 fa19-cs425-g73-04.cs.illinois.edu:20191103190513 fa19-cs425-g73-08.cs.illinois.edu:20191103185752]
+2019/11/03 19:05:13 Introducer: JoinAck Sent to Node: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:05:30 Introducer: JoinMsg Received from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103190530...
+2019/11/03 19:05:30 Sender:Sent Introduce to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 19:05:30 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:05:30 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:05:30 addNode(): Adding nodeID fa19-cs425-g73-05.cs.illinois.edu:20191103190530...
+2019/11/03 19:05:30 addNode(): Successfully added!
+2019/11/03 19:05:30 Updater: New List is: 
+2019/11/03 19:05:30 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733 fa19-cs425-g73-02.cs.illinois.edu:20191103185824 fa19-cs425-g73-04.cs.illinois.edu:20191103190513 fa19-cs425-g73-05.cs.illinois.edu:20191103190530 fa19-cs425-g73-08.cs.illinois.edu:20191103185752]
+2019/11/03 19:05:30 Introducer: JoinAck Sent to Node: fa19-cs425-g73-05.cs.illinois.edu:20191103190530...
+2019/11/03 19:06:04 Main: Show the current Membership List
+2019/11/03 19:06:25 Main: Put localfilename sdfsfilename
+2019/11/03 19:06:25 ====Put: filename = SDFS/localFile/wikicorpus_raw.en, size = 8192, destination = fa19-cs425-g73-01.cs.illinois.edu:8885
+2019/11/03 19:06:25 ====Put: filename = SDFS/localFile/wikicorpus_raw.en, size = 8192, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:06:25 ====Put: filename = SDFS/localFile/wikicorpus_raw.en, size = 8192, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:06:25 ====Put: filename = SDFS/localFile/wikicorpus_raw.en, size = 8192, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:06:25 ====PutFile successfully return
+2019/11/03 19:07:00 Listener: Recieve Fail message from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103190530
+2019/11/03 19:07:00 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 19:07:00 deleteNode(): Successfully deleted!
+2019/11/03 19:07:00 Listener: NodeID fa19-cs425-g73-08.cs.illinois.edu:20191103185752 is detected as fail...
+2019/11/03 19:07:00 Sender:Sent Fail to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:07:00 Sender:Sent Fail to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:07:00 Listener: Return from HandleListenMsg 
+2019/11/03 19:07:00 Listener: Recieve Fail message from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103190513
+2019/11/03 19:07:00 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 19:07:00 deleteNode(): Delete error: nodeID not found
+2019/11/03 19:07:00 Listener: Return from HandleListenMsg 
+2019/11/03 19:07:00 Listener: Recieve Fail message from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103185824
+2019/11/03 19:07:00 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103185752...
+2019/11/03 19:07:00 deleteNode(): Delete error: nodeID not found
+2019/11/03 19:07:00 Listener: Return from HandleListenMsg 
+2019/11/03 19:07:29 Introducer: JoinMsg Received from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:07:29 Sender:Sent Introduce to Monitor: fa19-cs425-g73-05.cs.illinois.edu:20191103190530...
+2019/11/03 19:07:29 Sender:Sent Introduce to Monitor: fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:07:29 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:07:29 addNode(): Adding nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:07:29 addNode(): Successfully added!
+2019/11/03 19:07:29 Updater: New List is: 
+2019/11/03 19:07:29 [fa19-cs425-g73-01.cs.illinois.edu:20191103185733 fa19-cs425-g73-02.cs.illinois.edu:20191103185824 fa19-cs425-g73-04.cs.illinois.edu:20191103190513 fa19-cs425-g73-05.cs.illinois.edu:20191103190530 fa19-cs425-g73-08.cs.illinois.edu:20191103190729]
+2019/11/03 19:07:29 Introducer: JoinAck Sent to Node: fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:09:13 Listener: Recieve Fail message from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103190513
+2019/11/03 19:09:13 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:09:13 deleteNode(): Successfully deleted!
+2019/11/03 19:09:13 Listener: NodeID fa19-cs425-g73-02.cs.illinois.edu:20191103185824 is detected as fail...
+2019/11/03 19:09:13 Sender:Sent Fail to Monitor: fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:09:13 Sender:Sent Fail to Monitor: fa19-cs425-g73-05.cs.illinois.edu:20191103190530...
+2019/11/03 19:09:13 Listener: Return from HandleListenMsg 
+2019/11/03 19:09:13 Listener: Recieve Fail message from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103190530
+2019/11/03 19:09:13 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:09:13 deleteNode(): Delete error: nodeID not found
+2019/11/03 19:09:13 Listener: Return from HandleListenMsg 
+2019/11/03 19:09:13 Listener: Recieve Fail message from Node: fa19-cs425-g73-08.cs.illinois.edu:20191103190729
+2019/11/03 19:09:13 deleteNode(): Deleting nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103185824...
+2019/11/03 19:09:13 deleteNode(): Delete error: nodeID not found
+2019/11/03 19:09:13 Listener: Return from HandleListenMsg 
+2019/11/03 19:09:13 ====Store sdfsfile: filename = SDFS/sdfsFile/1, size = 2097152, source = fa19-cs425-g73-04.cs.illinois.edu
+2019/11/03 19:10:54 Listener: Recieve Fail message from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103190530
+2019/11/03 19:10:54 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:10:54 deleteNode(): Successfully deleted!
+2019/11/03 19:10:54 Listener: NodeID fa19-cs425-g73-08.cs.illinois.edu:20191103190729 is detected as fail...
+2019/11/03 19:10:54 Sender:Sent Fail to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103190513...
+2019/11/03 19:10:54 Listener: Return from HandleListenMsg 
+2019/11/03 19:10:54 Listener: Recieve Fail message from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103190513
+2019/11/03 19:10:54 deleteNode(): Deleting nodeID fa19-cs425-g73-08.cs.illinois.edu:20191103190729...
+2019/11/03 19:10:54 deleteNode(): Delete error: nodeID not found
+2019/11/03 19:10:54 Listener: Return from HandleListenMsg 
+2019/11/03 19:14:44 Main: Join the group
+2019/11/03 19:14:44 addNode(): Adding nodeID fa19-cs425-g73-01.cs.illinois.edu:20191103191444...
+2019/11/03 19:14:44 addNode(): Successfully added!
+2019/11/03 19:14:44 Updater: New List is: 
+2019/11/03 19:14:44 [fa19-cs425-g73-01.cs.illinois.edu:20191103191444]
+2019/11/03 19:14:48 Introducer: JoinMsg Received from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:14:48 addNode(): Adding nodeID fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:14:48 addNode(): Successfully added!
+2019/11/03 19:14:48 Updater: New List is: 
+2019/11/03 19:14:48 [fa19-cs425-g73-01.cs.illinois.edu:20191103191444 fa19-cs425-g73-05.cs.illinois.edu:20191103191448]
+2019/11/03 19:14:48 Introducer: JoinAck Sent to Node: fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:15:01 Introducer: JoinMsg Received from Node: fa19-cs425-g73-06.cs.illinois.edu:20191103191501...
+2019/11/03 19:15:01 Sender:Sent Introduce to Monitor: fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:15:01 addNode(): Adding nodeID fa19-cs425-g73-06.cs.illinois.edu:20191103191501...
+2019/11/03 19:15:01 addNode(): Successfully added!
+2019/11/03 19:15:01 Updater: New List is: 
+2019/11/03 19:15:01 [fa19-cs425-g73-01.cs.illinois.edu:20191103191444 fa19-cs425-g73-05.cs.illinois.edu:20191103191448 fa19-cs425-g73-06.cs.illinois.edu:20191103191501]
+2019/11/03 19:15:01 Introducer: JoinAck Sent to Node: fa19-cs425-g73-06.cs.illinois.edu:20191103191501...
+2019/11/03 19:15:08 Introducer: JoinMsg Received from Node: fa19-cs425-g73-04.cs.illinois.edu:20191103191508...
+2019/11/03 19:15:08 Sender:Sent Introduce to Monitor: fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:15:08 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103191501...
+2019/11/03 19:15:08 addNode(): Adding nodeID fa19-cs425-g73-04.cs.illinois.edu:20191103191508...
+2019/11/03 19:15:08 addNode(): Successfully added!
+2019/11/03 19:15:08 Updater: New List is: 
+2019/11/03 19:15:08 [fa19-cs425-g73-01.cs.illinois.edu:20191103191444 fa19-cs425-g73-04.cs.illinois.edu:20191103191508 fa19-cs425-g73-05.cs.illinois.edu:20191103191448 fa19-cs425-g73-06.cs.illinois.edu:20191103191501]
+2019/11/03 19:15:08 Introducer: JoinAck Sent to Node: fa19-cs425-g73-04.cs.illinois.edu:20191103191508...
+2019/11/03 19:15:11 Introducer: JoinMsg Received from Node: fa19-cs425-g73-02.cs.illinois.edu:20191103191511...
+2019/11/03 19:15:11 Sender:Sent Introduce to Monitor: fa19-cs425-g73-06.cs.illinois.edu:20191103191501...
+2019/11/03 19:15:11 Sender:Sent Introduce to Monitor: fa19-cs425-g73-04.cs.illinois.edu:20191103191508...
+2019/11/03 19:15:11 Sender:Sent Introduce to Monitor: fa19-cs425-g73-05.cs.illinois.edu:20191103191448...
+2019/11/03 19:15:11 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103191511...
+2019/11/03 19:15:11 addNode(): Successfully added!
+2019/11/03 19:15:11 Updater: New List is: 
+2019/11/03 19:15:11 [fa19-cs425-g73-01.cs.illinois.edu:20191103191444 fa19-cs425-g73-02.cs.illinois.edu:20191103191511 fa19-cs425-g73-04.cs.illinois.edu:20191103191508 fa19-cs425-g73-05.cs.illinois.edu:20191103191448 fa19-cs425-g73-06.cs.illinois.edu:20191103191501]
+2019/11/03 19:15:11 Introducer: JoinAck Sent to Node: fa19-cs425-g73-02.cs.illinois.edu:20191103191511...
+2019/11/03 19:15:11 Listener: Recieve Introduce message from Node: fa19-cs425-g73-05.cs.illinois.edu:20191103191448
+2019/11/03 19:15:11 addNode(): Adding nodeID fa19-cs425-g73-02.cs.illinois.edu:20191103191511...
+2019/11/03 19:15:11 addNode(): Add error: nodeID already exists
+2019/11/03 19:15:11 Listener: Return from HandleListenMsg 
+2019/11/03 19:15:17 Main: Show the current Membership List
+2019/11/03 19:15:45 Main: Put localfilename sdfsfilename
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1450000_1460000, size = 6135808, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1500000_1510000, size = 1015808, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_270000_280000, size = 24073024, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_800000_810000, size = 24763514, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1420000_1430000, size = 10862592, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_240000_250000, size = 19603456, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_820000_830000, size = 25769732, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_110000_120000, size = 24982819, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:45 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1380000_1390000, size = 24841800, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1370000_1380000, size = 24849978, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1510000_1520000, size = 0, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1470000_1480000, size = 5955584, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_20000_30000, size = 24473846, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_200000_210000, size = 22929408, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1560000_1570000, size = 4333568, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1540000_1550000, size = 4800512, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_170000_180000, size = 24656824, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_250000_260000, size = 25128943, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_670000_680000, size = 8970240, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_110000_120000, size = 24982819, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_60000_70000, size = 24606542, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_460000_470000, size = 24723227, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_210000_220000, size = 24753193, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1590000_1600000, size = 0, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1340000_1350000, size = 24776022, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_900000_910000, size = 25255758, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1090000_1100000, size = 24905149, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1600000_1610000, size = 0, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_230000_240000, size = 25737901, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_710000_720000, size = 24809454, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_690000_700000, size = 25424421, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_950000_960000, size = 25008847, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_770000_780000, size = 25184575, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_760000_770000, size = 25181708, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_730000_740000, size = 25090602, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_720000_730000, size = 25061397, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_80000_90000, size = 0, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_780000_790000, size = 24667233, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_980000_990000, size = 24261743, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_290000_300000, size = 25397979, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_280000_290000, size = 24398953, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_810000_820000, size = 24591635, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_180000_190000, size = 24657590, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_170000_180000, size = 24656824, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1310000_1320000, size = 25003683, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_210000_220000, size = 24753193, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_190000_200000, size = 24728142, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_220000_230000, size = 24818673, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_970000_980000, size = 25755798, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1340000_1350000, size = 24776022, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1360000_1370000, size = 24771283, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1350000_1360000, size = 24800672, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1400000_1410000, size = 24729238, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_290000_300000, size = 25397979, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1330000_1340000, size = 24305228, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 http: Accept error: accept tcp [::]:8885: accept4: too many open files; retrying in 5ms
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1100000_1110000, size = 25521252, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1100000_1110000
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_220000_230000, size = 24818673, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_170000_180000, size = 24656824, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_170000_180000
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_180000_190000, size = 24657590, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_280000_290000, size = 24398953, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_280000_290000
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1330000_1340000, size = 24305228, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_880000_890000, size = 25440311, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:46 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_880000_890000
+2019/11/03 19:15:46 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_930000_940000, size = 24399448, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_130000_140000, size = 24531019, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_130000_140000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1120000_1130000, size = 25028552, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1160000_1170000, size = 25400053, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1160000_1170000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_70000_80000, size = 24996503, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_750000_760000, size = 24786485, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_750000_760000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_800000_810000, size = 24763514, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_840000_850000, size = 25487273, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_840000_850000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_850000_860000, size = 25699544, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_860000_870000, size = 25472751, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_860000_870000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_900000_910000, size = 25255758, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_90000_100000, size = 24269953, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_90000_100000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_910000_920000, size = 25038339, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_940000_950000, size = 24887721, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_940000_950000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_950000_960000, size = 25008847, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000, size = 24491958, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_990000_1000000, size = 25063455, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1620000_1630000, size = 0, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1620000_1630000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1280000_1290000, size = 25132902, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1130000_1140000, size = 24975597, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1130000_1140000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1140000_1150000, size = 25598906, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1150000_1160000, size = 25559198, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1150000_1160000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_630000_640000, size = 24656996, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_680000_690000, size = 24987268, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_680000_690000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_970000_980000, size = 25755798, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_60000_70000, size = 24606542, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_60000_70000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1350000_1360000, size = 24800672, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1360000_1370000, size = 24771283, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1360000_1370000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1370000_1380000, size = 24849978, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1390000_1400000, size = 25120083, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1390000_1400000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_460000_470000, size = 24723227, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_80000_90000, size = 0, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_80000_90000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_110000_120000, size = 24982819, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_240000_250000, size = 19603456, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_240000_250000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1410000_1420000, size = 10289152, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1460000_1470000, size = 7618560, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1460000_1470000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_830000_840000, size = 24909686, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_150000_160000, size = 24415630, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_150000_160000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1380000_1390000, size = 24841800, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1550000_1560000, size = 5521408, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1550000_1560000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_760000_770000, size = 25181708, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_860000_870000, size = 25472751, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_860000_870000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_850000_860000, size = 25699544, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1620000_1630000, size = 0, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1620000_1630000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1610000_1620000, size = 0, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000, size = 24491958, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_920000_930000, size = 24903763, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_910000_920000, size = 25038339, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_90000_100000, size = 24269953, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_870000_880000, size = 24861692, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_680000_690000, size = 24987268, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_0_10000, size = 22650880, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1150000_1160000, size = 25559198, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1140000_1150000, size = 25598906, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1290000_1300000, size = 24415766, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1280000_1290000, size = 25132902, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_730000_740000, size = 25090602, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_730000_740000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_720000_730000, size = 25061397, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_700000_710000, size = 25507169, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_700000_710000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_690000_700000, size = 25424421, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_780000_790000, size = 24667233, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_780000_790000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_770000_780000, size = 25184575, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_740000_750000, size = 24056123, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_740000_750000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_290000_300000, size = 25397979, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_810000_820000, size = 24591635, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_810000_820000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_790000_800000, size = 25168650, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_180000_190000, size = 24657590, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_180000_190000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_260000_270000, size = 24966255, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_980000_990000, size = 24261743, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_980000_990000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_200000_210000, size = 22929408, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_190000_200000, size = 24728142, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_190000_200000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_220000_230000, size = 24818673, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1110000_1120000, size = 25326173, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1110000_1120000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1100000_1110000, size = 25521252, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_270000_280000, size = 24073024, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_270000_280000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1090000_1100000, size = 24905149, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_140000_150000, size = 23999577, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:47 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_140000_150000
+2019/11/03 19:15:47 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_20000_30000, size = 24473846, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1400000_1410000, size = 24729238, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1400000_1410000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_840000_850000, size = 25487273, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_900000_910000, size = 25255758, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_900000_910000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_670000_680000, size = 8970240, destination = fa19-cs425-g73-02.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_940000_950000, size = 24887721, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_940000_950000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_990000_1000000, size = 25063455, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_630000_640000, size = 24656996, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_630000_640000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1130000_1140000, size = 24975597, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1570000_1580000, size = 0, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1570000_1580000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_710000_720000, size = 24809454, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1090000_1100000, size = 24905149, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1090000_1100000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1110000_1120000, size = 25326173, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1340000_1350000, size = 24776022, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_210000_220000, size = 24753193, destination = fa19-cs425-g73-04.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1330000_1340000, size = 24305228, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1100000_1110000, size = 25521252, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1110000_1120000, size = 25326173, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_970000_980000, size = 25755798, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_190000_200000, size = 24728142, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_980000_990000, size = 24261743, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_460000_470000, size = 24723227, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1360000_1370000, size = 24771283, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1280000_1290000, size = 25132902, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000, size = 24491958, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_910000_920000, size = 25038339, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_860000_870000, size = 25472751, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_730000_740000, size = 25090602, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_690000_700000, size = 25424421, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1150000_1160000, size = 25559198, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1310000_1320000, size = 25003683, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_780000_790000, size = 24667233, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_830000_840000, size = 24909686, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_830000_840000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_840000_850000, size = 25487273, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_870000_880000, size = 24861692, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_870000_880000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_930000_940000, size = 24399448, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_920000_930000, size = 24903763, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_920000_930000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_940000_950000, size = 24887721, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1610000_1620000, size = 0, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1610000_1620000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_130000_140000, size = 24531019, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_990000_1000000, size = 25063455, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_990000_1000000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1290000_1300000, size = 24415766, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1120000_1130000, size = 25028552, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1120000_1130000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1130000_1140000, size = 24975597, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_0_10000, size = 22650880, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_0_10000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1160000_1170000, size = 25400053, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_630000_640000, size = 24656996, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_630000_640000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_700000_710000, size = 25507169, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_850000_860000, size = 25699544, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_850000_860000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_70000_80000, size = 24996503, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1350000_1360000, size = 24800672, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1350000_1360000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_710000_720000, size = 24809454, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1390000_1400000, size = 25120083, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1390000_1400000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_130000_140000, size = 24531019, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_740000_750000, size = 24056123, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_740000_750000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1610000_1620000, size = 0, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_750000_760000, size = 24786485, destination = fa19-cs425-g73-06.cs.illinois.edu:8885
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000, size = 24491958, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_960000_970000
+2019/11/03 19:15:48 ====Put: filename = SDFS/localFile/wikicorpus_raw.en/englishText_1320000_1330000, size = 24879503, destination = fa19-cs425-g73-05.cs.illinois.edu:8885
+2019/11/03 19:15:48 os.Open() can't open file SDFS/localFile/wikicorpus_raw.en/englishText_1320000_1330000
