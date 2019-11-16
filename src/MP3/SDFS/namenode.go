@@ -300,4 +300,14 @@ func getCurrentMaps(filemap map[string]*FileMetadata, nodemap map[string][]strin
 }
 
 //Uniformly distribute file
-func getIdleDatanode
+func getIdleDatanodeList(fileIdx int) []string {
+	var datanodeList []string
+
+	nodeNum := len(Mem.MembershipList)
+
+	for i := 0; i < Config.Min(Config.ReplicaNum, nodeNum); i++ {
+		datanodeList = append(datanodeList, Mem.MembershipList[(Config.ReplicaNum*fileIdx+i)%nodeNum])
+	}
+
+	return datanodeList
+}
