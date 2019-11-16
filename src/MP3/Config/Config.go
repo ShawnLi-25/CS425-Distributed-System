@@ -1,13 +1,13 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 	DatanodePort = "8885"
 	NamenodePort = "8884"
 	ReplicaNum   = 4
-	BLOCK_SIZE   = 512 * 1024
+	BLOCK_SIZE   = 10 * 1024 * 1024
 )
 
 const (
@@ -90,6 +90,24 @@ func TimeCount() func() {
 
 	return func() {
 		cost := time.Since(start)
-		fmt.Printf("Time cost: %v\n" ,cost)
+		fmt.Printf("Time cost: %v\n", cost)
+	}
+}
+
+func EncodeFileName(src string) string {
+	res := strings.ReplaceAll(src, "/", "***")
+	return res
+}
+
+func DecodeFileName(src string) string {
+	res := strings.ReplaceAll(src, "***", "/")
+	return res
+}
+
+func Min(a int, b int) int{
+	if a < b {
+		return a
+	}else{
+		return b
 	}
 }

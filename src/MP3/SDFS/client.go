@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/rpc"
 	"os"
-	"time"
 	"sync"
+	"time"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -16,7 +16,7 @@ import (
 
 const (
 	R = 1
-	W = 4
+	W = Config.ReplicaNum
 )
 
 var KillTimeOut30s chan string = make(chan string)
@@ -24,7 +24,10 @@ var YESorNO chan bool = make(chan bool)
 var PutFinishChan chan string = make(chan string)
 var GetFinishChan chan string = make(chan string)
 var DeleteFinishChan chan string = make(chan string)
+
+// var AllFilePutFinishChan chan string = make(chan string)
 var mutex sync.Mutex
+var fileCountMutex sync.Mutex
 
 type Client struct {
 	Addr      string
@@ -94,7 +97,7 @@ func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool) er
 
 	var localfilepath string
 
-	if isLocal { 
+	if isLocal {
 		localfilepath = Config.LocalfileDir + "/" + localfilename
 	} else {
 		localfilepath = Config.SdfsfileDir + "/" + localfilename
@@ -217,15 +220,67 @@ func (c *Client) DeleteFileMetadata(sdfsfilename string) error {
 }
 
 /////////////////////Functions Called from main.go////////////////////////
+func PutFileOrPutDir(filenames []string) {
 
-//put command: put [localfilename] [sdfsfilename]
-func PutFile(filenames []string) {
-
-	
 	if len(filenames) < 2 {
 		fmt.Println("Usage: put [localfilename] [sdfsfilename]")
 		return
 	}
+
+	localfilePath := Config.LocalfileDir + "/" + filenames[0]
+
+	fi, err := os.Stat(localfilePath)
+
+	//Check if localfile exists
+	if os.IsNotExist(err) {
+		fmt.Printf("===Error: %s does not exsit in local!\n", localfilePath)
+		log.Printf("===Error: %s does not exsit in local!\n", localfilePath)
+		return
+	}
+
+	//Check file mode
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		fmt.Println("Running PutDir...")
+		PutDir(filenames)
+	case mode.IsRegular():
+		fmt.Println("Running PutFile...")
+		var notUsed int
+		PutFile(filenames, false, &notUsed, 1)
+	}
+}
+
+func PutDir(filenames []string) {
+
+	localdirname := filenames[0]
+	sdfsdirname := filenames[1]
+
+	localdirPath := Config.LocalfileDir + "/" + localdirname
+
+	//Get the list of files in localdirPath
+	files, err := ioutil.ReadDir(localdirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//For each files in localdirPath, run PutFile()
+	defer Config.TimeCount()()
+	totalFiles := len(files)
+	var fileCount int
+
+	for _, file := range files {
+		subfilenames := []string{localdirname + "/" + file.Name(), sdfsdirname + "/" + file.Name()}
+		PutFile(subfilenames, true, &fileCount, totalFiles)
+	}
+
+	fmt.Println("PutDir successfully return")
+	log.Println("====PutDir successfully return")
+
+	return
+}
+
+//put command: put [localfilename] [sdfsfilename]
+func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int) {
 
 	//localfilename or sdfsfilename
 	localfilename := filenames[0]
@@ -454,7 +509,7 @@ func GetNamenodeAddr() string {
 //Whenever client receive a filaedNodeID from updater, it calls datanode
 func WaitingForFailedNodeID() {
 	for true {
-		failedNodeID := <- Mem.FailedNodeID
+		failedNodeID := <-Mem.FailedNodeID
 
 		var updateOK bool
 
@@ -462,12 +517,12 @@ func WaitingForFailedNodeID() {
 		client.Dial()
 
 		client.rpcClient.Call("Datanode.UpdateNamenodeID", failedNodeID, &updateOK)
-		
+
 		client.Close()
 	}
 }
 
-func EvokeNamenode(namenodeID string){
+func EvokeNamenode(namenodeID string) {
 	namenodeAddr := Config.GetIPAddressFromID(namenodeID)
 
 	client := NewClient(namenodeAddr + ":" + Config.DatanodePort)
@@ -493,7 +548,8 @@ func listFile(dirPath string) {
 	}
 
 	for _, file := range files {
-		fmt.Printf("===%s    %d\n", file.Name(), int(file.Size()))
+		decodedFileName := Config.DecodeFileName(file.Name())
+		fmt.Printf("===%s    %d\n", decodedFileName, int(file.Size()))
 	}
 }
 
@@ -504,7 +560,7 @@ func informDatanodeToPutSdfsfile(datanodeID string, sdfsfilename string, otherNo
 	client.Dial()
 
 	var res string
-	client.rpcClient.Call("Datanode.PutSdfsfileToList", ReReplicaRequest{sdfsfilename,otherNodeList}, &res)
+	client.rpcClient.Call("Datanode.PutSdfsfileToList", ReReplicaRequest{sdfsfilename, otherNodeList}, &res)
 
 	client.Close()
 }
@@ -521,7 +577,7 @@ func RpcOperationAt(operation string, localfilename string, sdfsfilename string,
 		(*respCount)++
 		mutex.Unlock()
 
-		if *respCount == min(W,N) {
+		if *respCount == Config.Min(W, N) {
 			PutFinishChan <- ""
 		}
 	case "get":
@@ -531,7 +587,7 @@ func RpcOperationAt(operation string, localfilename string, sdfsfilename string,
 		(*respCount)++
 		mutex.Unlock()
 
-		if *respCount == min(R,N) {
+		if *respCount == Config.Min(R, N) {
 			GetFinishChan <- ""
 		}
 	case "delete":
@@ -549,12 +605,4 @@ func RpcOperationAt(operation string, localfilename string, sdfsfilename string,
 	}
 
 	client.Close()
-}
-
-func min(a int, b int) int{
-	if a < b {
-		return a
-	} else {
-		return b
-	}
 }
