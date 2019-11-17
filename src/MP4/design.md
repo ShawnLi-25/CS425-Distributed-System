@@ -21,23 +21,23 @@
 
 ## Todo
 
-1. How to run specific functions designated by client (e.g. WordCount.go)?
+1. How to run specific functions designated by client (e.g. WordCount.go)?  
     `Put the exec file into SDFS`<br>
     `Follow up: Should we multicast maple_exe/juice_exe to each worker nodes or put them in SDFS?`
 
-2. Should we put sdfs_src_directory into SDFS?
+2. Should we put sdfs_src_directory into SDFS?  
     `Pending: No need to do this, client contact RM, which will split the src_dir to chunks of file then sending to worker nodes`
 
-3. How does RM partition the Mapper task to AM?
-    `Removed First, count the total lines of data, get the workload for each AM; Second, use buffer to cache data and send to corresponding AMs`<br>
+3. How does RM partition the Mapper task to AM?  
+    `Removed First, count the total lines of data, get the workload for each AM; Second, use buffer to cache data and send to corresponding AMs`  
     `Updated Take 10 lines as a task unit, RM scans through data (maybe a bunch of files), assign each task one by one to available worker nodes(refer to FIFO queue mechanism)` 
 
-4. How does each ApplicationMaster (AM) get file?
+4. How does each ApplicationMaster (AM) get file?  
     `RPC or TCP Connection to get buffer then write to a local File`
 
-5. What's the interface of Mapper & Reducer?
-    `Mapper: func Mapper(fd *FIle) pair<string, string>`<br>
+5. What's the interface of Mapper & Reducer?  
+    `Mapper: func Mapper(fd *FIle) pair<string, string>`  
     `Reducer: func Mapper(keyValPair pair<string, string>) pair<string, string>`
 
-6. After Mapper Phase, how does RM collect "key-value" pairs?
+6. After Mapper Phase, how does RM collect "key-value" pairs?  
     `Iterate through AMs and ask them to send its intermediate files to SDFS`
