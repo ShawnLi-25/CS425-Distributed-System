@@ -9,7 +9,7 @@ import {
 
 var MapperResult map[string]int = make(map[string]int)
 
-func (fileName string) doMap[string]string {
+func doMap(fileName string) [string]string {
 	
 	data, fileErr := os.Open("SDFS/" + fileName)
 	if fileErr != nil {
