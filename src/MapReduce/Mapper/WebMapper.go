@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -24,7 +23,10 @@ func parsePair(pair string) {
 	MapperResult[tgt] = append(MapperResult[tgt], src)
 }
 
-func main(fileDir string) {
+func main() {
+
+	fileDir := os.Args[1]
+	// prefix := os.Args[2]
 
 	data, fileErr := os.Open(fileDir)
 	if fileErr != nil {
@@ -45,6 +47,10 @@ func main(fileDir string) {
 		fmt.Println(err)
 	}
 
-	ioutil.WriteFile(JsonFileName, b, 0644)
+	s := string(b)
+
+	fmt.Fprint(os.Stdout, s)
+	// helper.WriteStringSliceMapToJson(MapperResult, prefix)
+	// ioutil.WriteFile(JsonFileName, b, 0644)
 
 }

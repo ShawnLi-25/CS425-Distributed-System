@@ -1,18 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 	"strings"
+
 	//"encoding/json"
 	//"io/ioutil"
 
 	"./helper"
 )
 
-
-//TODO Exclude "," 
+//TODO Exclude ","
 func Parse(cmd string) []string {
 	cmd = strings.Join(strings.Fields(cmd), " ")
 	return strings.Split(cmd, " ")
@@ -21,7 +21,7 @@ func Parse(cmd string) []string {
 //Count each word in a word list
 func countFromWordList(wordList []string, wordMap map[string]int) {
 	//Iterate word list
-	for _, word := range(wordList) {
+	for _, word := range wordList {
 		if _, ok := wordMap[word]; ok {
 			//If the word exists in word map
 			wordMap[word]++
@@ -50,10 +50,10 @@ func main() {
 
 	//Read file line by line
 	scanner := bufio.NewScanner(file)
-	for scanner.Scan(){
+	for scanner.Scan() {
 		//Parse each line
 		wordList := Parse(scanner.Text())
-		
+
 		//Count each word in the line
 		countFromWordList(wordList, wordMap)
 	}
@@ -63,5 +63,5 @@ func main() {
 	}
 
 	fmt.Println(wordMap)
-	helper.WriteWordMapToJsonFile(wordMap, prefix)
+	helper.WriteIntMapToJson(wordMap, prefix)
 }
