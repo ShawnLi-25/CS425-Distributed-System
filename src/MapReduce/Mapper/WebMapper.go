@@ -1,15 +1,15 @@
 package main
 
-import {
-	"fmt"
-	"strings"
-	"io/ioutil"
-	"os"
+import (
 	"bufio"
 	"encoding/json"
-}
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+)
 
-var MapperResult map[string][]string  = make(map[string][]string)
+var MapperResult map[string][]string = make(map[string][]string)
 
 const JsonFileName = "webMap.json"
 
@@ -20,21 +20,21 @@ func parsePair(pair string) {
 	}
 	src := res[0]
 	tgt := res[1]
-	
+
 	MapperResult[tgt] = append(MapperResult[tgt], src)
 }
 
 func main(fileDir string) {
-	
+
 	data, fileErr := os.Open(fileDir)
 	if fileErr != nil {
-		log.Println(fileErr)
+		fmt.Println(fileErr)
 		panic(fileErr)
 	}
 	defer data.Close()
 
 	var scanner = bufio.NewScanner(data)
-	
+
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
 		parsePair(scanner.Text())
@@ -45,6 +45,6 @@ func main(fileDir string) {
 		fmt.Println(err)
 	}
 
-	ioutil.WriteFile(webMap, b, 0644)
+	ioutil.WriteFile(JsonFileName, b, 0644)
 
 }
