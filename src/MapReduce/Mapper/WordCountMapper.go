@@ -8,7 +8,7 @@ import (
 	//"encoding/json"
 	//"io/ioutil"
 
-	"./helper"
+	//"./helper"
 )
 
 
@@ -38,7 +38,7 @@ func main() {
 
 	//Read from arguments
 	filepath := os.Args[1]
-	prefix := os.Args[2]
+	//prefix := os.Args[2]
 
 	//Open file
 	file, err := os.Open(filepath)
@@ -62,6 +62,8 @@ func main() {
 		fmt.Println("Error")
 	}
 
-	fmt.Println(wordMap)
-	helper.WriteWordMapToJsonFile(wordMap, prefix)
+	
+
+	fmt.Fprintf(os.Stdout, wordMap)
+	//helper.WriteWordMapToJsonFile(wordMap, prefix)
 }
