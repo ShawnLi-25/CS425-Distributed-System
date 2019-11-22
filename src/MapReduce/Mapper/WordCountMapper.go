@@ -5,8 +5,10 @@ import (
 	"os"
 	"bufio"
 	"strings"
-	"encoding/json"
+	//"encoding/json"
 	//"io/ioutil"
+
+	"./helper"
 )
 
 
@@ -28,26 +30,6 @@ func countFromWordList(wordList []string, wordMap map[string]int) {
 			wordMap[word] = 1
 		}
 	}
-}
-
-//Save word map into a json file
-func WriteWordMapToJsonFile(mymap map[string]int, prefix string) error {
-	for word, count := range(mymap) {
-		filebyte, _ := json.MarshalIndent(map[string]int{word:count}, "", " ")
-
-		file, err := os.OpenFile(prefix + "_" + word, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		defer file.Close()
-
-		if err != nil {
-			return err
-		}
-
-		if _, err := file.Write(filebyte); err != nil{
-			return err
-		}
-	}
-
-	return nil
 }
 
 func main() {
@@ -81,5 +63,5 @@ func main() {
 	}
 
 	fmt.Println(wordMap)
-	WriteWordMapToJsonFile(wordMap, prefix)
+	helper.WriteWordMapToJsonFile(wordMap, prefix)
 }
