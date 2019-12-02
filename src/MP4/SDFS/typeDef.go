@@ -1,18 +1,24 @@
 package sdfs
 
-type MapperArg struct{
-	maple_exe string
-	num_maples int
-	sdfs_intermediate_filename_prefix string
-	sdfs_src_directory string
+type MapperArg struct {
+	Maple_exe string
+	Num_maples int
+	Sdfs_intermediate_filename_prefix string
+	Sdfs_src_directory string
 }
 
-type ReducerArg struct{
-	juice_exe string
-	num_juices int
-	sdfs_intermediate_filename_prefix string
-	sdfs_dest_filename string
-	delete_input bool
+type ReducerArg struct {
+	Juice_exe string
+	Num_juices int
+	Sdfs_intermediate_filename_prefix string
+	Sdfs_dest_filename string
+	Delete_input bool
+}
+
+type Task struct {
+	TaskType string //"map" or "reduce"
+	TaskExe  string //"WordCountMap" or "WordCountReducer"
+	FileList []string
 }
 
 type FindRequest struct {

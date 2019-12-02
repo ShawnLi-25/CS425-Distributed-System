@@ -19,10 +19,10 @@ func RunMapper(arg []string) {
 		return
 	}
 
-	mapper  := mapperArg.maple_exe
-	//N       := mapperArg.num_maples
-	//prefix  := mapperArg.sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.sdfs_src_directoy
+	mapper  := mapperArg.Maple_exe
+	//N       := mapperArg.Num_maples
+	//prefix  := mapperArg.Sdfs_intermediate_filename_prefix
+	src_dir := mapperArg.Sdfs_src_directoy
 
 	//Upload maple_exe to SDFS
 	sdfs.PutFileOrPutDir([]string{mapper, mapper})
@@ -51,11 +51,11 @@ func RunReducer(arg []string) {
 		return
 	}
 
-	reducer      := reducerArg.juice_exe
-	//N            := reducerArg.num_juices
-	//prefix       := reducerArg.sdfs_intermediate_filename_prefix
-	//destfilename := reducerArg.sdfs_dest_filename
-	//delete_input := reducerArg.delete_input
+	reducer      := reducerArg.Juice_exe
+	//N            := reducerArg.Num_juices
+	//prefix       := reducerArg.Sdfs_intermediate_filename_prefix
+	//destfilename := reducerArg.Sdfs_dest_filename
+	//delete_input := reducerArg.Delete_input
 
 	//Upload reducer_exe to SDFS
 	sdfs.PutFileOrPurDir([]string{reducer, reducer})
@@ -68,8 +68,8 @@ func RunReducer(arg []string) {
 
 	var res int
 	if err := client.rpcClient.Call("Namenode.RunReducer", reducerArg, &res); err != nil {
-	log.Println(err)
-}
+		log.Println(err)
+	}
 
 	return
 }

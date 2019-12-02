@@ -179,28 +179,64 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 	return nil
 }
 
-func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
-	mapper  := mapperArg.maple_exe
-	N       := mapperArg.num_maples
-	prefix  := mapperArg.sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.sdfs_src_directoy
 
-	//Split all data in correct wat
+//Namenode (master) splits all files into N Tasks.
+//Maintain a list of Tasks and a map of (key=NodeID,val=Task)
+func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
+	mapper  := mapperArg.Maple_exe
+	N       := mapperArg.Num_maples
+	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
+	src_dir := mapperArg.Sdfs_src_directoy
+
+	var taskList []Task
+	var workingMap map[string]Task
+	workingMap = make(map[string]Task)
+
+	//Find all sdfs_files which come from src_dir
+	//Helper function, return a list of filename
+	//TODO
+	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
+	if !ok {
+		*res = 0
+		return errors.New("Namenode.RunMapper: cannot find files")
+	}
+
+	//number of files in one task
+	var num_files int
+	num_files = len(fileList)/N
+
 	//Call mapper()
 
 	//Wait all mapper()
 }
 
-func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
-	reducer      := reducerArg.juice_exe
-	//N            := reducerArg.num_juices
-	//prefix       := reducerArg.sdfs_intermediate_filename_prefix
-	//destfilename := reducerArg.sdfs_dest_filename
-	//delete_input := reducerArg.delete_input
 
+//Namenode (master) splits all files into N Tasks.
+//Maintain a list of Tasks and a map of (key=NodeID, val=Task)
+func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
+	reducer      := reducerArg.Juice_exe
+	//N            := reducerArg.Num_juices
+	//prefix       := reducerArg.Sdfs_intermediate_filename_prefix
+	//destfilename := reducerArg.Sdfs_dest_filename
+	//delete_input := reducerArg.Delete_input
+
+	//Find all sdfs_files with the prefix
+	//Helper function, returns a list of filename
+	fileList, ok := findFileWithPrefix(prefix, Config.SdfsfileDir)
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
+func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
+	//TODO
+
+	return []string{}, true //Delete this line when start to implement
+
+	//If dir doesn't exist, return []string{}, false
+
+	//If no file is found with the prefix, return []string, false
+
+	//Else, return []string{filename1, filename2, ..., filenameN}, true
+}
 
 func insert(filemap map[string]*FileMetadata, sdfsfilename string, datanodeID string) {
 	if filemetadata, ok := filemap[sdfsfilename]; ok {
