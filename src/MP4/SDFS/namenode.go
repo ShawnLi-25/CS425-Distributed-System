@@ -188,8 +188,8 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
 	src_dir := mapperArg.Sdfs_src_directoy
 
-	var taskList []Task
-	var workingMap map[string]Task
+	var taskList []*Task
+	var workingMap map[string]*Task
 	workingMap = make(map[string]Task)
 
 	//Find all sdfs_files which come from src_dir
@@ -221,11 +221,15 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 			extra--
 		}
 
-		taskList = append(taskList, Task{"map", mapper, fileListPerTask, prefix})
+		task := Task{i, "map", mapper, time.Now(), fileListPerTask, prefix}
+
+		taskList = append(taskList, &task)
 	}
 
-	//when all Tasks are done, both taskList and workingMap are empty!
-	for len(taskList) != 0 && len(workingMap) != 0 {
+	//when all Tasks are done, remainTask = 0
+	remainTask := N
+
+	for true {
 
 		nodeNum := len(Mem.MembershipList)
 		memIndex := 0
