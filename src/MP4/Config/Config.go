@@ -18,6 +18,8 @@ const (
 	NamenodePort = "8884"
 	ReplicaNum   = 4
 	BLOCK_SIZE   = 10 * 1024 * 1024
+	LINENUM 	 = 10
+	TempFile	 = "temp.txt"
 )
 
 const (
