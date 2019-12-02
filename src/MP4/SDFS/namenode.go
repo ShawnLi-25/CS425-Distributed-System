@@ -229,6 +229,83 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	//when all Tasks are done, remainTask = 0
 	remainTask := N
 
+	/*pseudocode
+//Evoke everynode
+func distributeWork() {
+	for {
+		<- BeginDistribute
+
+		for NodeID, task := range (workingMap) {
+			if task == nil {
+				IdelNodeIDChan <- NodeID
+				ok := <-HaveTask
+				if !ok {
+					break
+				}
+			}
+		}
+	}
+}
+
+//assign work to specified NodeID
+func assignWork() {
+	nodeID <- IdelNodeIDChan
+
+	retTask := <-TaskChan
+	if retTask != nil {
+		HaveTask <- true
+		workingMap[NodeID] = retTask
+		//TODO: go RPCdatanode
+	} else {
+		//No task right now
+		HaveTask <- false
+	}
+}
+
+
+func RPCdatanode(nodeID) {
+	//when finishing this work
+	//delete task from workingMap
+	remain-- //TODO mutex lock
+	if remain == 0{
+		
+		return
+	}
+
+	IdelNodeIDChan <- nodeID
+	<-HaveTask
+	return
+}
+
+    	func deleteWorkingMapKey() {
+	//Update WorkingMap from MembershipList
+
+		failedNodeID <- FailedNodeChan
+
+		if workingMap[failedNodeID] != nil {
+			//Add the task to taskList
+			//delete the task from workingMap
+			BeginDistributeChan <- ""
+		}else {
+			//delete from workingMap
+		}
+    	}
+
+
+func maintainTaskList() {
+	<- requestTaskChan
+
+	//Pop out the task from taskList
+	if len(taskList) == 0 {
+		TaskChan <- nil
+	}else{
+		TaskChan <- taskList[0]
+		delete(taskList[0])
+	}
+}
+	*/
+
+  
 	for true {
 
 		nodeNum := len(Mem.MembershipList)
