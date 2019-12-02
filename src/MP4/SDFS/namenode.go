@@ -65,7 +65,7 @@ func RunNamenodeServer() {
 
 	getCurrentMaps(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 
-	go WaitUpdateFilemapChan(namenode.Filemap, namenode.Nodemap)
+	go WaitUpdateFilemapChan(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 
 	fmt.Printf("===RunNamenodeServer: Listen on port %s\n", Config.NamenodePort)
 	err = http.Serve(listener, mux)
@@ -74,7 +74,7 @@ func RunNamenodeServer() {
 	}
 }
 
-func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string][]string) {
+func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string][]string, Workingmap map[string]*Task) {
 	for {
 		failedNodeID := <-UpdateFilemapChan
 
@@ -341,22 +341,15 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 		taskList = append(taskList, &task)
 	}
 
-	//Initialize remainTask = N
-	remainTask := N
-
 	//taskKeeper, keep tracing each task and deal with node failure
-	go taskKeeper(&remainTask)
+	go taskKeeper(N, n.Workingmap)
 
 	//Evoke all nodes
 	for NodeID, _ := range(workingMap) {
-		go waitForTaskChan(NodeID)
+		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
 	go distributeAllTasks(taskList)
-
-
-
-
 
 	*res = 1
 	return nil
@@ -378,7 +371,6 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
-func initializeWorkingMap(
 
 func distributeAllTasks(taskList []*Task) {
 	for _, taskPointer := range(taskList) {
@@ -400,7 +392,7 @@ func waitForTaskChan(NodeID string) {
 
 //Check all tasks are done
 //If a node fail, give the task to another node
-func taskKeeper() {
+func taskKeeper(totalTask int, workingMap map[string]*Task) {
 	//TODO
 }
 
