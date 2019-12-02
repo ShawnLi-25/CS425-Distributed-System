@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	//"encoding/json"
+	"encoding/json"
 	//"io/ioutil"
 
 	//"./helper"
@@ -62,7 +62,7 @@ func main() {
 		fmt.Println("Error")
 	}
 
-	b, err := json.Marshal(MapperResult)
+	b, err := json.Marshal(wordMap)
 	if err != nil {
 		fmt.Println(err)
 	}
