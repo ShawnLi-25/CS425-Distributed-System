@@ -233,3 +233,7 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 
 	return nil
 }
+
+func (d *Datanode) Mapper(task Task, res *int) error {
+	
+}

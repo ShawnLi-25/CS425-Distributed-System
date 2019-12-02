@@ -16,9 +16,12 @@ type ReducerArg struct {
 }
 
 type Task struct {
+	TaskID   int
 	TaskType string //"map" or "reduce"
 	TaskExe  string //"WordCountMap" or "WordCountReducer"
+	StartTime Time
 	FileList []string
+	Output   string
 }
 
 type FindRequest struct {

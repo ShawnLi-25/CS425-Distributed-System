@@ -221,13 +221,30 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 			extra--
 		}
 
-		taskList = append(taskList, Task{"map", mapper, fileListPerTask})
+		taskList = append(taskList, Task{"map", mapper, fileListPerTask, prefix})
 	}
 
 	//when all Tasks are done, both taskList and workingMap are empty!
 	for len(taskList) != 0 && len(workingMap) != 0 {
-		//TODO
 
+		nodeNum := len(Mem.MembershipList)
+		memIndex := 0
+
+		//Iterate taskList, distribute to datanodes (slaves)
+		for _, task := range (taskList) {
+			//If the NodeID is Master's NodeID, skip
+			//if Config.GetIPAddressFromID(Mem.MembershipList[memIndex%nodeNum]) = Config.GetHostName() {
+			//	memIndex++
+			//}
+
+			//Add (NodeID, Task) to workingMap
+			workingMap[Mem.MembershipList[memIndex]] = task //TODO check
+
+			//Delete Task from taskList
+			taskList = append(taskList, taskList[1:]...)
+
+			//RPC NodeID
+		}
 		//RPC datanode (slave) to do task
 
 		//Add (NodeID, Task) to workingMap and delete the Task from taskList
