@@ -24,6 +24,7 @@ type FileMetadata struct {
 type Namenode struct {
 	Filemap map[string]*FileMetadata //Key:sdfsFilename  Value:Pointer of metadata
 	Nodemap map[string][]string      //Key:NodeID        Value:Pointer of fileList
+	Workingmap map[string]*Task      //Key:NodeID        Value:Pointer of Task
 }
 
 //////////////////////////////////////////Functions////////////////////////////////////////////
@@ -36,6 +37,7 @@ func RunNamenodeServer() {
 
 	namenode.Filemap = make(map[string]*FileMetadata)
 	namenode.Nodemap = make(map[string][]string)
+	namenode.WorkingMap = make(map[string]*Task)
 
 	namenodeServer := rpc.NewServer()
 
@@ -61,7 +63,7 @@ func RunNamenodeServer() {
 		log.Fatal("Listen error", err)
 	}
 
-	getCurrentMaps(namenode.Filemap, namenode.Nodemap)
+	getCurrentMaps(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 
 	go WaitUpdateFilemapChan(namenode.Filemap, namenode.Nodemap)
 
@@ -180,56 +182,7 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 }
 
 
-//Namenode (master) splits all files into N Tasks.
-//Maintain a list of Tasks and a map of (key=NodeID,val=Task)
-func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
-	mapper  := mapperArg.Maple_exe
-	N       := mapperArg.Num_maples
-	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.Sdfs_src_directoy
-
-	var taskList []*Task
-	var workingMap map[string]*Task
-	workingMap = make(map[string]Task)
-
-	//Find all sdfs_files which come from src_dir
-	//Helper function, return a list of filename
-	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
-	if !ok {
-		*res = 0
-		return errors.New("Namenode.RunMapper: cannot find files")
-	}
-	fileListLen := len(fileList)
-
-	//number of files in one task
-	var num_files int
-	num_files = fileListLen/N
-	extra := fileListLen%N
-
-	remain := fileListLen
-
-	//Split fileList into taskList
-	for i := 0; i < N; i++ {
-		var fileListPerTask []string
-
-		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
-
-		remain -= num_files
-		if extra != 0 {
-			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain]
-			remain--
-			extra--
-		}
-
-		task := Task{i, "map", mapper, time.Now(), fileListPerTask, prefix}
-
-		taskList = append(taskList, &task)
-	}
-
-	//when all Tasks are done, remainTask = 0
-	remainTask := N
-
-	/*pseudocode
+/*************************************pseudocode
 //Evoke everynode
 func distributeWork() {
 	for {
@@ -303,9 +256,7 @@ func maintainTaskList() {
 		delete(taskList[0])
 	}
 }
-	*/
 
-  
 	for true {
 
 		nodeNum := len(Mem.MembershipList)
@@ -342,6 +293,71 @@ func maintainTaskList() {
 
 	//Wait all mapper()
 
+******************************/
+
+//Namenode (master) splits all files into N Tasks.
+//Maintain a list of Tasks and a map of (key=NodeID,val=Task)
+func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
+	mapper  := mapperArg.Maple_exe
+	N       := mapperArg.Num_maples
+	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
+	src_dir := mapperArg.Sdfs_src_directoy
+
+	var taskList []*Task
+	
+	workingMap = make(map[string]Task)
+
+	//Find all sdfs_files which come from src_dir
+	//Helper function, return a list of filename
+	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
+	if !ok {
+		*res = 0
+		return errors.New("Namenode.RunMapper: cannot find files")
+	}
+	fileListLen := len(fileList)
+
+	//number of files in one task
+	var num_files int
+	num_files = fileListLen/N
+	extra := fileListLen%N
+
+	remain := fileListLen
+
+	//Split fileList into taskList
+	for i := 0; i < N; i++ {
+		var fileListPerTask []string
+
+		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
+
+		remain -= num_files
+		if extra != 0 {
+			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain]
+			remain--
+			extra--
+		}
+
+		task := Task{i, "map", mapper, time.Now(), fileListPerTask, prefix}
+
+		taskList = append(taskList, &task)
+	}
+
+	//Initialize remainTask = N
+	remainTask := N
+
+	//taskKeeper, keep tracing each task and deal with node failure
+	go taskKeeper(&remainTask)
+
+	//Evoke all nodes
+	for NodeID, _ := range(workingMap) {
+		go waitForTaskChan(NodeID)
+	}
+
+	go distributeAllTasks(taskList)
+
+
+
+
+
 	*res = 1
 	return nil
 }
@@ -362,6 +378,33 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
+func initializeWorkingMap(
+
+func distributeAllTasks(taskList []*Task) {
+	for _, taskPointer := range(taskList) {
+		TaskChan <- taskPointer
+	}
+}
+
+func waitForTaskChan(NodeID string) {
+	for {
+		task := <-TaskChan
+
+		if task != nil {
+			//TODO:  RPC
+		}else{
+			return
+		}
+	}
+}
+
+//Check all tasks are done
+//If a node fail, give the task to another node
+func taskKeeper() {
+	//TODO
+}
+
+
 func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
 	//TODO
 
@@ -463,7 +506,7 @@ func findDifferenceOfTwoLists(bigList []string, smallList []string, N int) ([]st
 	return res, len(res)
 }
 
-func getCurrentMaps(filemap map[string]*FileMetadata, nodemap map[string][]string) {
+func getCurrentMaps(filemap map[string]*FileMetadata, nodemap map[string][]string, workingmap map[string]*Task) {
 	//RPC datenodes to get FileList
 	for _, nodeID := range Mem.MembershipList {
 		nodeAddr := Config.GetIPAddressFromID(nodeID)
@@ -475,6 +518,8 @@ func getCurrentMaps(filemap map[string]*FileMetadata, nodemap map[string][]strin
 		client.rpcClient.Call("Datanode.GetFileList", Mem.LocalID, &filelist)
 
 		nodemap[nodeID] = filelist
+
+		workingmap[nodeID] = nil //TODO: when Master fail, get current task from other nodes
 
 		client.Close()
 	}
