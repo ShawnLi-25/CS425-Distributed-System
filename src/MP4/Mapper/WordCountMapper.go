@@ -62,8 +62,13 @@ func main() {
 		fmt.Println("Error")
 	}
 
-	
+	b, err := json.Marshal(MapperResult)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	fmt.Fprintf(os.Stdout, wordMap)
+	s := string(b)
+
+	fmt.Fprintf(os.Stdout, s)
 	//helper.WriteWordMapToJsonFile(wordMap, prefix)
 }
