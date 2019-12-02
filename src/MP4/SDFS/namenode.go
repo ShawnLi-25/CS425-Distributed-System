@@ -194,20 +194,58 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 
 	//Find all sdfs_files which come from src_dir
 	//Helper function, return a list of filename
-	//TODO
 	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
 	if !ok {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
+	fileListLen := len(fileList)
 
 	//number of files in one task
 	var num_files int
-	num_files = len(fileList)/N
+	num_files = fileListLen/N
+	extra := fileListLen%N
 
-	//Call mapper()
+	remain := fileListLen
+
+	//Split fileList into taskList
+	for i := 0; i < N; i++ {
+		var fileListPerTask []string
+
+		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
+
+		remain -= num_files
+		if extra != 0 {
+			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain]
+			remain--
+			extra--
+		}
+
+		taskList = append(taskList, Task{"map", mapper, fileListPerTask})
+	}
+
+	//when all Tasks are done, both taskList and workingMap are empty!
+	for len(taskList) != 0 && len(workingMap) != 0 {
+		//TODO
+
+		//RPC datanode (slave) to do task
+
+		//Add (NodeID, Task) to workingMap and delete the Task from taskList
+
+		//If the datanode finish working and return
+
+		//Delete (NodeID, Task) from workingMap
+
+		//If the node fails
+
+		//Re-add the Task to TaskList and delete (NodeID, Task)
+	}
+
 
 	//Wait all mapper()
+
+	*res = 1
+	return nil
 }
 
 
