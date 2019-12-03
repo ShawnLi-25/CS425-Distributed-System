@@ -72,6 +72,7 @@ func RunNamenodeServer() {
 	getCurrentMaps(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 
 	go WaitUpdateFilemapChan(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
+	go ListenOnNewNodeChan(namenode.Workingmap)
 
 	fmt.Printf("===RunNamenodeServer: Listen on port %s\n", Config.NamenodePort)
 	err = http.Serve(listener, mux)
@@ -110,6 +111,16 @@ func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string]
 				TaskKeeperChan <- unfinishedTask
 			}
 		}
+	}
+}
+
+func ListenOnNewNodeChan(Workingmap map[string]*Task) {
+	for true {
+		NewNodeID := <- Mem.NewNodeChan
+
+		Workingmap[NewNodeID] = nil
+
+		go waitForTaskChan(NewNodeID, Workingmap)
 	}
 }
 
