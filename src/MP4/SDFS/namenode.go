@@ -15,6 +15,8 @@ import (
 
 var OpenNamenodeServer chan string = make(chan string)
 var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
+var TaskChan chan *Task = make(chan *Task)
+var TaskKeeperChan chan *Task = make(chan *Task)
 
 type FileMetadata struct {
 	DatanodeList []string
@@ -92,6 +94,16 @@ func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string]
 					}
 				}
 				checkReplica(filename, Filemap[filename], Nodemap)
+			}
+		}
+
+		//If failed nodeID was also working at a task
+		if unfinishedTask, ok := Workingmap[failedNodeID]; ok{
+			//delete from Workingmap
+			delete(Workingmap, faildeNodeID)
+
+			if unfinishedTask != nil {
+				TaskKeeperChan <- unfinishedTask
 			}
 		}
 	}
@@ -180,120 +192,6 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 
 	return nil
 }
-
-
-/*************************************pseudocode
-//Evoke everynode
-func distributeWork() {
-	for {
-		<- BeginDistribute
-
-		for NodeID, task := range (workingMap) {
-			if task == nil {
-				IdelNodeIDChan <- NodeID
-				ok := <-HaveTask
-				if !ok {
-					break
-				}
-			}
-		}
-	}
-}
-
-//assign work to specified NodeID
-func assignWork() {
-	nodeID <- IdelNodeIDChan
-
-	retTask := <-TaskChan
-	if retTask != nil {
-		HaveTask <- true
-		workingMap[NodeID] = retTask
-		//TODO: go RPCdatanode
-	} else {
-		//No task right now
-		HaveTask <- false
-	}
-}
-
-
-func RPCdatanode(nodeID) {
-	//when finishing this work
-	//delete task from workingMap
-	remain-- //TODO mutex lock
-	if remain == 0{
-		
-		return
-	}
-
-	IdelNodeIDChan <- nodeID
-	<-HaveTask
-	return
-}
-
-    	func deleteWorkingMapKey() {
-	//Update WorkingMap from MembershipList
-
-		failedNodeID <- FailedNodeChan
-
-		if workingMap[failedNodeID] != nil {
-			//Add the task to taskList
-			//delete the task from workingMap
-			BeginDistributeChan <- ""
-		}else {
-			//delete from workingMap
-		}
-    	}
-
-
-func maintainTaskList() {
-	<- requestTaskChan
-
-	//Pop out the task from taskList
-	if len(taskList) == 0 {
-		TaskChan <- nil
-	}else{
-		TaskChan <- taskList[0]
-		delete(taskList[0])
-	}
-}
-
-	for true {
-
-		nodeNum := len(Mem.MembershipList)
-		memIndex := 0
-
-		//Iterate taskList, distribute to datanodes (slaves)
-		for _, task := range (taskList) {
-			//If the NodeID is Master's NodeID, skip
-			//if Config.GetIPAddressFromID(Mem.MembershipList[memIndex%nodeNum]) = Config.GetHostName() {
-			//	memIndex++
-			//}
-
-			//Add (NodeID, Task) to workingMap
-			workingMap[Mem.MembershipList[memIndex]] = task //TODO check
-
-			//Delete Task from taskList
-			taskList = append(taskList, taskList[1:]...)
-
-			//RPC NodeID
-		}
-		//RPC datanode (slave) to do task
-
-		//Add (NodeID, Task) to workingMap and delete the Task from taskList
-
-		//If the datanode finish working and return
-
-		//Delete (NodeID, Task) from workingMap
-
-		//If the node fails
-
-		//Re-add the Task to TaskList and delete (NodeID, Task)
-	}
-
-
-	//Wait all mapper()
-
-******************************/
 
 //Namenode (master) splits all files into N Tasks.
 //Maintain a list of Tasks and a map of (key=NodeID,val=Task)
@@ -384,6 +282,10 @@ func waitForTaskChan(NodeID string) {
 
 		if task != nil {
 			//TODO:  RPC
+
+			//RPC return means that task is finished
+			//When a task is finished, send nil to TaskKeeperChan
+			TaskKeeperChan <- nil
 		}else{
 			return
 		}
@@ -392,8 +294,23 @@ func waitForTaskChan(NodeID string) {
 
 //Check all tasks are done
 //If a node fail, give the task to another node
-func taskKeeper(totalTask int, workingMap map[string]*Task) {
-	//TODO
+func taskKeeper(remainTask int, Workingmap map[string]*Task) {
+	for {
+		NilorTask := <- TaskKeeperChan
+
+		if NilorTask != nil {
+			TaskChan <- NilorTask
+		} else {
+			remainTask--
+
+			if remainTask == 0 {
+				for i := 0; i < len(Workingmap); i++ {
+					TaskChan <- nil
+				}
+				return
+			}
+		}
+	}
 }
 
 
