@@ -17,6 +17,7 @@ var MemHBMap map[string]time.Time = make(map[string]time.Time)
 var MonitorList []string
 var MayFailMap map[string]time.Time = make(map[string]time.Time)
 var FailedNodeID chan string = make(chan string)
+var NewNodeChan chan string = make(chan sting)
 
 func UpdateMemshipList(recvMsg MP.Message) bool {
 	msgType := recvMsg.MessageType
@@ -24,9 +25,11 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 	contents := recvMsg.Content
 	var updateOk bool
 	var failedNodeID string
+	var newNodeID string
 
 	switch msgType {
 	case MP.JoinMsg:
+		newNodeID = senderID
 		updateOk = addNode(senderID)
 	case MP.LeaveMsg:
 		failedNodeID = contents[0]
@@ -39,6 +42,7 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 		failedNodeID = contents[0]
 		updateOk = deleteNode(contents[0])
 	case MP.IntroduceMsg:
+		newNodeID = contents[0]
 		updateOk = addNode(contents[0])
 	case MP.JoinAckMsg:
 		updateOk = true
@@ -58,6 +62,9 @@ func UpdateMemshipList(recvMsg MP.Message) bool {
 		if failedNodeID != "" {
 			go SendFailedNodeID(failedNodeID)
 		}
+		if newNodeID != "" {
+			go SendNewNodeID(newNodeID)
+		}
 	}
 	return updateOk
 }
@@ -66,6 +73,9 @@ func SendFailedNodeID(failedNodeID string){
 	FailedNodeID <- failedNodeID
 }
 
+func SendNewNodeID(newNodeID string) {
+	NewNodeChan <- newNodeID
+}
 func WriteMemtableToJsonFile(fileAddr string) error {
 	file, _ := json.MarshalIndent(MembershipList, "", " ")
 	err := ioutil.WriteFile(fileAddr, file, 0644)
