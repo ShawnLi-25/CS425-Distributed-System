@@ -5,27 +5,27 @@ import (
 )
 
 type MapperArg struct {
-	Maple_exe string
-	Num_maples int
+	Maple_exe                         string
+	Num_maples                        int
 	Sdfs_intermediate_filename_prefix string
-	Sdfs_src_directory string
+	Sdfs_src_directory                string
 }
 
 type ReducerArg struct {
-	Juice_exe string
-	Num_juices int
+	Juice_exe                         string
+	Num_juices                        int
 	Sdfs_intermediate_filename_prefix string
-	Sdfs_dest_filename string
-	Delete_input bool
+	Sdfs_dest_filename                string
+	Delete_input                      bool
 }
 
 type Task struct {
-	TaskID   int
-	TaskType string //"map" or "reduce"
-	TaskExe  string //"WordCountMap" or "WordCountReducer"
+	TaskID    int
+	TaskType  string //"map" or "reduce"
+	TaskExe   string //"WordCountMap" or "WordCountReducer"
 	StartTime time.Time
-	FileList []string //Note: filename is decoded, e.g. "MyDirName/MyFileName"
-	Output   string
+	FileList  []string //Note: filename is decoded, e.g. "MyDirName/MyFileName"
+	Output    string
 }
 
 type FindRequest struct {

@@ -1,6 +1,7 @@
 package sdfs
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"log"
@@ -236,9 +237,8 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 	return nil
 }
 
-
 func (d *Datanode) RunMapReduce(req Task, res *int) error {
-	fmt,Printf("Datanode: Receive TaskID %d, TaskType %s, TaskExe %s\n", req.TaskID, req.TaskType, req.TaskExe)
+	fmt.Printf("Datanode: Receive TaskID %d, TaskType %s, TaskExe %s\n", req.TaskID, req.TaskType, req.TaskExe)
 
 	if req.TaskType == "map" {
 		log.Printf("DataNode: Task %d Started!!\n", req.TaskID)
@@ -267,22 +267,22 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			}
 
 			//Scan file
-			data, err := os.Open(Config.LocalfileDir + "/" + fileName)  
+			data, err := os.Open(Config.LocalfileDir + "/" + fileName)
 			if err != nil {
 				log.Println("os.Open() error")
 				return err
 			}
 			var scanner = bufio.NewScanner(data)
 
-			int lineCnt  = 0
+			var lineCnt = 0
 
-			string buf = ""
+			var buf = ""
 
 			//TODO if EOF but lineCnt < 10 .....(taipeng2)
 			for scanner.Scan() {
 				// fmt.Println(scanner.Text())
-				//Deal with EOF 
-				if(lineCnt < 10 && scanner.hasNext()) {
+				//Deal with EOF
+				if lineCnt < 10 && scanner.hasNext() {
 					strings.Join(buf, scanner.Text())
 				} else {
 					// MapFunc(req.TaskExe)
@@ -292,18 +292,17 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 						panic(err)
 					}
 
-					cmd := exec.Command("./" + req.TaskExe, temp)
+					cmd := exec.Command("./"+req.TaskExe, temp)
 					res, _ := cmd.Output()
-					
-					parseMapRes(res)
+
+					parseMapRes(res, Task.Output)
 
 					defer temp.Close()
 					lineCnt = 0
 					buf = ""
 				}
-			}  
-			
-			
+			}
+
 		}
 
 	}
@@ -311,7 +310,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 /*
 func (d *Datanode) MapFunc(mapEXE string) {
-	
+
 	encodedFileName := Config.EncodeFileName(req.Filename)
 
 	sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
@@ -327,15 +326,42 @@ func (d *Datanode) MapFunc(mapEXE string) {
 */
 
 //xiangl14 TODO: How to parse Mapper output with absolutely different valaue types e.g. {"1":["5"],"2":["1","3"],"3":["4"],"4":["2"],"5":["6"],"6":["1"]}
-func (d *Datanode) parseMapRes(res []byte) error {
+func parseMapRes(res []byte, prefix string) error {
 	s := string(res)
-	
-	scanner := bufio.NewScanner(file)
+
+	isKey := true
+
+	var key, val []byte
+
+	for i := 0; i < len(s); i++ {
+		if isKey {
+			if s[i] == ':' {
+				isKey = false
+			} else {
+				key = append(key, s[i])
+			}
+		} else {
+			if s[i] == '\n' {
+				MapperOutput(key, val, prefix)
+			} else {
+				val = append(val, s[i])
+			}
+
+		}
+
+	}
+	// var reader = strings.NewReader(s)
+
+	// for reader.Read() {
+	// 	if
+	// }
+
 	return nil
 }
 
-
 //xiangl14 TODO: GetFile then manually append it, then Putfile
-func (d *Datanode) MapperOutput() {
+func MapperOutput(key []byte, val []byte, prefix string) {
+
+	PutFile()
 
 }
