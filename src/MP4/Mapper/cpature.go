@@ -1,14 +1,15 @@
 package main
 
 import (
-	"exec"
-	"fmt"
+	"log"
+	"os/exec"
 )
 
 func main() {
-	temp = "./webTest"
+	temp := "./webTest"
 	cmd := exec.Command("./WebMapper", temp)
 	res, _ := cmd.Output()
-	s = string(res)
-	fmt.Println(s)
+	s := string(res)
+	log.Println(s)
+	//fmt.Println(s)
 }
