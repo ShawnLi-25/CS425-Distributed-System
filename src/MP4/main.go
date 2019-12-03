@@ -22,7 +22,7 @@ func Parse(cmd string) []string {
 
 func main() {
 	vmNumber := Config.GetVMNumber()
-	logFile, err := os.OpenFile("MP3_"+strconv.Itoa(vmNumber)+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile("MP4_"+strconv.Itoa(vmNumber)+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}

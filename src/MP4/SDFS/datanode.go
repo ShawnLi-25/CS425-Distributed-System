@@ -237,7 +237,7 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 }
 
 
-func (d *Datanode) RunMapReduce(req Task, res *) error {
+func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	if req.TaskType == "map" {
 		log.Printf("DataNode: Task %d Started!!\n", req.TaskID)
 
@@ -320,7 +320,7 @@ func (d *Datanode) MapFunc(mapEXE string) {
 //xiangl14 TODO: How to parse Mapper output with absolutely different valaue types e.g. {"1":["5"],"2":["1","3"],"3":["4"],"4":["2"],"5":["6"],"6":["1"]}
 func (d *Datanode) parseMapRes(res []byte) error {
 
-
+	return nil
 }
 
 

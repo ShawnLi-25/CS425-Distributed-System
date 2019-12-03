@@ -217,6 +217,16 @@ func (c *Client) DeleteFileMetadata(sdfsfilename string) error {
 	return nil
 }
 
+func (c *Client) RpcClientCallNamenodeMapper(mapperArg MapperArg, res *int) error {
+	err:= c.rpcClient.Call("Namenode.RunMapper", mapperArg, res)
+	return err
+}
+
+func (c *Client) RpcClientCallNamenodeReducer(reducerArg ReducerArg, res *int) error {
+	err:= c.rpcClient.Call("Namenode.RunReducer", reducerArg, res)
+	return err
+}
+
 /////////////////////Functions Called from main.go////////////////////////
 func PutFileOrPutDir(filenames []string) {
 

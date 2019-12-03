@@ -1,8 +1,8 @@
+package sdfs
+
 import (
 	"time"
 )
-
-package sdfs
 
 type MapperArg struct {
 	Maple_exe string
@@ -24,7 +24,7 @@ type Task struct {
 	TaskType string //"map" or "reduce"
 	TaskExe  string //"WordCountMap" or "WordCountReducer"
 	StartTime time.Time
-	FileList []string
+	FileList []string //Note: filename is decoded, e.g. "MyDirName***MyFileName"
 	Output   string
 }
 

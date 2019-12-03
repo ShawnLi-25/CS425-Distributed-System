@@ -8,6 +8,10 @@ import (
 	"net/rpc"
 	"sort"
 	"time"
+	"strings"
+	"errors"
+	"os"
+	"io/ioutil"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -39,7 +43,7 @@ func RunNamenodeServer() {
 
 	namenode.Filemap = make(map[string]*FileMetadata)
 	namenode.Nodemap = make(map[string][]string)
-	namenode.WorkingMap = make(map[string]*Task)
+	namenode.Workingmap = make(map[string]*Task)
 
 	namenodeServer := rpc.NewServer()
 
@@ -100,7 +104,7 @@ func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string]
 		//If failed nodeID was also working at a task
 		if unfinishedTask, ok := Workingmap[failedNodeID]; ok{
 			//delete from Workingmap
-			delete(Workingmap, faildeNodeID)
+			delete(Workingmap, failedNodeID)
 
 			if unfinishedTask != nil {
 				TaskKeeperChan <- unfinishedTask
@@ -199,51 +203,24 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	mapper  := mapperArg.Maple_exe
 	N       := mapperArg.Num_maples
 	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.Sdfs_src_directoy
+	src_dir := mapperArg.Sdfs_src_directory
 
-	var taskList []*Task
-	
-	workingMap = make(map[string]Task)
 
-	//Find all sdfs_files which come from src_dir
-	//Helper function, return a list of filename
+	//Find all sdfs_files which come from src_dir, return a list of filename
 	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
-	if !ok {
+	if !ok || len(fileList) == 0 {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
-	fileListLen := len(fileList)
 
-	//number of files in one task
-	var num_files int
-	num_files = fileListLen/N
-	extra := fileListLen%N
-
-	remain := fileListLen
-
-	//Split fileList into taskList
-	for i := 0; i < N; i++ {
-		var fileListPerTask []string
-
-		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
-
-		remain -= num_files
-		if extra != 0 {
-			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain]
-			remain--
-			extra--
-		}
-
-		task := Task{i, "map", mapper, time.Now(), fileListPerTask, prefix}
-
-		taskList = append(taskList, &task)
-	}
+	//Split fileList into taskList, return a list of Task
+	taskList := splitFileIntoTask(fileList, N, "map", mapper, prefix)
 
 	//taskKeeper, keep tracing each task and deal with node failure
 	go taskKeeper(N, n.Workingmap)
 
 	//Evoke all nodes
-	for NodeID, _ := range(workingMap) {
+	for NodeID, _ := range(n.Workingmap) {
 		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
@@ -258,17 +235,69 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 //Maintain a list of Tasks and a map of (key=NodeID, val=Task)
 func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	reducer      := reducerArg.Juice_exe
-	//N            := reducerArg.Num_juices
-	//prefix       := reducerArg.Sdfs_intermediate_filename_prefix
-	//destfilename := reducerArg.Sdfs_dest_filename
-	//delete_input := reducerArg.Delete_input
+	N            := reducerArg.Num_juices
+	prefix       := reducerArg.Sdfs_intermediate_filename_prefix
+	destfilename := reducerArg.Sdfs_dest_filename
+	delete_input := reducerArg.Delete_input
 
-	//Find all sdfs_files with the prefix
-	//Helper function, returns a list of filename
+	//Find all sdfs_files with the prefix, returns a list of filename
 	fileList, ok := findFileWithPrefix(prefix, Config.SdfsfileDir)
+	if !ok || len(fileList) == 0 {
+		*res = 0
+		return errors.New("Namenode.RunMapper: cannot find files")
+	}
+
+	//Split file into task, return a list of tasks
+	taskList := splitFileIntoTask(fileList, N, "reduce", reducer, destfilename)
+
+	//taksKeeper
+	go taskKeeper(N, n.Workingmap)
+
+	//Evoke all nodes
+	for NodeID, _ := range(n.Workingmap) {
+		go waitForTaskChan(NodeID, n.Workingmap)
+	}
+
+	go distributeAllTasks(taskList)
+
+	if delete_input {
+		//TODO 
+	}
+
+	*res = 1
+	return nil
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
+func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+	var taskList []*Task
+
+	fileListLen := len(fileList)
+
+	num_files := fileListLen/totalTask
+	extra := fileListLen%totalTask
+
+	remain := fileListLen
+
+	for i := 0; i < totalTask; i++ {
+		var fileListPerTask []string
+
+		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
+
+		remain -= num_files
+		if extra != 0 {
+			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain])
+			remain--
+			extra--
+		}
+
+		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask, output}
+
+		taskList = append(taskList, &task)
+	}
+
+	return taskList
+}
 
 func distributeAllTasks(taskList []*Task) {
 	for _, taskPointer := range(taskList) {
@@ -276,16 +305,29 @@ func distributeAllTasks(taskList []*Task) {
 	}
 }
 
-func waitForTaskChan(NodeID string) {
+func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 	for {
 		task := <-TaskChan
 
 		if task != nil {
-			//TODO:  RPC
+			Workingmap[NodeID] = task
 
-			//RPC return means that task is finished
+			nodeAddr := Config.GetIPAddressFromID(NodeID)
+			client := NewClient(nodeAddr + ":" + Config.DatanodePort)
+			client.Dial()
+
+			var res int
+			if err := client.rpcClient.Call("Datanode.RunMapReduce", *task, &res); err != nil {
+				log.Println(err)
+			}
+
+			client.Close()
+
 			//When a task is finished, send nil to TaskKeeperChan
 			TaskKeeperChan <- nil
+			
+			//Also set Workingmap[NodeID] to nil
+			Workingmap[NodeID] = nil
 		}else{
 			return
 		}
@@ -315,15 +357,25 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task) {
 
 
 func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
-	//TODO
-
-	return []string{}, true //Delete this line when start to implement
 
 	//If dir doesn't exist, return []string{}, false
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		return []string{}, false
+	}
 
-	//If no file is found with the prefix, return []string, false
+	var fileList []string
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return []string{}, false
+	}
 
-	//Else, return []string{filename1, filename2, ..., filenameN}, true
+	for _, file := range(files) {
+		if strings.Contains(Config.DecodeFileName(file.Name()), prefix) {
+			fileList = append(fileList, file.Name())
+		}
+	}
+
+	return fileList, true
 }
 
 func insert(filemap map[string]*FileMetadata, sdfsfilename string, datanodeID string) {

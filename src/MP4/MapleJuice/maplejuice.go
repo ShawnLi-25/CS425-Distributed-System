@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 
-	config "./Config"
-	sdfs "./SDFS"
+	config "../Config"
+	sdfs "../SDFS"
 )
 
 
@@ -22,7 +22,7 @@ func RunMapper(arg []string) {
 	mapper  := mapperArg.Maple_exe
 	//N       := mapperArg.Num_maples
 	//prefix  := mapperArg.Sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.Sdfs_src_directoy
+	src_dir := mapperArg.Sdfs_src_directory
 
 	//Upload maple_exe to SDFS
 	sdfs.PutFileOrPutDir([]string{mapper, mapper})
@@ -37,7 +37,7 @@ func RunMapper(arg []string) {
 	defer client.Close()
 
 	var res int
-	if err := client.rpcClient.Call("Namenode.RunMapper", mapperArg, &res); err != nil {
+	if err := client.RpcClientCallNamenodeMapper(mapperArg, &res); err != nil {
 	log.Println(err)
 }
 
@@ -58,16 +58,16 @@ func RunReducer(arg []string) {
 	//delete_input := reducerArg.Delete_input
 
 	//Upload reducer_exe to SDFS
-	sdfs.PutFileOrPurDir([]string{reducer, reducer})
+	sdfs.PutFileOrPutDir([]string{reducer, reducer})
 
 	//RPC Namenode's method "RunReducer"
 	namenodeAddr := sdfs.GetNamenodeAddr()
 	client := sdfs.NewClient(namenodeAddr + ":" + config.NamenodePort)
-	client.Call()
+	client.Dial()
 	defer client.Close()
 
 	var res int
-	if err := client.rpcClient.Call("Namenode.RunReducer", reducerArg, &res); err != nil {
+	if err := client.RpcClientCallNamenodeReducer(reducerArg, &res); err != nil {
 		log.Println(err)
 	}
 
