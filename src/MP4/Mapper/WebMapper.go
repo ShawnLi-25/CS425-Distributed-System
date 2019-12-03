@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -21,6 +20,24 @@ func parsePair(pair string) {
 	tgt := res[1]
 
 	MapperResult[tgt] = append(MapperResult[tgt], src)
+}
+
+//General format as: key : [val]\n
+func PostProcess(wordMap map[string][]string) string {
+	res := ""
+
+	for key, list := range wordMap {
+		res += key + ": " + "["
+		for idx, val := range list {
+			res += val
+			if idx != len(list)-1 {
+				res += "," + " "
+			}
+		}
+		res += "]" + "\n"
+	}
+
+	return res
 }
 
 func main() {
@@ -42,14 +59,16 @@ func main() {
 		parsePair(scanner.Text())
 	}
 
-	b, err := json.Marshal(MapperResult)
-	if err != nil {
-		fmt.Println(err)
-	}
+	res := PostProcess(MapperResult)
 
-	s := string(b)
+	// b, err := json.Marshal(MapperResult)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	fmt.Fprint(os.Stdout, s)
+	// s := string(b)
+
+	fmt.Fprint(os.Stdout, res)
 	// helper.WriteStringSliceMapToJson(MapperResult, prefix)
 	// ioutil.WriteFile(JsonFileName, b, 0644)
 

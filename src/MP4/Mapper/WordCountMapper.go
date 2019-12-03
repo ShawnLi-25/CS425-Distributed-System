@@ -4,12 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
-
-	"encoding/json"
 	//"io/ioutil"
-
-	//"./helper"
 )
 
 //TODO Exclude ","
@@ -30,6 +27,17 @@ func countFromWordList(wordList []string, wordMap map[string]int) {
 			wordMap[word] = 1
 		}
 	}
+}
+
+//General format as: key : [val]\n
+func PostProcess(wordMap map[string]int) string {
+	res := ""
+
+	for key, val := range wordMap {
+		res += key + ": " + "[" + strconv.Itoa(val) + "]" + "\n"
+	}
+
+	return res
 }
 
 func main() {
@@ -62,13 +70,15 @@ func main() {
 		fmt.Println("Error")
 	}
 
-	b, err := json.Marshal(wordMap)
-	if err != nil {
-		fmt.Println(err)
-	}
+	res := PostProcess(wordMap)
 
-	s := string(b)
+	// b, err := json.Marshal(wordMap)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	fmt.Fprintf(os.Stdout, s)
+	// s := string(b)
+
+	fmt.Fprintf(os.Stdout, res)
 	//helper.WriteWordMapToJsonFile(wordMap, prefix)
 }
