@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os/exec"
 )
 
@@ -10,5 +10,6 @@ func main() {
 	cmd := exec.Command("./WebMapper", temp)
 	res, _ := cmd.Output()
 	s := string(res)
-	fmt.Println(s)
+	log.Println(s)
+	//fmt.Println(s)
 }

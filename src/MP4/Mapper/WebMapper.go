@@ -55,7 +55,7 @@ func main() {
 	var scanner = bufio.NewScanner(data)
 
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		//fmt.Println(scanner.Text())
 		parsePair(scanner.Text())
 	}
 

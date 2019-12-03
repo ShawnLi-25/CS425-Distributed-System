@@ -32,6 +32,11 @@ const (
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 
+func ParseString(cmd string) []string {
+	cmd = strings.Join(strings.Fields(cmd), " ")
+	return strings.Split(cmd, " ")
+}
+
 func GetLocalfilePath(localfilename string) string {
 	return LocalfileDir + "/" + localfilename
 }
