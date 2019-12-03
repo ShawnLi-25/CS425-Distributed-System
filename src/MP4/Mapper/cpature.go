@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"os/exec"
 )
@@ -22,7 +22,14 @@ func parseMapRes(res []byte, prefix string) error {
 			}
 		} else {
 			if s[i] == '\n' {
-				WriteFile(key, val, prefix)
+				err := WriteFile(key, val, prefix)
+				if err != nil {
+					panic(err)
+					return err
+				}
+				isKey = true
+				key = key[:0]
+				val = val[:0]
 			} else {
 				val = append(val, s[i])
 			}
@@ -39,11 +46,12 @@ func parseMapRes(res []byte, prefix string) error {
 	return nil
 }
 
-func WriteFile(key []byte, val []byte, prefix string) err {
-	fileName := prefix + string(key)
-	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_APPEND, 0666)
+func WriteFile(key []byte, val []byte, prefix string) error {
+	fileName := prefix + "_" + string(key)
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
 
 	n, err := file.Write(val)
+	fmt.Println(n)
 	if err != nil || n <= 0 {
 		return err
 	}
@@ -56,7 +64,8 @@ func main() {
 	temp := "./webTest"
 	cmd := exec.Command("./WebMapper", temp)
 	res, _ := cmd.Output()
-	s := string(res)
-	log.Println(s)
+	//s := string(res)
 	//fmt.Println(s)
+	parseMapRes(res, "prefix")
+
 }
