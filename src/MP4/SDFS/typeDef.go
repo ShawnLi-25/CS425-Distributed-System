@@ -61,10 +61,16 @@ type PutRequest struct {
 	Offset   int64
 	Content  []byte
 	Hostname string
+	AppendMode bool
 }
 
 type PutResponse struct {
 	Response string
+}
+
+type AppendRequest struct {
+	Filename string
+	Content  []byte
 }
 
 type GetRequest struct {

@@ -91,7 +91,7 @@ func (c *Client) GetWritePermission(sdfsfilename string) bool {
 	return permitted
 }
 
-func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool) error {
+func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool, appendMode bool) error {
 
 	var localfilepath string
 
@@ -136,7 +136,7 @@ func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool) er
 			}
 		}
 
-		req := PutRequest{sdfsfilename, eof, offset, buf[:n], hostname}
+		req := PutRequest{sdfsfilename, eof, offset, buf[:n], hostname, appendMode}
 
 		var res PutResponse
 		if err = c.rpcClient.Call("Datanode.Put", req, &res); err != nil {
@@ -254,7 +254,7 @@ func PutFileOrPutDir(filenames []string) {
 	case mode.IsRegular():
 		fmt.Println("Running PutFile...")
 		var notUsed int
-		PutFile(filenames, false, &notUsed, 1)
+		PutFile(filenames, false, &notUsed, 1, false)
 	}
 }
 
@@ -278,7 +278,7 @@ func PutDir(filenames []string) {
 
 	for _, file := range files {
 		subfilenames := []string{localdirname + "/" + file.Name(), sdfsdirname + "/" + file.Name()}
-		PutFile(subfilenames, true, &fileCount, totalFiles)
+		PutFile(subfilenames, true, &fileCount, totalFiles, false)
 	}
 
 	fmt.Println("PutDir successfully return")
@@ -288,7 +288,7 @@ func PutDir(filenames []string) {
 }
 
 //put command: put [localfilename] [sdfsfilename]
-func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int) {
+func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int, appendMode bool) {
 
 	//localfilename or sdfsfilename
 	localfilename := filenames[0]
@@ -320,9 +320,11 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int) {
 			return
 		}
 	} else {
-		//Before writing, RPC namenode to get write permission
-		if canWrite := client.GetWritePermission(sdfsfilename); !canWrite {
-			return
+		if !appendMode {
+			//Before writing, RPC namenode to get write permission
+			if canWrite := client.GetWritePermission(sdfsfilename); !canWrite {
+				return
+			}
 		}
 	}
 
@@ -332,7 +334,7 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int) {
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		go RpcOperationAt("put", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n)
+		go RpcOperationAt("put", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n, appendMode)
 	}
 
 	<-PutFinishChan
@@ -376,7 +378,7 @@ func GetFile(filenames []string) {
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
 		//Todo:
-		go RpcOperationAt("get", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n)
+		go RpcOperationAt("get", localfilename, sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n, false)
 	}
 
 	<-GetFinishChan
@@ -420,7 +422,7 @@ func DeleteFile(filenames []string) {
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
-		go RpcOperationAt("delete", "", sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n)
+		go RpcOperationAt("delete", "", sdfsfilename, datanodeAddr, Config.DatanodePort, true, &respCount, n, false)
 	}
 
 	<-DeleteFinishChan
@@ -573,13 +575,13 @@ func informDatanodeToPutSdfsfile(datanodeID string, sdfsfilename string, otherNo
 	client.Close()
 }
 
-func RpcOperationAt(operation string, localfilename string, sdfsfilename string, addr string, port string, isLocal bool, respCount *int, N int) {
+func RpcOperationAt(operation string, localfilename string, sdfsfilename string, addr string, port string, isLocal bool, respCount *int, N int, appendMode bool) {
 	client := NewClient(addr + ":" + port)
 	client.Dial()
 
 	switch operation {
 	case "put":
-		client.Put(localfilename, sdfsfilename, isLocal)
+		client.Put(localfilename, sdfsfilename, isLocal, appendMode)
 
 		mutex.Lock()
 		(*respCount)++

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
@@ -31,6 +32,24 @@ const (
 	TimeOut           = 4100
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
+
+func AppendFileToFile(src_file string, dest_file string) {
+	dest_fd, err := os.OpenFile(dest_file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dest_fd.Close()
+
+	src_byte, err := ioutil.ReadFile(src_file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := dest_fd.Write(src_byte); err != nil {
+		log.Fatal(err)
+	}
+
+}
 
 func ParseString(cmd string) []string {
 	cmd = strings.Join(strings.Fields(cmd), " ")

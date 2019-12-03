@@ -117,9 +117,13 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	encodedFileName := Config.EncodeFileName(req.Filename)
 
+	var tempfilePath string
+
 	tempfilePath := Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
+	var tempfile *File
+	
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
@@ -138,7 +142,12 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 		Config.CreateDirIfNotExist(Config.SdfsfileDir)
 		sdfsfilePath := Config.SdfsfileDir + "/" + encodedFileName
 
-		os.Rename(tempfilePath, sdfsfilePath)
+		if !req.AppendMode {
+			os.Rename(tempfilePath, sdfsfilePath)
+		} else {
+			Config.AppendFileToFile(tempfilePath, sdfsfilePath)
+		}
+
 		os.RemoveAll(Config.TempfileDir)
 
 		//Append if not exist
@@ -164,6 +173,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	return nil
 }
+
 
 //Send contents of "sdfsfile" to client
 func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
