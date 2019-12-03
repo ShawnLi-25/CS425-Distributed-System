@@ -310,8 +310,12 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 		task := <-TaskChan
 
 		if task != nil {
+			//receive a task
+
+			//change state in Workingmap
 			Workingmap[NodeID] = task
 
+			//Rpc datanode to work
 			nodeAddr := Config.GetIPAddressFromID(NodeID)
 			client := NewClient(nodeAddr + ":" + Config.DatanodePort)
 			client.Dial()
@@ -329,6 +333,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 			//Also set Workingmap[NodeID] to nil
 			Workingmap[NodeID] = nil
 		}else{
+			//receive nil, return
 			return
 		}
 	}
@@ -370,8 +375,9 @@ func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
 	}
 
 	for _, file := range(files) {
-		if strings.Contains(Config.DecodeFileName(file.Name()), prefix) {
-			fileList = append(fileList, file.Name())
+		decodedFilename := Config.DecodeFileName(file.Name())
+		if strings.Contains(decodedFilename, prefix) {
+			fileList = append(fileList, decodedFilename)
 		}
 	}
 

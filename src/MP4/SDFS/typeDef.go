@@ -24,7 +24,7 @@ type Task struct {
 	TaskType string //"map" or "reduce"
 	TaskExe  string //"WordCountMap" or "WordCountReducer"
 	StartTime time.Time
-	FileList []string //Note: filename is decoded, e.g. "MyDirName***MyFileName"
+	FileList []string //Note: filename is decoded, e.g. "MyDirName/MyFileName"
 	Output   string
 }
 

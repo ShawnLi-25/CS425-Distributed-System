@@ -238,6 +238,8 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 
 
 func (d *Datanode) RunMapReduce(req Task, res *int) error {
+	fmt,Printf("Datanode: Receive TaskID %d, TaskType %s, TaskExe %s\n", req.TaskID, req.TaskType, req.TaskExe)
+
 	if req.TaskType == "map" {
 		log.Printf("DataNode: Task %d Started!!\n", req.TaskID)
 
@@ -252,16 +254,19 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 		//Call MapFunc for each file
 		for idx, fileName := range req.FileList {
-			fmt.Printf("Start Process File %d\n", idx)
+			fmt.Printf("Start Process File %s\n", fileName)
 
+			//Fetch SDFSfile to local file system
 			GetFile(fileName, fileName)
 
+			//Create temp.txt in LocalfileDir
 			temp, err := os.Create(Config.LocalfileDir + "/" + Config.TempFile)
 			if err != nil {
 				fmt.Println("os.Create() error")
 				return err
 			}
 
+			//Scan file
 			data, err := os.Open(Config.LocalfileDir + "/" + fileName)  
 			if err != nil {
 				log.Println("os.Open() error")
@@ -273,10 +278,11 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 			string buf = ""
 
+			//TODO if EOF but lineCnt < 10 .....(taipeng2)
 			for scanner.Scan() {
 				// fmt.Println(scanner.Text())
 				if(lineCnt < 10) {
-					strings.join(buf, scanner.Text())
+					strings.Join(buf, scanner.Text())
 				} else {
 					// MapFunc(req.TaskExe)
 
