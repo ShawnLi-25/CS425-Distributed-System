@@ -281,7 +281,8 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			//TODO if EOF but lineCnt < 10 .....(taipeng2)
 			for scanner.Scan() {
 				// fmt.Println(scanner.Text())
-				if(lineCnt < 10) {
+				//Deal with EOF 
+				if(lineCnt < 10 && scanner.hasNext()) {
 					strings.Join(buf, scanner.Text())
 				} else {
 					// MapFunc(req.TaskExe)
@@ -291,15 +292,17 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 						panic(err)
 					}
 
-					cmd := exec.Command(req.TaskExe, temp)
+					cmd := exec.Command("./" + req.TaskExe, temp)
 					res, _ := cmd.Output()
 					
 					parseMapRes(res)
 
 					defer temp.Close()
 					lineCnt = 0
+					buf = ""
 				}
 			}  
+			
 			
 		}
 
@@ -325,7 +328,9 @@ func (d *Datanode) MapFunc(mapEXE string) {
 
 //xiangl14 TODO: How to parse Mapper output with absolutely different valaue types e.g. {"1":["5"],"2":["1","3"],"3":["4"],"4":["2"],"5":["6"],"6":["1"]}
 func (d *Datanode) parseMapRes(res []byte) error {
+	s := string(res)
 	
+	scanner := bufio.NewScanner(file)
 	return nil
 }
 

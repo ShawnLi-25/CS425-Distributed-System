@@ -28,8 +28,11 @@ func PostProcess(wordMap map[string][]string) string {
 
 	for key, list := range wordMap {
 		res += key + ": " + "["
-		for _, val := range list {
-			res += val + "," + " "
+		for idx, val := range list {
+			res += val
+			if idx != len(list)-1 {
+				res += "," + " "
+			}
 		}
 		res += "]" + "\n"
 	}
