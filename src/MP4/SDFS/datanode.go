@@ -122,11 +122,6 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 	tempfilePath = Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
-<<<<<<< HEAD
-=======
-	var tempfile *File
-
->>>>>>> 6accb8f9b613722dd6b036b883f3931b408acc5d
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
@@ -396,7 +391,7 @@ func MapperOutput(key []byte, val []byte, prefix string) {
 	}
 
 	//PutFile()
-	
+
 	var cnt int
 	//Append Map Intermediate result
 	PutFile(fileName, fileName, false, &cnt, 1, true)
