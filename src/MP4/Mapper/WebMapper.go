@@ -27,7 +27,7 @@ func PostProcess(wordMap map[string][]string) string {
 	res := ""
 
 	for key, list := range wordMap {
-		res += key + ": " + "["
+		res += key + ":" + "["
 		for idx, val := range list {
 			res += val
 			if idx != len(list)-1 {

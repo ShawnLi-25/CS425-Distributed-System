@@ -122,6 +122,11 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 	tempfilePath = Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
+<<<<<<< HEAD
+=======
+	var tempfile *File
+
+>>>>>>> 6accb8f9b613722dd6b036b883f3931b408acc5d
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
@@ -171,7 +176,6 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	return nil
 }
-
 
 //Send contents of "sdfsfile" to client
 func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
@@ -336,7 +340,7 @@ func (d *Datanode) MapFunc(mapEXE string) {
 }
 */
 
-//xiangl14 TODO: How to parse Mapper output with absolutely different valaue types e.g. {"1":["5"],"2":["1","3"],"3":["4"],"4":["2"],"5":["6"],"6":["1"]}
+//Parse Mapper output with absolutely different valaue types e.g. {"1":["5"],"2":["1","3"],"3":["4"],"4":["2"],"5":["6"],"6":["1"]}
 func parseMapRes(res []byte, prefix string) error {
 	s := string(res)
 
@@ -353,7 +357,14 @@ func parseMapRes(res []byte, prefix string) error {
 			}
 		} else {
 			if s[i] == '\n' {
-				MapperOutput(key, val, prefix)
+				err := MapperOutput(key, val, prefix)
+				if err != nil {
+					panic(err)
+					return err
+				}
+				isKey = true
+				key = key[:0]
+				val = val[:0]
 			} else {
 				val = append(val, s[i])
 			}
@@ -372,7 +383,22 @@ func parseMapRes(res []byte, prefix string) error {
 
 //xiangl14 TODO: GetFile then manually append it, then Putfile
 func MapperOutput(key []byte, val []byte, prefix string) {
+	fileName := prefix + "_" + string(key)
+
+	file, err := os.OpenFile(config.LocalfileDir+"/"+fileName, os.O_RDWR|os.O_CREATE, 0644)
+
+	n, err := file.Write(val)
+
+	// fmt.Println(n)
+
+	if err != nil || n <= 0 {
+		return err
+	}
 
 	//PutFile()
 	
+	var cnt int
+	//Append Map Intermediate result
+	PutFile(fileName, fileName, false, &cnt, 1, true)
+
 }
