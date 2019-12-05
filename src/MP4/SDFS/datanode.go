@@ -278,6 +278,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			//Scan file
 			data, err := os.Open(Config.LocalfileDir + "/" + fileName)
 			if err != nil {
+				fmt.Println("src_file os.Open() error")
 				log.Println("os.Open() error")
 				return err
 			}

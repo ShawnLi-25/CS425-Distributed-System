@@ -15,6 +15,7 @@ func parsePair(pair string) {
 	res := strings.Split(pair, " ")
 	if len(res) > 2 {
 		fmt.Println("Data Error!")
+		return
 	}
 	src := res[0]
 	tgt := res[1]
