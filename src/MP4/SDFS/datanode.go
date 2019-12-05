@@ -123,7 +123,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	//Open and write
 	var tempfile *File
-	
+
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
@@ -173,7 +173,6 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	return nil
 }
-
 
 //Send contents of "sdfsfile" to client
 func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
@@ -372,6 +371,10 @@ func parseMapRes(res []byte, prefix string) error {
 //xiangl14 TODO: GetFile then manually append it, then Putfile
 func MapperOutput(key []byte, val []byte, prefix string) {
 
-	PutFile()
+	fileName := prefix + string(key)
+
+	var cnt int
+	//Append Map Intermediate result
+	PutFile(fileName, fileName, false, &cnt, 1, true)
 
 }
