@@ -218,12 +218,12 @@ func (c *Client) DeleteFileMetadata(sdfsfilename string) error {
 }
 
 func (c *Client) RpcClientCallNamenodeMapper(mapperArg MapperArg, res *int) error {
-	err:= c.rpcClient.Call("Namenode.RunMapper", mapperArg, res)
+	err := c.rpcClient.Call("Namenode.RunMapper", mapperArg, res)
 	return err
 }
 
 func (c *Client) RpcClientCallNamenodeReducer(reducerArg ReducerArg, res *int) error {
-	err:= c.rpcClient.Call("Namenode.RunReducer", reducerArg, res)
+	err := c.rpcClient.Call("Namenode.RunReducer", reducerArg, res)
 	return err
 }
 
@@ -341,8 +341,8 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int, a
 
 	client.Close()
 
-	fmt.Println("PutFile successfully return")
-	log.Println("====PutFile successfully return")
+	fmt.Printf("PutFile %s to %s successfully return\n", localfilename, sdfsfilename)
+	log.Printf("PutFile %s to %s successfully return\n", localfilename, sdfsfilename)
 
 	return
 }
@@ -391,8 +391,8 @@ func GetFile(filenames []string) {
 		log.Println("RemoveAll() error: can't remove TempfileDir")
 	}
 
-	fmt.Println("GetFile successfully return")
-	log.Println("====GetFile successfully return")
+	fmt.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
+	log.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
 
 	return
 }
