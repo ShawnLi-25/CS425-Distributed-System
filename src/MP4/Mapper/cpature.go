@@ -62,7 +62,7 @@ func WriteFile(key []byte, val []byte, prefix string) error {
 
 func main() {
 	temp := "./webTest"
-	cmd := exec.Command("./WebMapper", temp)
+	cmd := exec.Command("./WordCountMapper", temp)
 	res, _ := cmd.Output()
 	//s := string(res)
 	//fmt.Println(s)
