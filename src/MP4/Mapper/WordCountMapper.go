@@ -34,7 +34,7 @@ func PostProcess(wordMap map[string]int) string {
 	res := ""
 
 	for key, val := range wordMap {
-		res += key + ": " + "[" + strconv.Itoa(val) + "]" + "\n"
+		res += key + ":" + "[" + strconv.Itoa(val) + "]" + "\n"
 	}
 
 	return res
