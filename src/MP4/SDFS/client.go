@@ -156,11 +156,14 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 	// Config.CreateDirIfNotExist(Config.TempfileDir)
 
 	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
-	fmt.Println("tempfilePath is", tempfilePath)
 
-	os.MkdirAll(tempfilePath, 0777)
+	names := Config.parseDir(tempfilePath)
 
-	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
+	fmt.Printf("filePath is %s, name is %s", names[0], names[1])
+
+	os.MkdirAll(names[0], 0777)
+
+	tempfile, err := os.OpenFile(names[0]+"/"+names[1], os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		log.Println("os.OpenFile() error")
 		return err

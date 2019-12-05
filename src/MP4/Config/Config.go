@@ -2,10 +2,10 @@ package config
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
-	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
@@ -19,8 +19,8 @@ const (
 	NamenodePort = "8884"
 	ReplicaNum   = 4
 	BLOCK_SIZE   = 10 * 1024 * 1024
-	LINENUM 	 = 10
-	TempFile	 = "temp.txt"
+	LINENUM      = 10
+	TempFile     = "temp.txt"
 )
 
 const (
@@ -128,10 +128,17 @@ func DecodeFileName(src string) string {
 	return res
 }
 
-func Min(a int, b int) int{
+func Min(a int, b int) int {
 	if a < b {
 		return a
-	}else{
+	} else {
 		return b
 	}
+}
+
+func dirToFile(str string) []string {
+	idx := strings.LastIndex(str, "/")
+	dirName := str[:idx-1]
+	fieName := str[idx : len(str)-1]
+	return []string{dirName, fieName}
 }
