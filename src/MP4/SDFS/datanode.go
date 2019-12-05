@@ -119,11 +119,14 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 
 	var tempfilePath string
 
-	tempfilePath := Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
+	tempfilePath = Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
+<<<<<<< HEAD
+=======
 	var tempfile *File
 
+>>>>>>> 6accb8f9b613722dd6b036b883f3931b408acc5d
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
@@ -238,7 +241,7 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 	for _, nodeID := range req.DatanodeList {
 		nodeAddr := Config.GetIPAddressFromID(nodeID)
 
-		go RpcOperationAt("put", req.Filename, req.Filename, nodeAddr, Config.DatanodePort, false, &resp, len(req.DatanodeList))
+		go RpcOperationAt("put", req.Filename, req.Filename, nodeAddr, Config.DatanodePort, false, &resp, len(req.DatanodeList), false)
 	}
 
 	<-PutFinishChan
@@ -266,7 +269,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			fmt.Printf("Start Process File %s\n", fileName)
 
 			//Fetch SDFSfile to local file system
-			GetFile(fileName, fileName)
+			GetFile([]string{fileName, fileName})
 
 			//Create temp.txt in LocalfileDir
 			temp, err := os.Create(Config.LocalfileDir + "/" + Config.TempFile)
@@ -304,7 +307,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 					cmd := exec.Command("./"+req.TaskExe, temp)
 					res, _ := cmd.Output()
 
-					parseMapRes(res, Task.Output)
+					parseMapRes(res, req.Output)
 
 					defer temp.Close()
 					lineCnt = 0
@@ -315,6 +318,9 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		}
 
 	}
+
+	*res = 1
+	return nil
 }
 
 /*
@@ -389,6 +395,8 @@ func MapperOutput(key []byte, val []byte, prefix string) {
 		return err
 	}
 
+	//PutFile()
+	
 	var cnt int
 	//Append Map Intermediate result
 	PutFile(fileName, fileName, false, &cnt, 1, true)
