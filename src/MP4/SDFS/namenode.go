@@ -1,17 +1,17 @@
 package sdfs
 
 import (
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
-	"sort"
-	"time"
-	"strings"
-	"errors"
 	"os"
-	"io/ioutil"
+	"sort"
+	"strings"
+	"time"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -28,9 +28,9 @@ type FileMetadata struct {
 }
 
 type Namenode struct {
-	Filemap map[string]*FileMetadata //Key:sdfsFilename  Value:Pointer of metadata
-	Nodemap map[string][]string      //Key:NodeID        Value:Pointer of fileList
-	Workingmap map[string]*Task      //Key:NodeID        Value:Pointer of Task
+	Filemap    map[string]*FileMetadata //Key:sdfsFilename  Value:Pointer of metadata
+	Nodemap    map[string][]string      //Key:NodeID        Value:Pointer of fileList
+	Workingmap map[string]*Task         //Key:NodeID        Value:Pointer of Task
 }
 
 //////////////////////////////////////////Functions////////////////////////////////////////////
@@ -103,7 +103,7 @@ func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string]
 		}
 
 		//If failed nodeID was also working at a task
-		if unfinishedTask, ok := Workingmap[failedNodeID]; ok{
+		if unfinishedTask, ok := Workingmap[failedNodeID]; ok {
 			//delete from Workingmap
 			delete(Workingmap, failedNodeID)
 
@@ -116,7 +116,7 @@ func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string]
 
 func ListenOnNewNodeChan(Workingmap map[string]*Task) {
 	for true {
-		NewNodeID := <- Mem.NewNodeChan
+		NewNodeID := <-Mem.NewNodeChan
 
 		Workingmap[NewNodeID] = nil
 
@@ -211,14 +211,13 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 //Namenode (master) splits all files into N Tasks.
 //Maintain a list of Tasks and a map of (key=NodeID,val=Task)
 func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
-	mapper  := mapperArg.Maple_exe
-	N       := mapperArg.Num_maples
-	prefix  := mapperArg.Sdfs_intermediate_filename_prefix
+	mapper := mapperArg.Maple_exe
+	N := mapperArg.Num_maples
+	prefix := mapperArg.Sdfs_intermediate_filename_prefix
 	src_dir := mapperArg.Sdfs_src_directory
 
-
 	//Find all sdfs_files which come from src_dir, return a list of filename
-	fileList, ok := findFileWithPrefix(src_dir + "/", Config.SdfsfileDir)
+	fileList, ok := findFileWithPrefix(src_dir+"/", Config.SdfsfileDir)
 	if !ok || len(fileList) == 0 {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
@@ -231,7 +230,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	go taskKeeper(N, n.Workingmap)
 
 	//Evoke all nodes
-	for NodeID, _ := range(n.Workingmap) {
+	for NodeID, _ := range n.Workingmap {
 		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
@@ -241,13 +240,12 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	return nil
 }
 
-
 //Namenode (master) splits all files into N Tasks.
 //Maintain a list of Tasks and a map of (key=NodeID, val=Task)
 func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
-	reducer      := reducerArg.Juice_exe
-	N            := reducerArg.Num_juices
-	prefix       := reducerArg.Sdfs_intermediate_filename_prefix
+	reducer := reducerArg.Juice_exe
+	N := reducerArg.Num_juices
+	prefix := reducerArg.Sdfs_intermediate_filename_prefix
 	destfilename := reducerArg.Sdfs_dest_filename
 	delete_input := reducerArg.Delete_input
 
@@ -258,21 +256,21 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
 
-	//Split file into task, return a list of tasks
+	//Todo: Partition xiangl14
 	taskList := splitFileIntoTask(fileList, N, "reduce", reducer, destfilename)
 
 	//taksKeeper
 	go taskKeeper(N, n.Workingmap)
 
 	//Evoke all nodes
-	for NodeID, _ := range(n.Workingmap) {
+	for NodeID, _ := range n.Workingmap {
 		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
 	go distributeAllTasks(taskList)
 
 	if delete_input {
-		//TODO 
+		//TODO
 	}
 
 	*res = 1
@@ -285,19 +283,19 @@ func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_na
 
 	fileListLen := len(fileList)
 
-	num_files := fileListLen/totalTask
-	extra := fileListLen%totalTask
+	num_files := fileListLen / totalTask
+	extra := fileListLen % totalTask
 
 	remain := fileListLen
 
 	for i := 0; i < totalTask; i++ {
 		var fileListPerTask []string
 
-		fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain : fileListLen - remain + num_files]...)
+		fileListPerTask = append(fileListPerTask, fileList[fileListLen-remain:fileListLen-remain+num_files]...)
 
 		remain -= num_files
 		if extra != 0 {
-			fileListPerTask = append(fileListPerTask, fileList[fileListLen - remain])
+			fileListPerTask = append(fileListPerTask, fileList[fileListLen-remain])
 			remain--
 			extra--
 		}
@@ -311,7 +309,7 @@ func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_na
 }
 
 func distributeAllTasks(taskList []*Task) {
-	for _, taskPointer := range(taskList) {
+	for _, taskPointer := range taskList {
 		TaskChan <- taskPointer
 	}
 }
@@ -340,10 +338,10 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 
 			//When a task is finished, send nil to TaskKeeperChan
 			TaskKeeperChan <- nil
-			
+
 			//Also set Workingmap[NodeID] to nil
 			Workingmap[NodeID] = nil
-		}else{
+		} else {
 			//receive nil, return
 			return
 		}
@@ -354,7 +352,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 //If a node fail, give the task to another node
 func taskKeeper(remainTask int, Workingmap map[string]*Task) {
 	for {
-		NilorTask := <- TaskKeeperChan
+		NilorTask := <-TaskKeeperChan
 
 		if NilorTask != nil {
 			TaskChan <- NilorTask
@@ -371,7 +369,6 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task) {
 	}
 }
 
-
 func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
 
 	//If dir doesn't exist, return []string{}, false
@@ -385,7 +382,7 @@ func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
 		return []string{}, false
 	}
 
-	for _, file := range(files) {
+	for _, file := range files {
 		decodedFilename := Config.DecodeFileName(file.Name())
 		if strings.Contains(decodedFilename, prefix) {
 			fileList = append(fileList, decodedFilename)
