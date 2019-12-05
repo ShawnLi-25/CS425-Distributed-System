@@ -98,7 +98,7 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 	prefix := arg[2]
 
 	//Check if src_dir exists and contains file
-	src_dir := config.SdfsfileDir + "/" + arg[3]
+	src_dir := config.LocalfileDir + "/" + arg[3]
 	if _, err := os.Stat(src_dir); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", src_dir)
 		return sdfs.MapperArg{}, false
