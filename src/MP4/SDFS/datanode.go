@@ -257,9 +257,10 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		// defer temp.Close()
 
 		fileNum := len(req.FileList)
+		log.Printf("There are %d file for this Map Task\n", fileNum)
 
 		//Call MapFunc for each file
-		for idx, fileName := range req.FileList {
+		for _, fileName := range req.FileList {
 			fmt.Printf("Start Process File %s\n", fileName)
 
 			//Fetch SDFSfile to local file system
@@ -272,6 +273,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 				fmt.Println("os.Create() error")
 				return err
 			}
+			defer temp.Close()
 
 			//Scan file
 			data, err := os.Open(Config.LocalfileDir + "/" + fileName)
@@ -303,14 +305,21 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 					parseMapRes(res, req.Output)
 
-					defer temp.Close()
 					lineCnt = 0
 					buf = ""
 				}
 			}
 
 			if lineCnt != 0 {
+				_, err := temp.WriteString(buf)
+				if err != nil {
+					panic(err)
+				}
 
+				cmd := exec.Command("./"+req.TaskExe, tempFileDir)
+				res, _ := cmd.Output()
+
+				parseMapRes(res, req.Output)
 			}
 
 		}
