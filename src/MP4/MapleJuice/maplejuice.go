@@ -2,24 +2,23 @@ package maplejuice
 
 import (
 	"fmt"
-	"strconv"
-	"os"
 	"io/ioutil"
 	"log"
+	"os"
+	"strconv"
 
 	config "../Config"
 	sdfs "../SDFS"
 )
 
-
 func RunMapper(arg []string) {
 	//Check argument
 	mapperArg, ok := checkMapperArg(arg)
-	if !ok{
+	if !ok {
 		return
 	}
 
-	mapper  := mapperArg.Maple_exe
+	mapper := mapperArg.Maple_exe
 	//N       := mapperArg.Num_maples
 	//prefix  := mapperArg.Sdfs_intermediate_filename_prefix
 	src_dir := mapperArg.Sdfs_src_directory
@@ -38,8 +37,8 @@ func RunMapper(arg []string) {
 
 	var res int
 	if err := client.RpcClientCallNamenodeMapper(mapperArg, &res); err != nil {
-	log.Println(err)
-}
+		log.Println(err)
+	}
 
 	return
 }
@@ -47,11 +46,11 @@ func RunMapper(arg []string) {
 func RunReducer(arg []string) {
 	//Check argument
 	reducerArg, ok := checkReducerArg(arg)
-	if !ok{
+	if !ok {
 		return
 	}
 
-	reducer      := reducerArg.Juice_exe
+	reducer := reducerArg.Juice_exe
 	//N            := reducerArg.Num_juices
 	//prefix       := reducerArg.Sdfs_intermediate_filename_prefix
 	//destfilename := reducerArg.Sdfs_dest_filename
@@ -76,27 +75,27 @@ func RunReducer(arg []string) {
 
 /////////////////////////////Helper functions/////////////////////////////////
 
-func checkMapperArg(arg []string) (sdfs.MapperArg, bool){
-	if len(arg) < 4{
+func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
+	if len(arg) < 4 {
 		fmt.Println("Usage: maple <maple_exe> <num_maples> <sdfs_intermediate_filename_prefix> <sdfs_src_directory>")
 		return sdfs.MapperArg{}, false
 	}
 
 	//Check if maple_exe exists
-	mapper  := arg[0]
+	mapper := config.LocalfileDir + "/" + arg[0]
 	if _, err := os.Stat(mapper); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", mapper)
 		return sdfs.MapperArg{}, false
 	}
 
 	//Check if N is valid
-	N, _    := strconv.Atoi(arg[1])
+	N, _ := strconv.Atoi(arg[1])
 	if N < 0 {
 		fmt.Println("====Error: non-positive num_maples")
 		return sdfs.MapperArg{}, false
 	}
 
-	prefix  := arg[2]
+	prefix := arg[2]
 
 	//Check if src_dir exists and contains file
 	src_dir := arg[3]
@@ -117,27 +116,27 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool){
 	return sdfs.MapperArg{mapper, N, prefix, src_dir}, true
 }
 
-func checkReducerArg(arg []string) (sdfs.ReducerArg, bool){
-	if len(arg) < 5{
+func checkReducerArg(arg []string) (sdfs.ReducerArg, bool) {
+	if len(arg) < 5 {
 		fmt.Println("Usage: juice <juice_exe> <num_juices> <sdfs_intermediate_filename_prefiix> <sdfs_dest_filename> delete_input={0,1}")
 		return sdfs.ReducerArg{}, false
 	}
 
 	//Check if juice_exe exists
-	reducer  := arg[0]
+	reducer := arg[0]
 	if _, err := os.Stat(reducer); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", reducer)
 		return sdfs.ReducerArg{}, false
 	}
 
 	//Check if N is valid
-	N, _    := strconv.Atoi(arg[1])
+	N, _ := strconv.Atoi(arg[1])
 	if N < 0 {
 		fmt.Println("====Error: non-positive num_juices")
 		return sdfs.ReducerArg{}, false
 	}
 
-	prefix  := arg[2]
+	prefix := arg[2]
 	//TODO what if no sdfsfile has matching prefix?
 
 	destfilename := arg[3]
@@ -145,9 +144,9 @@ func checkReducerArg(arg []string) (sdfs.ReducerArg, bool){
 	var delete_input bool
 	if arg[4] == "delete_input=0" || arg[4] == "0" {
 		delete_input = false
-	}else if arg[4] == "delete_input=1" || arg[4] == "1" {
+	} else if arg[4] == "delete_input=1" || arg[4] == "1" {
 		delete_input = true
-	}else {
+	} else {
 		//By default
 		delete_input = false
 	}
