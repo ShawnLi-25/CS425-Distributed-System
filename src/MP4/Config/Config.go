@@ -136,7 +136,7 @@ func Min(a int, b int) int {
 	}
 }
 
-func dirToFile(str string) []string {
+func parseDir(str string) []string {
 	idx := strings.LastIndex(str, "/")
 	dirName := str[:idx-1]
 	fieName := str[idx : len(str)-1]
