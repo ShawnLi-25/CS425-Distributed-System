@@ -121,7 +121,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 	tempfilePath = Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
-	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		log.Println("os.OpenFile() error")
 		return err
@@ -392,7 +392,7 @@ func parseMapRes(res []byte, prefix string) error {
 func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
 
-	file, err := os.OpenFile(Config.LocalfileDir+"/"+fileName, os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(Config.LocalfileDir+"/"+fileName, os.O_RDWR|os.O_CREATE, 0777)
 
 	n, err := file.Write(val)
 

@@ -48,7 +48,7 @@ func parseMapRes(res []byte, prefix string) error {
 
 func WriteFile(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
-	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0777)
 
 	n, err := file.Write(val)
 	fmt.Println(n)

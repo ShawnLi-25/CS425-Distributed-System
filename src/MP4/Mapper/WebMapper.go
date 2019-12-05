@@ -70,6 +70,6 @@ func main() {
 
 	fmt.Fprint(os.Stdout, res)
 	// helper.WriteStringSliceMapToJson(MapperResult, prefix)
-	// ioutil.WriteFile(JsonFileName, b, 0644)
+	// ioutil.WriteFile(JsonFileName, b, 0777)
 
 }

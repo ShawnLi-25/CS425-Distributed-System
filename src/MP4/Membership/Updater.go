@@ -78,7 +78,7 @@ func SendNewNodeID(newNodeID string) {
 }
 func WriteMemtableToJsonFile(fileAddr string) error {
 	file, _ := json.MarshalIndent(MembershipList, "", " ")
-	err := ioutil.WriteFile(fileAddr, file, 0644)
+	err := ioutil.WriteFile(fileAddr, file, 0777)
 	return err
 }
 

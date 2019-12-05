@@ -157,7 +157,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
 
-	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		log.Println("os.OpenFile() error")
 		return err
