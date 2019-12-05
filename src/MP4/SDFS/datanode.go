@@ -288,7 +288,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			for scanner.Scan() {
 				// fmt.Println(scanner.Text())
 				//Deal with EOF
-				if lineCnt < 10 && scanner.hasNext() {
+				if lineCnt < 10 {
 					buf += scanner.Text()
 				} else {
 					// MapFunc(req.TaskExe)
@@ -399,4 +399,5 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 	//Append Map Intermediate result
 	PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
 
+	return nil
 }
