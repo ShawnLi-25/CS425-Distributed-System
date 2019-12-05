@@ -156,8 +156,9 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 	Config.CreateDirIfNotExist(Config.TempfileDir)
 
 	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
+	fmt.Println("tempfilePath is", tempfilePath)
 
-	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Println("os.OpenFile() error")
 		return err
@@ -181,6 +182,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 	}
 
 	filePath := Config.LocalfileDir + "/" + localfilename
+	fmt.Println(filePath)
 
 	fi, _ := tempfile.Stat()
 	filesize := int(fi.Size())
