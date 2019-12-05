@@ -103,7 +103,7 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 		fmt.Printf("====Error: %s not found", src_dir)
 		return sdfs.MapperArg{}, false
 	}
-	files, err := ioutil.ReadDir(src_dir)
+	files, err := ioutil.ReadDir(config.LocalfileDir + "/" + src_dir)
 	if err != nil {
 		log.Fatal(err)
 	}
