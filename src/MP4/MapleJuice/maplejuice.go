@@ -82,8 +82,8 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 	}
 
 	//Check if maple_exe exists
-	mapper := config.LocalfileDir + "/" + arg[0]
-	if _, err := os.Stat(mapper); os.IsNotExist(err) {
+	mapper := arg[0]
+	if _, err := os.Stat(config.LocalfileDir + "/" + mapper); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", mapper)
 		return sdfs.MapperArg{}, false
 	}
@@ -98,8 +98,8 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 	prefix := arg[2]
 
 	//Check if src_dir exists and contains file
-	src_dir := config.LocalfileDir + "/" + arg[3]
-	if _, err := os.Stat(src_dir); os.IsNotExist(err) {
+	src_dir := arg[3]
+	if _, err := os.Stat(config.LocalfileDir + "/" + src_dir); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", src_dir)
 		return sdfs.MapperArg{}, false
 	}
