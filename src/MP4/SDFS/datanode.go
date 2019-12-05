@@ -256,6 +256,8 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		// }
 		// defer temp.Close()
 
+		GetFile([]string{req.TaskExe, req.TaskExe})
+
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Map Task\n", fileNum)
 
