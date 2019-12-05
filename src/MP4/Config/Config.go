@@ -139,6 +139,6 @@ func Min(a int, b int) int {
 func ParseDir(str string) []string {
 	idx := strings.LastIndex(str, "/")
 	dirName := str[:idx]
-	fieName := str[idx+1 : len(str)-1]
+	fieName := str[idx+1 : len(str)]
 	return []string{dirName, fieName}
 }
