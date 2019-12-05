@@ -10,7 +10,6 @@ import (
 	"net/rpc"
 	"os"
 	"os/exec"
-	"strings"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -267,7 +266,8 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			GetFile([]string{fileName, fileName})
 
 			//Create temp.txt in LocalfileDir
-			temp, err := os.Create(Config.LocalfileDir + "/" + Config.TempFile)
+			tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
+			temp, err := os.Create(tempFileDir)
 			if err != nil {
 				fmt.Println("os.Create() error")
 				return err
@@ -285,12 +285,11 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 			var buf = ""
 
-			//TODO if EOF but lineCnt < 10 .....(taipeng2)
 			for scanner.Scan() {
 				// fmt.Println(scanner.Text())
 				//Deal with EOF
 				if lineCnt < 10 && scanner.hasNext() {
-					strings.Join(buf, scanner.Text())
+					buf += scanner.Text()
 				} else {
 					// MapFunc(req.TaskExe)
 
@@ -299,7 +298,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 						panic(err)
 					}
 
-					cmd := exec.Command("./"+req.TaskExe, temp)
+					cmd := exec.Command("./"+req.TaskExe, tempFileDir)
 					res, _ := cmd.Output()
 
 					parseMapRes(res, req.Output)
@@ -308,6 +307,10 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 					lineCnt = 0
 					buf = ""
 				}
+			}
+
+			if lineCnt != 0 {
+
 			}
 
 		}
@@ -377,10 +380,10 @@ func parseMapRes(res []byte, prefix string) error {
 }
 
 //xiangl14 TODO: GetFile then manually append it, then Putfile
-func MapperOutput(key []byte, val []byte, prefix string) {
+func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
 
-	file, err := os.OpenFile(config.LocalfileDir+"/"+fileName, os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(Config.LocalfileDir+"/"+fileName, os.O_RDWR|os.O_CREATE, 0644)
 
 	n, err := file.Write(val)
 
@@ -394,6 +397,6 @@ func MapperOutput(key []byte, val []byte, prefix string) {
 
 	var cnt int
 	//Append Map Intermediate result
-	PutFile(fileName, fileName, false, &cnt, 1, true)
+	PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
 
 }
