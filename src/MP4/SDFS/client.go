@@ -159,7 +159,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	names := Config.ParseDir(tempfilePath)
 
-	fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
+	// fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
 
 	os.MkdirAll(names[0], 0777)
 
@@ -190,7 +190,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	names = Config.ParseDir(filePath)
 
-	fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
+	// fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
 
 	os.MkdirAll(names[0], 0777)
 
