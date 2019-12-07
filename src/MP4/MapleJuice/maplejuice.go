@@ -124,7 +124,7 @@ func checkReducerArg(arg []string) (sdfs.ReducerArg, bool) {
 
 	//Check if juice_exe exists
 	reducer := arg[0]
-	if _, err := os.Stat(reducer); os.IsNotExist(err) {
+	if _, err := os.Stat(config.LocalfileDir + "/" + reducer); os.IsNotExist(err) {
 		fmt.Printf("====Error: %s not found", reducer)
 		return sdfs.ReducerArg{}, false
 	}
