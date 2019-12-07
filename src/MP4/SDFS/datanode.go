@@ -397,7 +397,7 @@ func RunReduceTask(req Task) error {
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
-		cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
+		cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, ReduceInputDir)
 		res, _ := cmd.Output()
 
 		ReducerOutput(res, key, req.Output)
