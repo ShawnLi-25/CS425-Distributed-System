@@ -19,7 +19,7 @@ func wordCount(content string) int {
 			startIdx = idx + 1
 		} else if c == ']' {
 			val := content[startIdx:idx]
-			cnt += val
+			cnt += strconv.Atoi(val)
 		}
 	}
 	return cnt
