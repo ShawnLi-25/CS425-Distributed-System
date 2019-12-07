@@ -483,9 +483,12 @@ func ShowDatanode(filenames []string) {
 }
 
 //store command: At any machine, list all files currently being stored at this machine
-func ShowFile() {
-	//listFile(Config.LocalfileDir) //Only for debugging, comment OUT in demo!
+func ShowSDFSFile() {
 	listFile(Config.SdfsfileDir)
+}
+
+func ShowLocalFile() {
+	listFile(Config.LocalfileDir) //Only for debugging, comment OUT in demo!
 }
 
 //clear command: Remove all sdfsfiles stored in "SDFS/sdfsFile"
