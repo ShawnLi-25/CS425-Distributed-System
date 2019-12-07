@@ -321,7 +321,7 @@ func RunMapTask(req Task) error {
 					return err
 				}
 
-				// fmt.Println("*****Temp Created!")
+				//fmt.Println("*****Temp Created!")
 
 				_, err = temp.WriteString(buf)
 				if err != nil {
@@ -329,7 +329,7 @@ func RunMapTask(req Task) error {
 					log.Println("temp_file WriteString error")
 					panic(err)
 				}
-				// fmt.Println("*****Temp File Write Succeed!")
+				//fmt.Println("*****Temp File Write Succeed!")
 
 				//Todo: Need to close?
 				temp.Close()
@@ -350,6 +350,7 @@ func RunMapTask(req Task) error {
 		}
 
 		if lineCnt != 0 {
+			fmt.Println("Scanner exit")
 			temp, err := os.Create(tempFileDir)
 			if err != nil {
 				fmt.Println("os.Create() error")
@@ -376,7 +377,7 @@ func RunMapTask(req Task) error {
 			parseMapRes(res, req.Output)
 		}
 
-		//fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
+		fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
 
 	}
 
@@ -404,7 +405,7 @@ func RunReduceTask(req Task) error {
 		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
-		fmt.Println("Src file name:", decodedFileName)
+		//fmt.Println("Src file name:", decodedFileName)
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
@@ -439,9 +440,11 @@ func parseMapRes(res []byte, prefix string) error {
 		} else {
 			if s[i] == '\n' {
 				val = append(val, s[i]) //Each value ends with '\n'
+				fmt.Println("Go to MapperOutput")
 				err := MapperOutput(key, val, prefix)
 				if err != nil {
 					panic(err)
+					fmt.Println("MapperOutput error")
 					return err
 				}
 				isKey = true
