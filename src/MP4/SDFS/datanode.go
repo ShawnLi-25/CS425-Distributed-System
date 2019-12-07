@@ -163,7 +163,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 			}
 		}
 
-		fmt.Printf("Write sdfsfile %s succeed: size = %d, source = %s!!\n", req.Filename, filesize, req.Hostname)
+		// fmt.Printf("Write sdfsfile %s succeed: size = %d, source = %s!!\n", req.Filename, filesize, req.Hostname)
 		log.Printf("====Store sdfsfile: filename = %s, size = %d, source = %s\n", req.Filename, filesize, req.Hostname)
 	}
 
@@ -195,7 +195,7 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 		if err != io.EOF {
 			return err
 		} else {
-			fmt.Printf("Read sdfsfile %s succeed!!\n", req.Filename)
+			// fmt.Printf("Read sdfsfile %s succeed!!\n", req.Filename)
 			resp.Eof = true
 		}
 	}
@@ -319,18 +319,23 @@ func RunMapTask(req Task) error {
 					return err
 				}
 
+				fmt.Println("*****Temp Created!")
+
 				_, err = temp.WriteString(buf)
 				if err != nil {
 					fmt.Println("temp_file WriteString error")
 					log.Println("temp_file WriteString error")
 					panic(err)
 				}
+				fmt.Println("*****Temp File Write Succeed!")
 
 				//Todo: Need to close?
 				temp.Close()
 
 				cmd := exec.Command("./"+req.TaskExe, tempFileDir)
 				res, _ := cmd.Output()
+
+				fmt.Println("*****CMD succeed!")
 
 				parseMapRes(res, req.Output)
 
@@ -356,7 +361,11 @@ func RunMapTask(req Task) error {
 
 			parseMapRes(res, req.Output)
 		}
+
+		fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
+
 	}
+	fmt.Printf("Map Task %d succeed!\n", req.TaskID)
 
 	return nil
 }

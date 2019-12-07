@@ -294,7 +294,7 @@ func PutDir(filenames []string) {
 		PutFile(subfilenames, true, &fileCount, totalFiles, false)
 	}
 
-	fmt.Println("PutDir successfully return")
+	// fmt.Println("PutDir successfully return")
 	log.Println("====PutDir successfully return")
 
 	return
@@ -354,7 +354,7 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int, a
 
 	client.Close()
 
-	fmt.Printf("PutFile %s to %s successfully return\n", localfilename, sdfsfilename)
+	// fmt.Printf("PutFile %s to %s successfully return\n", localfilename, sdfsfilename)
 	log.Printf("PutFile %s to %s successfully return\n", localfilename, sdfsfilename)
 
 	return
@@ -404,7 +404,7 @@ func GetFile(filenames []string) {
 		log.Println("RemoveAll() error: can't remove TempfileDir")
 	}
 
-	fmt.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
+	// fmt.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
 	log.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
 
 	return
@@ -446,7 +446,7 @@ func DeleteFile(filenames []string) {
 	}
 
 	client.Close()
-	fmt.Println("DeleteFile successfully return")
+	// fmt.Println("DeleteFile successfully return")
 	log.Println("DeleteFile successfully return")
 
 	return
