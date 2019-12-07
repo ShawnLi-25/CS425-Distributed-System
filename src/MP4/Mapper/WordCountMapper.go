@@ -41,6 +41,9 @@ func PostProcess(wordMap map[string]int) string {
 }
 
 func main() {
+
+	fmt.Println("****Enter exe!!")
+
 	var wordMap map[string]int
 	wordMap = make(map[string]int)
 
