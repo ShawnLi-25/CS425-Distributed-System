@@ -27,7 +27,7 @@ func RunMapper(arg []string) {
 	sdfs.PutFileOrPutDir([]string{mapper, mapper})
 
 	//Upload all files in src_dir to SDFS
-	sdfs.PutFileOrPutDir([]string{src_dir, src_dir})
+	//sdfs.PutFileOrPutDir([]string{src_dir, src_dir})
 
 	//RPC Namenode's method "RunMapper"
 	namenodeAddr := sdfs.GetNamenodeAddr()
