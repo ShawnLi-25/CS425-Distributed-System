@@ -311,7 +311,7 @@ func RunMapTask(req Task) error {
 			//Deal with EOF
 			if lineCnt < 10 {
 				buf += scanner.Text() + "\n"
-				fmt.Println("Read line")
+				//fmt.Println("Read line")
 				lineCnt += 1
 			} else {
 				// MapFunc(req.TaskExe)
@@ -337,7 +337,7 @@ func RunMapTask(req Task) error {
 				cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
 				res, _ := cmd.Output()
 
-				fmt.Println("*****CMD succeed!")
+			       fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
 				parseMapRes(res, req.Output)
 
@@ -353,14 +353,14 @@ func RunMapTask(req Task) error {
 				return err
 			}
 
-			fmt.Println("*****Temp Created!")
+			//fmt.Println("*****Temp Created!")
 
 			_, err = temp.WriteString(buf)
 			if err != nil {
 				panic(err)
 			}
 
-			fmt.Println("*****Temp File Write Succeed!")
+			//fmt.Println("*****Temp File Write Succeed!")
 
 			cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
 			res, err := cmd.Output()
@@ -368,8 +368,8 @@ func RunMapTask(req Task) error {
 				fmt.Println("cmd.Output Error")
 			}
 
-			fmt.Println("*****CMD succeed!")
-
+			fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
+			
 			parseMapRes(res, req.Output)
 		}
 
