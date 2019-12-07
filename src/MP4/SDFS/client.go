@@ -108,7 +108,7 @@ func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool, ap
 	}
 
 	fileSize := fileInfo.Size()
-	fmt.Printf("Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
+	//fmt.Printf("Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
 	log.Printf("====Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
 
 	//Open the file
@@ -201,7 +201,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	os.Rename(tempfilePath, filePath)
 
-	fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
+	//fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 	log.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 
 	return nil
@@ -262,10 +262,10 @@ func PutFileOrPutDir(filenames []string) {
 	//Check file mode
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
-		fmt.Println("Running PutDir...")
+		//fmt.Println("Running PutDir...")
 		PutDir(filenames)
 	case mode.IsRegular():
-		fmt.Println("Running PutFile...")
+		//fmt.Println("Running PutFile...")
 		var notUsed int
 		PutFile(filenames, false, &notUsed, 1, false)
 	}

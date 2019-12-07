@@ -224,7 +224,7 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 		}
 	}
 
-	fmt.Printf("Delete sdfsfile %s succeed!!\n", req.Filename)
+	//fmt.Printf("Delete sdfsfile %s succeed!!\n", req.Filename)
 	log.Printf("Datanode: Delete sdfsfile %s!!\n", req.Filename)
 
 	return nil
@@ -340,7 +340,7 @@ func RunMapTask(req Task) error {
 					fmt.Println("cmd.Output Error")
 				}
 
-				fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
+				//fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
 				parseMapRes(res, req.Output)
 
@@ -371,12 +371,12 @@ func RunMapTask(req Task) error {
 				fmt.Println("cmd.Output Error")
 			}
 
-			fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
+			//fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
 			parseMapRes(res, req.Output)
 		}
 
-		fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
+		//fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
 
 	}
 
