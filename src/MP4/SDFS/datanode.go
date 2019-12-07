@@ -10,6 +10,7 @@ import (
 	"net/rpc"
 	"os"
 	"os/exec"
+	"strings"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -339,6 +340,12 @@ func RunMapTask(req Task) error{
 		}
 
 		if lineCnt != 0 {
+			temp, err := os.Create(tempFileDir)
+			if err != nil {
+				fmt.Println("os.Create() error")
+				return err
+			}
+
 			_, err := temp.WriteString(buf)
 			if err != nil {
 				panic(err)
@@ -356,7 +363,7 @@ func RunMapTask(req Task) error{
 
 //Delete??
 func RunReduceTask(req Task) error{
-	for _, fileName := range File.FileList {
+	for _, fileName := range Task.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
 		//Fetch SDFSfile to local file system
@@ -373,12 +380,12 @@ func RunReduceTask(req Task) error{
 		decodedFileName := Config.DecodeFileName(fileName)
 		fmt.Println("Src file name:", decodedFileName)
 		
-		ReduceInputDir = Config.LocalfileDir + "/" + decodedFileName
+		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
 		cmd := exec.Command("./"+req.TaskExe, ReduceInputDir)
 		res, _ := cmd.Output()
 
-		ReducerOutput(res, key)
+		ReducerOutput(res, key, req.Output)
 	}
 
 	return nil
@@ -453,10 +460,7 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
-func ReducerOutput(res []byte, key string) error{
-
-	destFileName := res.Output
-
+func ReducerOutput(res []byte, key string, destFileName string) error{
 	var cnt int
 
 	PutFile([]string{destFileName, destFileName}, false, &cnt, 1, true)
