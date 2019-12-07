@@ -143,7 +143,7 @@ func ParseDir(str string) []string {
 	return []string{dirName, fieName}
 }
 
-func hash(s string) uint32 {
+func Hash(s string) uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(s))
 	return h.Sum32()
