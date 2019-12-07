@@ -21,7 +21,9 @@ var OpenNamenodeServer chan string = make(chan string)
 var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
 var TaskChan chan *Task = make(chan *Task)
 var TaskKeeperChan chan *Task = make(chan *Task)
-var deleteFilesRequest chan string = make(chan string)
+var deleteFilesRequest chan bool = make(chan bool)
+var INPUT_DIR chan string = make(chan string)
+
 
 type FileMetadata struct {
 	DatanodeList []string
@@ -237,6 +239,9 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
+	go send_src_dir(src_dir)
+
+
 	*res = 1
 	return nil
 }
@@ -270,19 +275,35 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
-	go deleteFiles(fileList)
-
+	go deleteInputFiles(fileList)
 
 	*res = 1
 	return nil
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
-func deleteFiles(fileList []string) {
-	<-deleteFilesRequest
+func send_src_dir(src_dir string) {
+	INPUT_DIR <- src_dir
+}
 
-	for _, filename := range fileList {
+
+func deleteInputFiles(prefixFileList []string) {
+	delete_input := <-deleteFilesRequest
+
+	for _, filename := range prefixFileList {
 		DeleteFile([]string{filename})
+	}
+
+	if delete_input {
+		src_dir := <- INPUT_DIR
+		inputFileList, ok := findFileWithPrefix(src_dir + "/" , Config.SdfsfileDir)
+		if !ok || len(inputFileList) == 0 {
+			return
+		}
+		for _, inputFilename := range inputFileList {
+			DeleteFile([]string{inputFilename})
+		}
+
 	}
 }
 
@@ -372,7 +393,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 					TaskChan <- nil
 				}
 				if delete_input {
-					deleteFilesRequest <- ""
+					deleteFilesRequest <- true
 				}
 				return
 			}
