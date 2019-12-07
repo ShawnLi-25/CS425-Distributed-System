@@ -400,14 +400,14 @@ func RunReduceTask(req Task) error {
 			return nil
 		}
 
-		key := parseName[0]
+		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
 		fmt.Println("Src file name:", decodedFileName)
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
-		cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, ReduceInputDir)
+		cmd := exec.Command(Config.LocalfileDir+"/"+req.TaskExe, ReduceInputDir)
 		output, _ := cmd.Output()
 
 		res := FormatOutput(output, key)
