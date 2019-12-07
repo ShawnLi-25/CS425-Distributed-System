@@ -36,7 +36,6 @@ func postProcess() string {
 		}
 	}
 
-	fmt.Println(res)
 	return res
 }
 

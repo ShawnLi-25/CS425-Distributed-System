@@ -321,7 +321,7 @@ func RunMapTask(req Task) error {
 					return err
 				}
 
-				fmt.Println("*****Temp Created!")
+				// fmt.Println("*****Temp Created!")
 
 				_, err = temp.WriteString(buf)
 				if err != nil {
@@ -329,7 +329,7 @@ func RunMapTask(req Task) error {
 					log.Println("temp_file WriteString error")
 					panic(err)
 				}
-				fmt.Println("*****Temp File Write Succeed!")
+				// fmt.Println("*****Temp File Write Succeed!")
 
 				//Todo: Need to close?
 				temp.Close()
@@ -412,6 +412,8 @@ func RunReduceTask(req Task) error {
 
 		res := FormatOutput(output, key)
 
+		os.Remove(Config.LocalfileDir + "/" + fileName)
+
 		ReducerOutput(res, req.Output)
 	}
 
@@ -490,7 +492,6 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 
 func FormatOutput(output []byte, key string) string {
 	res := key + ": " + string(output) + "\n"
-
 	return res
 }
 
