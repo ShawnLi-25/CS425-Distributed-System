@@ -331,9 +331,8 @@ func hashPartition(fileList []string, totalTask int, taskType string, exe_name s
 
 	var fileListPerTask [][]string = make([][]string, totalTask)
 
-	fileListLen := len(fileList)
-
-	num_files := fileListLen / totalTask
+	// fileListLen := len(fileList)
+	// num_files := fileListLen / totalTask
 
 	for _, fileName := range fileList {
 		parseName := strings.Split(fileName, "_")
@@ -345,7 +344,7 @@ func hashPartition(fileList []string, totalTask int, taskType string, exe_name s
 		fileListPerTask[hashVal] = append(fileListPerTask[hashVal], fileName)
 	}
 
-	for i := 0; i < totalTask; i += 1 {
+	for i := 0; i < totalTask; i++ {
 		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask[i], output}
 
 		taskList = append(taskList, &task)
