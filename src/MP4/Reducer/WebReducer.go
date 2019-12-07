@@ -4,10 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
 
-var valueList []string 
+var valueList []string
 
 //filename_prefix_K
 func gatherLink(content string) {
@@ -19,7 +18,7 @@ func gatherLink(content string) {
 		if c == '[' {
 			startIdx = idx + 1
 		} else if c == ']' {
-			val = content[startIdx, idx]
+			val = content[startIdx:idx]
 			valueList = append(valueList, val)
 		}
 	}
@@ -27,10 +26,9 @@ func gatherLink(content string) {
 
 func postProcess(value string) {
 
-
 }
 
-func main {
+func main() {
 
 	fileDir := os.Args[1]
 
