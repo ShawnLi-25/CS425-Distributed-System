@@ -381,6 +381,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 
 			client.Close()
 
+			fmt.Println("Namenode: Datanode.RunMapReduce() returns, send nil to taskKeeperChan")
 			//When a task is finished, send nil to TaskKeeperChan
 			TaskKeeperChan <- nil
 
@@ -405,6 +406,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 			remainTask--
 
 			if remainTask == 0 {
+				fmt.Println("TaskKeeper: remainTask is zero")
 				for i := 0; i < len(Workingmap); i++ {
 					TaskChan <- nil
 				}
@@ -430,7 +432,9 @@ func requestTaskSubmission(nodeID string) {
 	client.Dial()
 
 	var res string
-	client.rpcClient.Call("Datanode.SubmitTask", "", &res)
+	if err := client.rpcClient.Call("Datanode.SubmitTask", "", &res); err != nil {
+		fmt.Println("requestTaskSubmission().client.rpcClient.Call() fails!")
+	}
 
 	client.Close()
 }
