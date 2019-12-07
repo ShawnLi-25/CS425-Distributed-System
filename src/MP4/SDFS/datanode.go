@@ -281,6 +281,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 //Scan the Map-Input Files, call Map.exe per 10-lines
 func RunMapTask(req Task) error {
+	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Map Task for File %s\n", fileName)
 
@@ -288,7 +289,6 @@ func RunMapTask(req Task) error {
 		GetFile([]string{fileName, fileName})
 
 		//Create temp.txt in LocalfileDir
-		tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 
 		//Scan file
 		decodedFileName := Config.DecodeFileName(fileName)
