@@ -280,7 +280,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	return nil
 }
 
-func (d *Datanode) SubmitTask(req string, res *string) {
+func (d *Datanode) SubmitTask(req string, res *string) error{
 	//Append Map  result to per key Intermediate file
 	fmt.Println("*****Submit Map Task!!!!!")
 	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
@@ -293,6 +293,7 @@ func (d *Datanode) SubmitTask(req string, res *string) {
 	}
 
 	os.Remove(cacheDir)
+	return nil
 }
 
 //Scan the Map-Input Files, call Map.exe per 10-lines
