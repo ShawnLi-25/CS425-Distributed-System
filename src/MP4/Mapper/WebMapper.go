@@ -15,7 +15,7 @@ const JsonFileName = "webMap.json"
 func parsePair(pair string) {
 	res := strings.Split(pair, " ")
 	if len(res) > 2 {
-		log.Println("Data Error!")
+		log.Println("Data Format Error!")
 		return
 	}
 	src := res[0]

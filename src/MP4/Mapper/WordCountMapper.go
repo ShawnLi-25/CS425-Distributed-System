@@ -7,12 +7,28 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
 	//"io/ioutil"
 )
 
-//TODO Exclude ","
 func Parse(cmd string) []string {
-	cmd = strings.Join(strings.Fields(cmd), " ")
+	wordList := strings.Fields(cmd)
+	
+	cmd = ""
+
+	for _, word := range wordList {
+		if len(word) == 0 {
+			continue
+		}
+		for i := 0; i < len(word); i++ {
+			if unicode.IsDigit(rune(word[i])) || unicode.IsLetter(rune(word[i])) {
+				cmd += string(word[i])
+			}
+		}
+		cmd += " "
+	}
+	// cmd = strings.Join(strings.Fields(cmd), " ")
+	//fmt.Println(cmd)
 	return strings.Split(cmd, " ")
 }
 
@@ -20,6 +36,9 @@ func Parse(cmd string) []string {
 func countFromWordList(wordList []string, wordMap map[string]int) {
 	//Iterate word list
 	for _, word := range wordList {
+		if len(word) == 0 {
+			continue
+		}
 		if _, ok := wordMap[word]; ok {
 			//If the word exists in word map
 			wordMap[word]++
