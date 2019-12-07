@@ -21,6 +21,7 @@ var OpenNamenodeServer chan string = make(chan string)
 var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
 var TaskChan chan *Task = make(chan *Task)
 var TaskKeeperChan chan *Task = make(chan *Task)
+var deleteFilesRequest chan string = make(chan string)
 
 type FileMetadata struct {
 	DatanodeList []string
@@ -227,7 +228,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	taskList := splitFileIntoTask(fileList, N, "map", mapper, prefix)
 
 	//taskKeeper, keep tracing each task and deal with node failure
-	go taskKeeper(N, n.Workingmap)
+	go taskKeeper(N, n.Workingmap, false)
 
 	//Evoke all nodes
 	for NodeID, _ := range n.Workingmap {
@@ -260,7 +261,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	taskList := splitFileIntoTask(fileList, N, "reduce", reducer, destfilename)
 
 	//taksKeeper
-	go taskKeeper(N, n.Workingmap)
+	go taskKeeper(N, n.Workingmap, delete_input)
 
 	//Evoke all nodes
 	for NodeID, _ := range n.Workingmap {
@@ -269,15 +270,22 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
-	if delete_input {
-		//TODO
-	}
+	go deleteFiles(fileList)
+
 
 	*res = 1
 	return nil
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
+func deleteFiles(fileList []string) {
+	<-deleteFilesRequest
+
+	for _, filename := range fileList {
+		DeleteFile([]string{filename})
+	}
+}
+
 func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
 	var taskList []*Task
 
@@ -350,7 +358,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 
 //Check all tasks are done
 //If a node fail, give the task to another node
-func taskKeeper(remainTask int, Workingmap map[string]*Task) {
+func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) {
 	for {
 		NilorTask := <-TaskKeeperChan
 
@@ -362,6 +370,9 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task) {
 			if remainTask == 0 {
 				for i := 0; i < len(Workingmap); i++ {
 					TaskChan <- nil
+				}
+				if delete_input {
+					deleteFilesRequest <- ""
 				}
 				return
 			}
