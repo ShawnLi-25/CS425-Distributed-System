@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -114,7 +113,7 @@ func TimeCount() func() {
 
 	return func() {
 		cost := time.Since(start)
-		fmt.Printf("Time cost: %v\n", cost)
+		log.Printf("Time cost: %v\n", cost)
 	}
 }
 
