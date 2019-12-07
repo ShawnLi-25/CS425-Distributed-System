@@ -486,9 +486,9 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 	return nil
 }
 
-func FormatOutput(output []byte, key string) string{
-	res := key + ": " string(output) + "\n"
-	
+func FormatOutput(output []byte, key string) string {
+	res := key + ": " + string(output) + "\n"
+
 	return res
 }
 
