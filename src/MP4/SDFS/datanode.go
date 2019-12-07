@@ -332,7 +332,7 @@ func RunMapTask(req Task) error {
 				//Todo: Need to close?
 				temp.Close()
 
-				cmd := exec.Command("./"+req.TaskExe, tempFileDir)
+				cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
 				res, _ := cmd.Output()
 
 				fmt.Println("*****CMD succeed!")
@@ -351,13 +351,19 @@ func RunMapTask(req Task) error {
 				return err
 			}
 
+			fmt.Println("*****Temp Created!")
+
 			_, err = temp.WriteString(buf)
 			if err != nil {
 				panic(err)
 			}
 
-			cmd := exec.Command("./"+req.TaskExe, tempFileDir)
+			fmt.Println("*****Temp File Write Succeed!")
+
+			cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
 			res, _ := cmd.Output()
+
+			fmt.Println("*****CMD succeed!")
 
 			parseMapRes(res, req.Output)
 		}
@@ -462,6 +468,8 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 
 	//Append Map  result to per key Intermediate file
 	PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
+
+	fmt.Printf("Map Phase Output for %s succeed!\n", fileName)
 
 	return nil
 }
