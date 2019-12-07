@@ -124,12 +124,12 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 	//Open and write
 	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
-		log.Println("os.OpenFile() error")
+		log.Println("Datanode.Put: os.OpenFile() error")
 		return err
 	}
 
 	if _, err = tempfile.WriteAt(req.Content, req.Offset); err != nil {
-		log.Println("sdfsfile.WriteAt() error", err)
+		log.Println("Datanode.Out: sdfsfile.WriteAt() error", err)
 		return err
 	}
 
@@ -317,17 +317,15 @@ func RunMapTask(req Task) error {
 				// MapFunc(req.TaskExe)
 				temp, err := os.Create(tempFileDir)
 				if err != nil {
-					fmt.Println("os.Create() error")
+					fmt.Println("Datanode.RunMapTask.Scanner: os.Create() error")
 					return err
 				}
 
-				//fmt.Println("*****Temp Created!")
-
 				_, err = temp.WriteString(buf)
 				if err != nil {
-					fmt.Println("temp_file WriteString error")
+					fmt.Println("Datanode.RunMapTask: temp_file WriteString error")
 					log.Println("temp_file WriteString error")
-					panic(err)
+					return err
 				}
 				//fmt.Println("*****Temp File Write Succeed!")
 
@@ -337,8 +335,9 @@ func RunMapTask(req Task) error {
 				cmd := exec.Command(Config.LocalfileDir+"/"+req.TaskExe, tempFileDir)
 				res, err := cmd.Output()
 				if err != nil {
-					fmt.Println("cmd.Output Error")
+					fmt.Println("Datanode.RunMapTask: cmd.Output Error")
 				}
+
 
 				//fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
@@ -440,10 +439,9 @@ func parseMapRes(res []byte, prefix string) error {
 		} else {
 			if s[i] == '\n' {
 				val = append(val, s[i]) //Each value ends with '\n'
-				fmt.Println("Go to MapperOutput")
 				err := MapperOutput(key, val, prefix)
 				if err != nil {
-					panic(err)
+					//panic(err)
 					fmt.Println("MapperOutput error")
 					return err
 				}
@@ -482,6 +480,7 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 		return err
 	}
 
+	fmt.Println("Before PutFile()")
 	var cnt int
 
 	//Append Map  result to per key Intermediate file
