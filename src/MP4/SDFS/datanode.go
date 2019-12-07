@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"ioutil"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -287,7 +287,8 @@ func SubmitTask(req string, res *string) {
 
 	var cnt = 1
 	for _, file := range files {
-		PutFile([]string{file, file}, false, &cnt, 1, true)
+		fileName := file.Name()
+		PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
 	}
 
 	os.Remove(cacheDir)
