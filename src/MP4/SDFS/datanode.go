@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -279,6 +280,19 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	return nil
 }
 
+func SubmitTask(req string, res *string) {
+	//Append Map  result to per key Intermediate file
+	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
+	files, _ := ioutil.ReadDir(cacheDir)
+
+	var cnt = 1
+	for _, file := range files {
+		PutFile([]string{file, file}, false, &cnt, 1, true)
+	}
+
+	os.Remove(cacheDir)
+}
+
 //Scan the Map-Input Files, call Map.exe per 10-lines
 func RunMapTask(req Task) error {
 	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
@@ -337,7 +351,6 @@ func RunMapTask(req Task) error {
 				if err != nil {
 					fmt.Println("Datanode.RunMapTask: cmd.Output Error")
 				}
-
 
 				//fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
@@ -415,7 +428,7 @@ func RunReduceTask(req Task) error {
 
 		os.Remove(Config.LocalfileDir + "/" + fileName)
 
-		ReducerOutput(res, req.Output)
+		CacheReduceOutput(res, req.Output)
 	}
 
 	return nil
@@ -439,7 +452,7 @@ func parseMapRes(res []byte, prefix string) error {
 		} else {
 			if s[i] == '\n' {
 				val = append(val, s[i]) //Each value ends with '\n'
-				err := MapperOutput(key, val, prefix)
+				err := CacheMapOutput(key, val, prefix)
 				if err != nil {
 					//panic(err)
 					fmt.Println("MapperOutput error")
@@ -465,30 +478,26 @@ func parseMapRes(res []byte, prefix string) error {
 }
 
 //Todo: Check
-func MapperOutput(key []byte, val []byte, prefix string) error {
+func CacheMapOutput(key []byte, val []byte, prefix string) error {
+
+	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+
 	fileName := prefix + "_" + string(key)
-	localDir := Config.LocalfileDir + "/" + fileName
-	file, err := os.Create(localDir)
+	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + fileName
+
+	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println("os.Create() error")
+		fmt.Println("os.OpenFile() error")
 		return err
 	}
-	// defer file.Close()
+	defer file.Close()
 
 	n, err := file.Write(val)
 	if err != nil || n <= 0 {
 		return err
 	}
 
-	fmt.Println("Before PutFile()")
-	var cnt int
-
-	//Append Map  result to per key Intermediate file
-	PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
-
-	os.Remove(localDir)
-
-	fmt.Printf("Map Phase Output for %s succeed!\n", fileName)
+	fmt.Printf("Map Phase Write Intermediate File for %s succeed!\n", fileName)
 
 	return nil
 }
@@ -499,22 +508,21 @@ func FormatOutput(output []byte, key string) string {
 }
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
-func ReducerOutput(res string, destFileName string) error {
-	localDir := Config.LocalfileDir + "/" + destFileName
-	file, err := os.Create(localDir)
+func CacheReduceOutput(res string, destFileName string) error {
+	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+
+	localDir := Config.LocalfileDir + "/" + Config.CacheDir + destFileName
+
+	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println("os.Create() error")
+		fmt.Println("os.OpenFile() error")
 		return err
 	}
-	// defer file.Close()
+	defer file.Close()
 
 	_, err = file.WriteString(res)
 
-	var cnt int
-
-	PutFile([]string{destFileName, destFileName}, false, &cnt, 1, true)
-
-	os.Remove(localDir)
+	// os.Remove(localDir)
 
 	return nil
 }

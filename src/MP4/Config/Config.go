@@ -20,7 +20,8 @@ const (
 	ReplicaNum   = 4
 	BLOCK_SIZE   = 10 * 1024 * 1024
 	LINENUM      = 10
-	TempFile     = "temp.txt"
+	TempFile     = "temp"
+	CacheDir     = "cache"
 )
 
 const (
