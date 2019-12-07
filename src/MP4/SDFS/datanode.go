@@ -280,8 +280,9 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	return nil
 }
 
-func SubmitTask(req string, res *string) {
+func (d *Datanode) SubmitTask(req string, res *string) {
 	//Append Map  result to per key Intermediate file
+	fmt.Println("*****Submit Map Task!!!!!")
 	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
 	files, _ := ioutil.ReadDir(cacheDir)
 
@@ -498,7 +499,7 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 		return err
 	}
 
-	fmt.Printf("Map Phase Write Intermediate File for %s succeed!\n", fileName)
+	//fmt.Printf("Map Phase Write Intermediate File for %s succeed!\n", fileName)
 
 	return nil
 }
