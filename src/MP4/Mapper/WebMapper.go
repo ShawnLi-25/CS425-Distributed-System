@@ -44,12 +44,11 @@ func PostProcess(wordMap map[string][]string) string {
 func main() {
 
 	fileDir := os.Args[1]
-	// prefix := os.Args[2]
 
 	data, fileErr := os.Open(fileDir)
 	if fileErr != nil {
-		fmt.Println(fileErr)
-		panic(fileErr)
+		fmt.Printf("os.Open() error: Can't open file %s\n", fileDir)
+		return
 	}
 	defer data.Close()
 

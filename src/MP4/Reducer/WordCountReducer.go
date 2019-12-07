@@ -1,12 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
-
-	Config "../Config"
+	"strings"
 )
 
 //General format as: key : [val]\n
@@ -19,7 +18,6 @@ func PostProcess(wordMap map[string]int) string {
 
 	return res
 }
-
 
 func main() {
 	var output map[string]int
@@ -39,10 +37,11 @@ func main() {
 	//Read file line by line
 	scanner := bufio.NewScanner(file)
 
-
 	for scanner.Scan() {
 		//Parse each line
-		parsedLine := Config.ParseString(scanner.Text())
+		cmd := strings.Join(strings.Fields(scanner.Text()), " ")
+		parsedLine := strings.Split(cmd, " ")
+
 		key := parsedLine[0]
 		value, _ := strconv.Atoi(parsedLine[1])
 
