@@ -21,7 +21,7 @@ func RunMapper(arg []string) {
 	mapper := mapperArg.Maple_exe
 	//N       := mapperArg.Num_maples
 	//prefix  := mapperArg.Sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.Sdfs_src_directory
+	//src_dir := mapperArg.Sdfs_src_directory
 
 	//Upload maple_exe to SDFS
 	sdfs.PutFileOrPutDir([]string{mapper, mapper})

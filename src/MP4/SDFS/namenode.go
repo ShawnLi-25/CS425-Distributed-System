@@ -22,7 +22,6 @@ var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
 var TaskChan chan *Task = make(chan *Task)
 var TaskKeeperChan chan *Task = make(chan *Task)
 var deleteFilesRequest chan bool = make(chan bool)
-var INPUT_DIR chan string = make(chan string)
 
 
 type FileMetadata struct {
@@ -239,9 +238,6 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
-	go send_src_dir(src_dir)
-
-
 	*res = 1
 	return nil
 }
@@ -282,28 +278,13 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
-func send_src_dir(src_dir string) {
-	INPUT_DIR <- src_dir
-}
-
-
 func deleteInputFiles(prefixFileList []string) {
 	delete_input := <-deleteFilesRequest
 
-	for _, filename := range prefixFileList {
-		DeleteFile([]string{filename})
-	}
-
 	if delete_input {
-		src_dir := <- INPUT_DIR
-		inputFileList, ok := findFileWithPrefix(src_dir + "/" , Config.SdfsfileDir)
-		if !ok || len(inputFileList) == 0 {
-			return
+		for _, filename := range prefixFileList {
+			DeleteFile([]string{filename})
 		}
-		for _, inputFilename := range inputFileList {
-			DeleteFile([]string{inputFilename})
-		}
-
 	}
 }
 
@@ -394,6 +375,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 				}
 				if delete_input {
 					deleteFilesRequest <- true
+				}else {
+					deleteFilesRequest <- false
 				}
 				return
 			}
