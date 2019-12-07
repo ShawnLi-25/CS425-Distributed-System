@@ -346,7 +346,7 @@ func RunMapTask(req Task) error{
 				return err
 			}
 
-			_, err := temp.WriteString(buf)
+			_, err = temp.WriteString(buf)
 			if err != nil {
 				panic(err)
 			}
@@ -363,13 +363,13 @@ func RunMapTask(req Task) error{
 
 //Delete??
 func RunReduceTask(req Task) error{
-	for _, fileName := range Task.FileList {
+	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
 		//Fetch SDFSfile to local file system
 		GetFile([]string{fileName, fileName})
 
-		parseName := strings.Split(fileName, "_")[1]
+		parseName := strings.Split(fileName, "_")
 		if len(parseName) != 2 {
 			log.Println("Parse Name Error!! Should be prefix_key")
 			return nil
