@@ -289,7 +289,7 @@ func (d *Datanode) SubmitTask(req string, res *string) error{
 	var cnt = 1
 	for _, file := range files {
 		fileName := file.Name()
-		PutFile([]string{Config.CacheDir + "/" + fileName, Config.CacheDir + "/" + fileName}, false, &cnt, 1, true)
+		PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
 	}
 
 	os.Remove(cacheDir)
