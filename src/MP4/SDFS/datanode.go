@@ -351,6 +351,7 @@ func RunMapTask(req Task) error {
 				cmd := exec.Command(Config.LocalfileDir+"/"+req.TaskExe, tempFileDir)
 				res, err := cmd.Output()
 				if err != nil {
+					fmt.Println(buf)
 					fmt.Println("Datanode.RunMapTask: cmd.Output Error")
 				}
 
