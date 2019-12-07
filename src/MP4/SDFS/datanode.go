@@ -270,7 +270,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		
 		err := RunReduceTask(req)
 		if err != nil {
-			retrun err
+			return err
 		}
 	}
 
