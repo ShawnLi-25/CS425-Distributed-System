@@ -7,12 +7,23 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
 	//"io/ioutil"
 )
 
-//TODO Exclude ","
 func Parse(cmd string) []string {
-	cmd = strings.Join(strings.Fields(cmd), " ")
+	wordList := strings.Fields(cmd)
+
+	for _, word := range wordList {
+		for i := 0; i < len(word); i++ {
+			if !unicode.IsDigit(rune(word[i])) && !unicode.IsLetter(rune(word[i])) {
+				cmd += string(word[i])
+			}
+		}
+		cmd += " "
+	}
+	// cmd = strings.Join(strings.Fields(cmd), " ")
+
 	return strings.Split(cmd, " ")
 }
 

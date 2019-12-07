@@ -557,7 +557,7 @@ func EvokeNamenode(namenodeID string) {
 	var updateOK bool
 	client.rpcClient.Call("Datanode.UpdateNamenodeID", "", updateOK)
 	if !updateOK {
-		fmt.Println("UpdateNamenodeID error")
+		log.Println("No need to Update NamenodeID")
 	}
 
 	client.Close()
