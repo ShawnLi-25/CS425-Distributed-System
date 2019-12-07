@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -54,7 +55,7 @@ func main() {
 	//Open file
 	file, err := os.Open(filepath)
 	if err != nil {
-		fmt.Printf("os.Open() can't open file %s\n", filepath)
+		log.Printf("os.Open() can't open file %s\n", filepath)
 		return
 	}
 	defer file.Close()
@@ -70,18 +71,10 @@ func main() {
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Println("Error")
+		log.Println("Error")
 	}
 
 	res := PostProcess(wordMap)
-
-	// b, err := json.Marshal(wordMap)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// s := string(b)
-
 	fmt.Fprintf(os.Stdout, res)
 	//helper.WriteWordMapToJsonFile(wordMap, prefix)
 }
