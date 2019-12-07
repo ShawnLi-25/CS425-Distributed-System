@@ -99,18 +99,18 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 
 	//Check if src_dir exists and contains file
 	src_dir := arg[3]
-	if _, err := os.Stat(config.LocalfileDir + "/" + src_dir); os.IsNotExist(err) {
-		fmt.Printf("====Error: %s not found", src_dir)
-		return sdfs.MapperArg{}, false
-	}
-	files, err := ioutil.ReadDir(config.LocalfileDir + "/" + src_dir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if len(files) == 0 {
-		fmt.Printf("====Error: %s doesn't contains files", src_dir)
-		return sdfs.MapperArg{}, false
-	}
+	//if _, err := os.Stat(config.LocalfileDir + "/" + src_dir); os.IsNotExist(err) {
+	//	fmt.Printf("====Error: %s not found", src_dir)
+	//	return sdfs.MapperArg{}, false
+	//}
+	//files, err := ioutil.ReadDir(config.LocalfileDir + "/" + src_dir)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//if len(files) == 0 {
+	//	fmt.Printf("====Error: %s doesn't contains files", src_dir)
+	//	return sdfs.MapperArg{}, false
+	//}
 
 	//Return
 	return sdfs.MapperArg{mapper, N, prefix, src_dir}, true
