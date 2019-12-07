@@ -263,7 +263,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	if partition_way == "hash" || strings.Contains(partition_way, "hash") {
 		taskList = hashPartition(fileList, N, "reduce", reducer, destfilename)
 	} else if partition_way == "range" || strings.Contains(partition_way, "range") {
-		taskList := rangePartition(fileList, N, "reduce", reducer, destfilename)
+		taskList = rangePartition(fileList, N, "reduce", reducer, destfilename)
 	} else {
 		fmt.Println("Invalid partition way: only support hash or range partition")
 		return nil
@@ -332,9 +332,6 @@ func hashPartition(fileList []string, totalTask int, taskType string, exe_name s
 	fileListLen := len(fileList)
 
 	num_files := fileListLen / totalTask
-	extra := fileListLen % totalTask
-
-	remain := fileListLen
 
 	for _, fileName := range fileList {
 		parseName := strings.Split(fileName, "_")
