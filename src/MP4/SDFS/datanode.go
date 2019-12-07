@@ -379,12 +379,14 @@ func RunMapTask(req Task) error {
 		fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
 
 	}
+
+	os.Remove(tempFileDir)
+
 	fmt.Printf("Map Task %d succeed!\n", req.TaskID)
 
 	return nil
 }
 
-//Delete??
 func RunReduceTask(req Task) error {
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
@@ -459,13 +461,13 @@ func parseMapRes(res []byte, prefix string) error {
 //Todo: Check
 func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
-
-	file, err := os.Create(Config.LocalfileDir + "/" + fileName)
+	localDir := Config.LocalfileDir + "/" + fileName
+	file, err := os.Create(localDir)
 	if err != nil {
 		fmt.Println("os.Create() error")
 		return err
 	}
-	defer file.Close()
+	// defer file.Close()
 
 	n, err := file.Write(val)
 	if err != nil || n <= 0 {
@@ -477,6 +479,8 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 	//Append Map  result to per key Intermediate file
 	PutFile([]string{fileName, fileName}, false, &cnt, 1, true)
 
+	os.Remove(localDir)
+
 	fmt.Printf("Map Phase Output for %s succeed!\n", fileName)
 
 	return nil
@@ -484,16 +488,19 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
 func ReducerOutput(res []byte, key string, destFileName string) error {
-	file, err := os.Create(Config.LocalfileDir + "/" + destFileName)
+	localDir := Config.LocalfileDir + "/" + destFileName
+	file, err := os.Create(localDir)
 	if err != nil {
 		fmt.Println("os.Create() error")
 		return err
 	}
-	defer file.Close()
+	// defer file.Close()
 
 	var cnt int
 
 	PutFile([]string{destFileName, destFileName}, false, &cnt, 1, true)
+
+	os.Remove(localDir)
 
 	return nil
 }
