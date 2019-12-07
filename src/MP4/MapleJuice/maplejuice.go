@@ -2,7 +2,7 @@ package maplejuice
 
 import (
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
 	"os"
 	"strconv"
