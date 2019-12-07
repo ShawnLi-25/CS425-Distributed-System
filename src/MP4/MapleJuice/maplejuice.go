@@ -21,13 +21,13 @@ func RunMapper(arg []string) {
 	mapper := mapperArg.Maple_exe
 	//N       := mapperArg.Num_maples
 	//prefix  := mapperArg.Sdfs_intermediate_filename_prefix
-	src_dir := mapperArg.Sdfs_src_directory
+	//src_dir := mapperArg.Sdfs_src_directory
 
 	//Upload maple_exe to SDFS
 	sdfs.PutFileOrPutDir([]string{mapper, mapper})
 
 	//Upload all files in src_dir to SDFS
-	sdfs.PutFileOrPutDir([]string{src_dir, src_dir})
+	//sdfs.PutFileOrPutDir([]string{src_dir, src_dir})
 
 	//RPC Namenode's method "RunMapper"
 	namenodeAddr := sdfs.GetNamenodeAddr()
