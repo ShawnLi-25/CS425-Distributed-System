@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 var valueList []string
@@ -28,9 +27,14 @@ func gatherLink(content string) {
 func postProcess() string {
 	res := ""
 
-	for _, val := range valueList {
-		res += strconv.Itoa(val) + " "
+	for idx, val := range valueList {
+		if idx != len(valueList) - 1 {
+			res += val + ","
+		} else {
+			res += val + "\n"
+		}
 	}
+	
 
 	fmt.Println(res)
 	return res
