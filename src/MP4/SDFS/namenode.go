@@ -24,7 +24,6 @@ var TaskKeeperChan chan *Task = make(chan *Task)
 var deleteFilesRequest chan bool = make(chan bool)
 var INPUT_DIR chan string = make(chan string)
 
-
 type FileMetadata struct {
 	DatanodeList []string
 	LastWrtTime  time.Time
@@ -227,7 +226,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	}
 
 	//Split fileList into taskList, return a list of Task
-	taskList := splitFileIntoTask(fileList, N, "map", mapper, prefix)
+	taskList := splitMapTask(fileList, N, "map", mapper, prefix)
 
 	//taskKeeper, keep tracing each task and deal with node failure
 	go taskKeeper(N, n.Workingmap, false)
@@ -241,7 +240,6 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 
 	go send_src_dir(src_dir)
 
-
 	*res = 1
 	return nil
 }
@@ -254,6 +252,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	prefix := reducerArg.Sdfs_intermediate_filename_prefix
 	destfilename := reducerArg.Sdfs_dest_filename
 	delete_input := reducerArg.Delete_input
+	partition_way := reducerArg.Partition_way
 
 	//Find all sdfs_files with the prefix, returns a list of filename
 	fileList, ok := findFileWithPrefix(prefix, Config.SdfsfileDir)
@@ -263,7 +262,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	}
 
 	//Todo: Partition xiangl14
-	taskList := splitFileIntoTask(fileList, N, "reduce", reducer, destfilename)
+	taskList := splitReduceTask(fileList, N, "reduce", reducer, destfilename)
 
 	//taksKeeper
 	go taskKeeper(N, n.Workingmap, delete_input)
@@ -286,7 +285,6 @@ func send_src_dir(src_dir string) {
 	INPUT_DIR <- src_dir
 }
 
-
 func deleteInputFiles(prefixFileList []string) {
 	delete_input := <-deleteFilesRequest
 
@@ -295,8 +293,8 @@ func deleteInputFiles(prefixFileList []string) {
 	}
 
 	if delete_input {
-		src_dir := <- INPUT_DIR
-		inputFileList, ok := findFileWithPrefix(src_dir + "/" , Config.SdfsfileDir)
+		src_dir := <-INPUT_DIR
+		inputFileList, ok := findFileWithPrefix(src_dir+"/", Config.SdfsfileDir)
 		if !ok || len(inputFileList) == 0 {
 			return
 		}
@@ -307,7 +305,7 @@ func deleteInputFiles(prefixFileList []string) {
 	}
 }
 
-func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+func splitMapTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
 	var taskList []*Task
 
 	fileListLen := len(fileList)
@@ -335,6 +333,26 @@ func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_na
 	}
 
 	return taskList
+}
+
+func slitReduceTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+	var taskList []*Task
+
+	fileListLen := len(fileList)
+
+	for _, fileName := range fileList {
+		parseName := strings.Split(fileName, "_")
+		key := parseName[1]
+
+		hashVal := Config.hash(key)
+
+		taskList
+	}
+
+	for i := 0; i < totalTask; i += 1 {
+
+	}
+
 }
 
 func distributeAllTasks(taskList []*Task) {

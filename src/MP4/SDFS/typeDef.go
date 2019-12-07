@@ -17,6 +17,7 @@ type ReducerArg struct {
 	Sdfs_intermediate_filename_prefix string
 	Sdfs_dest_filename                string
 	Delete_input                      bool
+	Partition_way                     string
 }
 
 type Task struct {
@@ -56,11 +57,11 @@ type ReReplicaRequest struct {
 }
 
 type PutRequest struct {
-	Filename string
-	Eof      bool
-	Offset   int64
-	Content  []byte
-	Hostname string
+	Filename   string
+	Eof        bool
+	Offset     int64
+	Content    []byte
+	Hostname   string
 	AppendMode bool
 }
 
