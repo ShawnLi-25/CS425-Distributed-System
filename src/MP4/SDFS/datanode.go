@@ -254,7 +254,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Map Task\n", fileNum)
-	
+
 		//Call MapFunc for each file
 		err := RunMapTask(req)
 		if err != nil {
@@ -263,15 +263,15 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 	} else if req.TaskType == "reduce" {
 		log.Printf("DataNode: Reduce Task %d Started!!\n", req.TaskID)
-		
+
 		GetFile([]string{req.TaskExe, req.TaskExe})
 
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Reduce Task\n", fileNum)
-		
+
 		err := RunReduceTask(req)
 		if err != nil {
-			retrun err
+			return err
 		}
 	}
 
@@ -279,8 +279,8 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	return nil
 }
 
-//Scan the Map-Input Files, call Map.exe per 10-lines 
-func RunMapTask(req Task) error{
+//Scan the Map-Input Files, call Map.exe per 10-lines
+func RunMapTask(req Task) error {
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Map Task for File %s\n", fileName)
 
@@ -300,7 +300,7 @@ func RunMapTask(req Task) error{
 			return err
 		}
 		defer data.Close()
-		
+
 		var scanner = bufio.NewScanner(data)
 
 		var lineCnt = 0
@@ -325,7 +325,7 @@ func RunMapTask(req Task) error{
 					log.Println("temp_file WriteString error")
 					panic(err)
 				}
-				
+
 				//Todo: Need to close?
 				temp.Close()
 
@@ -362,7 +362,7 @@ func RunMapTask(req Task) error{
 }
 
 //Delete??
-func RunReduceTask(req Task) error{
+func RunReduceTask(req Task) error {
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
@@ -379,7 +379,7 @@ func RunReduceTask(req Task) error{
 
 		decodedFileName := Config.DecodeFileName(fileName)
 		fmt.Println("Src file name:", decodedFileName)
-		
+
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
 		cmd := exec.Command("./"+req.TaskExe, ReduceInputDir)
@@ -433,7 +433,6 @@ func parseMapRes(res []byte, prefix string) error {
 	return nil
 }
 
-
 //Todo: Check
 func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
@@ -458,12 +457,11 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 	return nil
 }
 
-
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
-func ReducerOutput(res []byte, key string, destFileName string) error{
+func ReducerOutput(res []byte, key string, destFileName string) error {
 	var cnt int
 
 	PutFile([]string{destFileName, destFileName}, false, &cnt, 1, true)
-	
+
 	return nil
 }
