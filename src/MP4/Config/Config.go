@@ -36,17 +36,17 @@ const (
 func AppendFileToFile(src_file string, dest_file string) {
 	dest_fd, err := os.OpenFile(dest_file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("AppendFileToFile: os.OpenFile() error")
 	}
 	defer dest_fd.Close()
 
 	src_byte, err := ioutil.ReadFile(src_file)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("AppendFileToFile: ioutil.ReadFile() error")
 	}
 
 	if _, err := dest_fd.Write(src_byte); err != nil {
-		log.Fatal(err)
+		log.Println("AppendFileToFile: fd.Write() error")
 	}
 
 }
