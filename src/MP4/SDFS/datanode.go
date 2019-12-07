@@ -387,6 +387,7 @@ func RunMapTask(req Task) error {
 	return nil
 }
 
+//Todo: Why not remove-all?
 func RunReduceTask(req Task) error {
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
