@@ -22,8 +22,6 @@ var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
 var TaskChan chan *Task = make(chan *Task)
 var TaskKeeperChan chan *Task = make(chan *Task)
 var deleteFilesRequest chan bool = make(chan bool)
-var INPUT_DIR chan string = make(chan string)
-
 
 type FileMetadata struct {
 	DatanodeList []string
@@ -74,7 +72,7 @@ func RunNamenodeServer() {
 
 	getCurrentMaps(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 
-	go WaitUpdateFilemapChan(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
+	go WaitUpdateMapChan(namenode.Filemap, namenode.Nodemap, namenode.Workingmap)
 	go ListenOnNewNodeChan(namenode.Workingmap)
 
 	fmt.Printf("===RunNamenodeServer: Listen on port %s\n", Config.NamenodePort)
@@ -84,7 +82,7 @@ func RunNamenodeServer() {
 	}
 }
 
-func WaitUpdateFilemapChan(Filemap map[string]*FileMetadata, Nodemap map[string][]string, Workingmap map[string]*Task) {
+func WaitUpdateMapChan(Filemap map[string]*FileMetadata, Nodemap map[string][]string, Workingmap map[string]*Task) {
 	for {
 		failedNodeID := <-UpdateFilemapChan
 
@@ -227,7 +225,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	}
 
 	//Split fileList into taskList, return a list of Task
-	taskList := splitFileIntoTask(fileList, N, "map", mapper, prefix)
+	taskList := rangePartition(fileList, N, "map", mapper, prefix)
 
 	//taskKeeper, keep tracing each task and deal with node failure
 	go taskKeeper(N, n.Workingmap, false)
@@ -238,9 +236,6 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	}
 
 	go distributeAllTasks(taskList)
-
-	go send_src_dir(src_dir)
-
 
 	*res = 1
 	return nil
@@ -254,6 +249,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	prefix := reducerArg.Sdfs_intermediate_filename_prefix
 	destfilename := reducerArg.Sdfs_dest_filename
 	delete_input := reducerArg.Delete_input
+	partition_way := reducerArg.Partition_way
 
 	//Find all sdfs_files with the prefix, returns a list of filename
 	fileList, ok := findFileWithPrefix(prefix, Config.SdfsfileDir)
@@ -262,8 +258,16 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
 
+	var taskList []*Task
 	//Todo: Partition xiangl14
-	taskList := splitFileIntoTask(fileList, N, "reduce", reducer, destfilename)
+	if partitionWay == "hash" || strings.Contains(partitionWay, "hash") {
+		taskList = hashPartition(fileList, N, "reduce", reducer, destfilename)
+	} else if partitionWay == "range" || strings.Contains(partitionWay, "range") {
+		taskList := rangePartition(fileList, N, "map", mapper, prefix)
+	} else {
+		fmt.Println("Invalid partition way: only support hash or range partition")
+		return nil
+	}
 
 	//taksKeeper
 	go taskKeeper(N, n.Workingmap, delete_input)
@@ -273,8 +277,6 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
-	go distributeAllTasks(taskList)
-
 	go deleteInputFiles(fileList)
 
 	*res = 1
@@ -282,32 +284,17 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
-func send_src_dir(src_dir string) {
-	INPUT_DIR <- src_dir
-}
-
-
 func deleteInputFiles(prefixFileList []string) {
 	delete_input := <-deleteFilesRequest
 
-	for _, filename := range prefixFileList {
-		DeleteFile([]string{filename})
-	}
-
 	if delete_input {
-		src_dir := <- INPUT_DIR
-		inputFileList, ok := findFileWithPrefix(src_dir + "/" , Config.SdfsfileDir)
-		if !ok || len(inputFileList) == 0 {
-			return
+		for _, filename := range prefixFileList {
+			DeleteFile([]string{filename})
 		}
-		for _, inputFilename := range inputFileList {
-			DeleteFile([]string{inputFilename})
-		}
-
 	}
 }
 
-func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+func rangePartition(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
 	var taskList []*Task
 
 	fileListLen := len(fileList)
@@ -330,6 +317,37 @@ func splitFileIntoTask(fileList []string, totalTask int, taskType string, exe_na
 		}
 
 		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask, output}
+
+		taskList = append(taskList, &task)
+	}
+
+	return taskList
+}
+
+func hashPartition(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+	var taskList []*Task = make([]*Task, totalTask)
+
+	var fileListPerTask [][]string = make([][]string, totalTask)
+
+	fileListLen := len(fileList)
+
+	num_files := fileListLen / totalTask
+	extra := fileListLen % totalTask
+
+	remain := fileListLen
+
+	for _, fileName := range fileList {
+		parseName := strings.Split(fileName, "_")
+		key := parseName[1]
+
+		hashVal := Config.hash(key) % totalTask
+		fmt.Printf("Hash value for key %s is %d", key, hashVal)
+
+		fileListPerTask[hashVal] = append(fileListPerTask[hashVal], fileName)
+	}
+
+	for i := 0; i < totalTask; i += 1 {
+		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask[i], output}
 
 		taskList = append(taskList, &task)
 	}
@@ -394,6 +412,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 				}
 				if delete_input {
 					deleteFilesRequest <- true
+				} else {
+					deleteFilesRequest <- false
 				}
 				return
 			}

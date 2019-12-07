@@ -1,6 +1,7 @@
 package config
 
 import (
+	"hash/fnv"
 	"io/ioutil"
 	"log"
 	"os"
@@ -140,4 +141,10 @@ func ParseDir(str string) []string {
 	dirName := str[:idx]
 	fieName := str[idx+1 : len(str)]
 	return []string{dirName, fieName}
+}
+
+func hash(s string) uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return h.Sum32()
 }
