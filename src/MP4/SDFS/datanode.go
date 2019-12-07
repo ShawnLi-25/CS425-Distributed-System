@@ -489,7 +489,7 @@ func MapperOutput(key []byte, val []byte, prefix string) error {
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
 func ReducerOutput(res []byte, key string, destFileName string) error {
 	localDir := Config.LocalfileDir + "/" + destFileName
-	file, err := os.Create(localDir)
+	_, err := os.Create(localDir)
 	if err != nil {
 		fmt.Println("os.Create() error")
 		return err
