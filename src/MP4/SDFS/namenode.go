@@ -408,6 +408,9 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 				for i := 0; i < len(Workingmap); i++ {
 					TaskChan <- nil
 				}
+				for nodeID,_ := range Workingmap {
+					requestTaskSubmission(nodeID)
+				}
 				if delete_input {
 					deleteFilesRequest <- true
 				} else {
@@ -417,6 +420,19 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 			}
 		}
 	}
+}
+
+//RPC nodeID to submit a job
+func requestTaskSubmission(nodeID string) {
+	nodeAddr := Config.GetIPAddressFromID(nodeID)
+
+	client := NewClient(nodeAddr + ":" + Config.DatanodePort)
+	client.Dial()
+
+	var res string
+	client.rpcClient.Call("Datanode.SubmitTask", "", &res)
+
+	client.Close()
 }
 
 func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
