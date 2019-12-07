@@ -363,7 +363,10 @@ func RunMapTask(req Task) error {
 			fmt.Println("*****Temp File Write Succeed!")
 
 			cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
-			res, _ := cmd.Output()
+			res, err := cmd.Output()
+			if err != nil {
+				fmt.Println("cmd.Output Error")
+			}
 
 			fmt.Println("*****CMD succeed!")
 
