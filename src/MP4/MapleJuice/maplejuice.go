@@ -117,8 +117,8 @@ func checkMapperArg(arg []string) (sdfs.MapperArg, bool) {
 }
 
 func checkReducerArg(arg []string) (sdfs.ReducerArg, bool) {
-	if len(arg) < 5 {
-		fmt.Println("Usage: juice <juice_exe> <num_juices> <sdfs_intermediate_filename_prefiix> <sdfs_dest_filename> delete_input={0,1}")
+	if len(arg) < 6 {
+		fmt.Println("Usage: juice <juice_exe> <num_juices> <sdfs_intermediate_filename_prefiix> <sdfs_dest_filename> delete_input={0,1} partition_way={hash,range}")
 		return sdfs.ReducerArg{}, false
 	}
 
@@ -151,5 +151,7 @@ func checkReducerArg(arg []string) (sdfs.ReducerArg, bool) {
 		delete_input = false
 	}
 
-	return sdfs.ReducerArg{reducer, N, prefix, destfilename, delete_input}, true
+	partition_way := arg[5]
+
+	return sdfs.ReducerArg{reducer, N, prefix, destfilename, delete_input, partition_way}, true
 }
