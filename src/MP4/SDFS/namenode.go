@@ -277,6 +277,8 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 		go waitForTaskChan(NodeID, n.Workingmap)
 	}
 
+	go distributeAllTasks(taskList)
+
 	go deleteInputFiles(fileList)
 
 	*res = 1
