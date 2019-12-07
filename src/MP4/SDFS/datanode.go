@@ -460,7 +460,7 @@ func parseMapRes(res []byte, prefix string) error {
 func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
 
-	file, err := os.Create(Config.LocalfileDir + "/" + ConfileName)
+	file, err := os.Create(Config.LocalfileDir + "/" + fileName)
 	if err != nil {
 		fmt.Println("os.Create() error")
 		return err
