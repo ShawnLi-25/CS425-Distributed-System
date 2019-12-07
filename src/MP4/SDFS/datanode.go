@@ -334,10 +334,13 @@ func RunMapTask(req Task) error {
 				//Todo: Need to close?
 				temp.Close()
 
-				cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
-				res, _ := cmd.Output()
+				cmd := exec.Command(Config.LocalfileDir+"/"+req.TaskExe, tempFileDir)
+				res, err := cmd.Output()
+				if err != nil {
+					fmt.Println("cmd.Output Error")
+				}
 
-			       fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
+				fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
 
 				parseMapRes(res, req.Output)
 
@@ -362,14 +365,14 @@ func RunMapTask(req Task) error {
 
 			//fmt.Println("*****Temp File Write Succeed!")
 
-			cmd := exec.Command(Config.LocalfileDir+"./"+req.TaskExe, tempFileDir)
+			cmd := exec.Command(Config.LocalfileDir+"/"+req.TaskExe, tempFileDir)
 			res, err := cmd.Output()
 			if err != nil {
 				fmt.Println("cmd.Output Error")
 			}
 
 			fmt.Printf("*****CMD succeed: res is: %s!!\n", res)
-			
+
 			parseMapRes(res, req.Output)
 		}
 
@@ -457,7 +460,7 @@ func parseMapRes(res []byte, prefix string) error {
 func MapperOutput(key []byte, val []byte, prefix string) error {
 	fileName := prefix + "_" + string(key)
 
-	file, err := os.Create(fileName)
+	file, err := os.Create(Config.LocalfileDir + "/" + ConfileName)
 	if err != nil {
 		fmt.Println("os.Create() error")
 		return err
