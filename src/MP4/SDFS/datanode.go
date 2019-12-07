@@ -311,6 +311,7 @@ func RunMapTask(req Task) error {
 			//Deal with EOF
 			if lineCnt < 10 {
 				buf += scanner.Text() + "\n"
+				fmt.Println("Read line")
 			} else {
 				// MapFunc(req.TaskExe)
 				temp, err := os.Create(tempFileDir)
