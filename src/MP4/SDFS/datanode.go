@@ -214,16 +214,16 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 
-	fi, err := os.Stat(req.Filename)
+	fi, err := os.Stat(Config.SdfsfileDir + "/" + req.Filename)
 	if os.IsNotExist(err) {
-		fmt.Printf("===Error: %s does not exsit in local!\n", req.Filename)
-		log.Printf("===Error: %s does not exsit in local!\n", req.Filename)
+		fmt.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
+		log.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
 
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
-		err := os.RemoveAll(req.Filename)
+		err := os.RemoveAll(Config.SdfsfileDir + "/" + req.Filename)
 		if err != nil {
 			return err
 		}
@@ -474,14 +474,14 @@ func RunReduceTask(req Task) error {
 
 	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 
+	temp, err := os.Create(tempFileDir)
+	if err != nil {
+		fmt.Println("Datanode.RunReduceTask: os.Create() error")
+		return err
+	}
+
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
-
-		// temp, err := os.Create(tempFileDir)
-		// if err != nil {
-		// 	fmt.Println("Datanode.RunReduceTask: os.Create() error")
-		// 	return err
-		// }
 
 		//Stale way: Fetch SDFSfile to local file system
 		// GetFile([]string{fileName, fileName})
@@ -492,7 +492,7 @@ func RunReduceTask(req Task) error {
 
 		for _, nodeID := range cacheList {
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
-			go RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
@@ -615,10 +615,10 @@ func CacheReduceOutput(res string, destFileName string) error {
 	}
 	defer file.Close()
 
+	fmt.Println("Write to:" + fileDir)
 	_, err = file.WriteString(res)
 
 	// os.Remove(fileDir)
 
 	return nil
 }
-!

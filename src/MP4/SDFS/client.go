@@ -201,7 +201,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	os.Rename(tempfilePath, filePath)
 
-	//fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
+	fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 	log.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 
 	return nil
@@ -254,8 +254,8 @@ func PutFileOrPutDir(filenames []string) {
 
 	//Check if localfile exists
 	if os.IsNotExist(err) {
-		fmt.Printf("===Error: %s does not exsit in local!\n", localfilePath)
-		log.Printf("===Error: %s does not exsit in local!\n", localfilePath)
+		fmt.Printf("===PutFileOrPutDir Error: %s does not exsit in local!\n", localfilePath)
+		log.Printf("===PutFileOrPutDir Error: %s does not exsit in local!\n", localfilePath)
 		return
 	}
 
@@ -312,8 +312,8 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int, a
 
 	//Check if localfile exists
 	if _, err := os.Stat(localfilePath); os.IsNotExist(err) {
-		fmt.Printf("===Error: %s does not exsit in local!\n", localfilePath)
-		log.Printf("===Error: %s does not exsit in local!\n", localfilePath)
+		fmt.Printf("===PutFile Error: %s does not exsit in local!\n", localfilePath)
+		log.Printf("===PutFile Error: %s does not exsit in local!\n", localfilePath)
 		return
 	}
 
