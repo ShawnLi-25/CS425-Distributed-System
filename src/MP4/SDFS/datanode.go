@@ -435,7 +435,11 @@ func RunReduceTask(req Task) error {
 
 		res := FormatOutput(output, key)
 
-		os.Remove(Config.LocalfileDir + "/" + fileName)
+		err := os.Remove(Config.LocalfileDir + "/" + fileName)
+		fmt.Println(fileName)
+		if err != nil {
+			fmt.Println("os.Remove error!")
+		}
 
 		CacheReduceOutput(res, req.Output)
 	}
@@ -502,7 +506,7 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 	defer file.Close()
 
 	n, err := file.Write(val)
-	fmt.Printf(string(val))
+	// fmt.Printf(string(val))
 	if err != nil || n <= 0 {
 		return err
 	}
