@@ -335,14 +335,13 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 		log.Println("Invalid Task Name!!")
 	}
 
-	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
 	fmt.Printf("***Submit %s task takes %v\n!!!", req, time.Since(start))
 	return nil
 }
 
 //Scan the Map-Input Files, call Map.exe per 10-lines
 func RunMapTask(req Task) error {
-	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
+	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Map Task for File %s\n", fileName)
 
@@ -450,18 +449,39 @@ func RunMapTask(req Task) error {
 
 //Todo: Why not remove-all?
 func RunReduceTask(req Task) error {
+
+	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
+
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
-		//Fetch SDFSfile to local file system
-		GetFile([]string{fileName, fileName})
+		// temp, err := os.Create(tempFileDir)
+		// if err != nil {
+		// 	fmt.Println("Datanode.RunReduceTask: os.Create() error")
+		// 	return err
+		// }
+
+		//Stale way: Fetch SDFSfile to local file system
+		// GetFile([]string{fileName, fileName})
+
+		cacheList := req.CacheMap[fileName]
+
+		var respCount int = 0
+
+		for _, nodeID := range cacheList {
+			nodeAddr := Config.GetIPAddressFromID(nodeID)
+			go RpcOperationAt("get", Config.TempFile, fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"./"+fileName)
+			if err != nil {
+				fmt.Println(": Append temp to localFile error")
+			}
+		}
 
 		parseName := strings.Split(fileName, "_")
 		if len(parseName) != 2 {
 			log.Println("Parse Name Error!! Should be prefix_key")
 			return nil
 		}
-
 		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
@@ -475,13 +495,14 @@ func RunReduceTask(req Task) error {
 		res := FormatOutput(output, key)
 
 		err := os.Remove(Config.LocalfileDir + "/" + fileName)
-		//fmt.Println(fileName)
 		if err != nil {
 			fmt.Println("os.Remove error!")
 		}
 
 		CacheReduceOutput(res, req.Output)
 	}
+
+	os.Remove(tempFileDir)
 
 	return nil
 }
