@@ -474,7 +474,7 @@ func RunReduceTask(req Task) error {
 
 	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 
-	temp, err := os.Create(tempFileDir)
+	_, err := os.Create(tempFileDir)
 	if err != nil {
 		fmt.Println("Datanode.RunReduceTask: os.Create() error")
 		return err
