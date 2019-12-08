@@ -435,7 +435,7 @@ func RunReduceTask(req Task) error {
 
 		res := FormatOutput(output, key)
 
-		err := os.Remove(Config.LocalfileDir + "/" + fileName)
+		err := os.RemoveAll(Config.LocalfileDir + "/" + fileName)
 		fmt.Println(fileName)
 		if err != nil {
 			fmt.Println("os.Remove error!")
