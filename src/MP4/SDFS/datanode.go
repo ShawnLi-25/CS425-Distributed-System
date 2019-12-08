@@ -316,7 +316,8 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 		resultDir := Config.ResultDir
 		files, _ := ioutil.ReadDir(resultDir)
-
+		
+		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
 			PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
