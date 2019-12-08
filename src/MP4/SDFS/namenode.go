@@ -428,6 +428,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 
 //RPC nodeID to submit a job
 func requestTaskSubmission(nodeID string) {
+	fmt.Println("Namenode.RequestTaskSubmission:", nodeID)
 	nodeAddr := Config.GetIPAddressFromID(nodeID)
 
 	client := NewClient(nodeAddr + ":" + Config.DatanodePort)
