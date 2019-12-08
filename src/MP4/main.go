@@ -12,6 +12,7 @@ import (
 	mj "./MapleJuice"
 	Mem "./Membership"
 	Sdfs "./SDFS"
+	//"Grep" "./Grep"
 )
 
 func Parse(cmd string) []string {
@@ -96,6 +97,8 @@ func main() {
 			go mj.RunMapper(parsedcmd[1:])
 		case "juice":
 			go mj.RunReducer(parsedcmd[1:])
+		//case "grep":
+		//	go Grep.RunGrep(parsedcmd[1:])
 		default:
 			log.Println("Main: Don't support this command")
 		}
