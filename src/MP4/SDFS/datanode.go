@@ -299,10 +299,10 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 	fmt.Printf("*****Submit %s Task Started!!!!!\n", req)
 	start := time.Now()
 
-	if req.TaskType == Config.Map {
+	if req == Config.Map {
 		var cacheList []string
 
-		cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
+		cacheDir := Config.CacheDir
 		files, _ := ioutil.ReadDir(cacheDir)
 
 		for _, file := range files {
@@ -312,8 +312,9 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 		*res = cacheList
 
-	} else if req.TaskType == Config.Reduce {
-		resultDir := Config.LocalfileDir + "/" + Config.ResultDir
+	} else if req == Config.Reduce {
+
+		resultDir := Config.ResultDir
 		files, _ := ioutil.ReadDir(resultDir)
 
 		for _, file := range files {
@@ -335,7 +336,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 	}
 
 	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
-	fmt.Printf("***Submit file %s takes %v\n!!!", fileName, time.Since(start))
+	fmt.Printf("***Submit %s task takes %v\n!!!", req, time.Since(start))
 	return nil
 }
 
@@ -531,12 +532,12 @@ func parseMapRes(res []byte, prefix string) error {
 //Todo: Check
 func CacheMapOutput(key []byte, val []byte, prefix string) error {
 
-	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+	Config.CreateDirIfNotExist(Config.CacheDir)
 
 	fileName := prefix + "_" + string(key)
-	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + fileName
+	fileDir := Config.CacheDir + "/" + fileName
 
-	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println("os.OpenFile() error")
 		return err
@@ -560,11 +561,11 @@ func FormatOutput(output []byte, key string) string {
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
 func CacheReduceOutput(res string, destFileName string) error {
-	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.ResultDir)
+	Config.CreateDirIfNotExist(Config.ResultDir)
 
-	localDir := Config.LocalfileDir + "/" + Config.ResultDir + "/" + destFileName
+	fileDir := Config.ResultDir + "/" + destFileName
 
-	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println("os.OpenFile() error")
 		return err
@@ -573,7 +574,7 @@ func CacheReduceOutput(res string, destFileName string) error {
 
 	_, err = file.WriteString(res)
 
-	// os.Remove(localDir)
+	// os.Remove(fileDir)
 
 	return nil
 }
