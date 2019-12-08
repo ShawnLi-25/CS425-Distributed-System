@@ -292,7 +292,7 @@ func (d *Datanode) SubmitTask(req string, res *string) error {
 		start := time.Now()
 		fileName := file.Name()
 		PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
-		fmt.Printf("***Submit file %s takes %v!!!", fileName, time.Since(start))
+		fmt.Printf("***Submit file %s takes %v\n!!!", fileName, time.Since(start))
 	}
 
 	err := os.RemoveAll(cacheDir)
