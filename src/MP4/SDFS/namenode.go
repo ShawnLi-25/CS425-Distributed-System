@@ -228,7 +228,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	taskList := rangePartition(fileList, N, "map", mapper, prefix)
 
 	//taskKeeper, keep tracing each task and deal with node failure
-	go taskKeeper(N, n.Workingmap, false)
+	go taskKeeper(N, n.Workingmap, "map", false)
 
 	//Evoke all nodes
 	for NodeID, _ := range n.Workingmap {
@@ -269,8 +269,10 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 		return nil
 	}
 
+	go deleteInputFiles(fileList)
+
 	//taksKeeper
-	go taskKeeper(N, n.Workingmap, delete_input)
+	go taskKeeper(N, n.Workingmap, "reduce", delete_input)
 
 	//Evoke all nodes
 	for NodeID, _ := range n.Workingmap {
@@ -279,7 +281,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
-	go deleteInputFiles(fileList)
+
 
 	*res = 1
 	return nil
@@ -287,8 +289,10 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 ///////////////////////////////////Helper functions////////////////////////////
 func deleteInputFiles(prefixFileList []string) {
+	fmt.Println("Waiting for deleteFilesRequest")
 	delete_input := <-deleteFilesRequest
 
+	fmt.Println("Get deleteFilesRequest")
 	if delete_input {
 		for _, filename := range prefixFileList {
 			DeleteFile([]string{filename})
@@ -396,7 +400,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*Task) {
 
 //Check all tasks are done
 //If a node fail, give the task to another node
-func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) {
+func taskKeeper(remainTask int, Workingmap map[string]*Task, taskType string, delete_input bool) {
 	for {
 		NilorTask := <-TaskKeeperChan
 
@@ -411,12 +415,16 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 					TaskChan <- nil
 				}
 				for nodeID,_ := range Workingmap {
-					requestTaskSubmission(nodeID)
+					requestTaskSubmission(nodeID, taskType)
 				}
-				if delete_input {
-					deleteFilesRequest <- true
-				} else {
-					deleteFilesRequest <- false
+				switch taskType {
+				case "reduce":
+					if delete_input {
+						deleteFilesRequest <- true
+					} else {
+						deleteFilesRequest <- false
+					}
+				default:
 				}
 
 				fmt.Println("TaskKeeper: All tasks finished!")
@@ -427,7 +435,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 }
 
 //RPC nodeID to submit a job
-func requestTaskSubmission(nodeID string) {
+func requestTaskSubmission(nodeID string, taskType string) {
 	fmt.Println("Namenode.RequestTaskSubmission:", nodeID)
 	nodeAddr := Config.GetIPAddressFromID(nodeID)
 
@@ -435,7 +443,7 @@ func requestTaskSubmission(nodeID string) {
 	client.Dial()
 
 	var res string
-	if err := client.rpcClient.Call("Datanode.SubmitTask", "", &res); err != nil {
+	if err := client.rpcClient.Call("Datanode.SubmitTask", taskType, &res); err != nil {
 		fmt.Println("Namenode.requestTaskSubmission().client.rpcClient.Call() fails!")
 	}
 
