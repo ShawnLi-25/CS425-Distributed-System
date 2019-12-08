@@ -349,10 +349,14 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 		for nodeID, _ := range Workingmap {
 			//RPC node to delete all intermediate files
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
+
+			fmt.Printf("RPCing %s to delete cache\n", nodeID)
 			client := NewClient(nodeAddr + "/" + Config.DatanodePort)
 			client.Dial()
 
-			client.Delete("cache")
+			if err := client.Delete("cache"); err {
+				log.Println("Namenode.deleteInputFiles.client.Delete: error at node ", nodeID)
+			}
 
 			client.Close()
 		}
