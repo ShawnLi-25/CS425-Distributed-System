@@ -249,7 +249,7 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	fmt.Printf("Datanode: Receive TaskID %d, TaskType %s, TaskExe %s\n", req.TaskID, req.TaskType, req.TaskExe)
 
-	if req.TaskType == "map" {
+	if req.TaskType == Config.Map {
 		log.Printf("DataNode: Map Task %d Started!!\n", req.TaskID)
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
@@ -268,7 +268,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			return err
 		}
 
-	} else if req.TaskType == "reduce" {
+	} else if req.TaskType == Config.Reduce {
 		log.Printf("DataNode: Reduce Task %d Started!!\n", req.TaskID)
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
@@ -285,32 +285,59 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		fmt.Println("Invalid Task Name!!")
+		log.Println("Invalid Task Name!!")
 	}
 
 	*res = 1
 	return nil
 }
 
-func (d *Datanode) SubmitTask(req string, res *string) error {
+func (d *Datanode) SubmitTask(req string, res *[]string) error {
 	//Append Map  result to per key Intermediate file
 	fmt.Printf("*****Submit %s Task Started!!!!!\n", req)
-	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
-	files, _ := ioutil.ReadDir(cacheDir)
+	start := time.Now()
 
-	var cnt = 1
-	for _, file := range files {
-		start := time.Now()
-		fileName := file.Name()
-		PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
-		fmt.Printf("***Submit file %s takes %v\n!!!", fileName, time.Since(start))
-	}
+	if req == Config.Map {
+		var cacheList []string
 
-	err := os.RemoveAll(cacheDir)
-	if err != nil {
-		log.Println("os.RemoveAll() Error!!")
+		cacheDir := Config.CacheDir
+		files, _ := ioutil.ReadDir(cacheDir)
+
+		for _, file := range files {
+			fileName := file.Name()
+			cacheList = append(cacheList, fileName)
+		}
+
+		*res = cacheList
+
+	} else if req == Config.Reduce {
+
+		resultDir := Config.ResultDir
+		files, _ := ioutil.ReadDir(resultDir)
+		
+		var cnt = 0
+		for _, file := range files {
+			fileName := file.Name()
+			PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
+		}
+
+		err := os.RemoveAll(resultDir)
+		if err != nil {
+			log.Println("os.RemoveAll() Error!!")
+			return err
+		}
+
+		*res = nil
+
+	} else {
+		fmt.Println("Invalid Task Name!!")
+		log.Println("Invalid Task Name!!")
 	}
 
 	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
+	fmt.Printf("***Submit %s task takes %v\n!!!", req, time.Since(start))
 	return nil
 }
 
@@ -506,12 +533,12 @@ func parseMapRes(res []byte, prefix string) error {
 //Todo: Check
 func CacheMapOutput(key []byte, val []byte, prefix string) error {
 
-	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+	Config.CreateDirIfNotExist(Config.CacheDir)
 
 	fileName := prefix + "_" + string(key)
-	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + fileName
+	fileDir := Config.CacheDir + "/" + fileName
 
-	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println("os.OpenFile() error")
 		return err
@@ -519,7 +546,6 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 	defer file.Close()
 
 	n, err := file.Write(val)
-	// fmt.Printf(string(val))
 	if err != nil || n <= 0 {
 		return err
 	}
@@ -536,11 +562,11 @@ func FormatOutput(output []byte, key string) string {
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
 func CacheReduceOutput(res string, destFileName string) error {
-	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+	Config.CreateDirIfNotExist(Config.ResultDir)
 
-	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + destFileName
+	fileDir := Config.ResultDir + "/" + destFileName
 
-	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println("os.OpenFile() error")
 		return err
@@ -549,7 +575,7 @@ func CacheReduceOutput(res string, destFileName string) error {
 
 	_, err = file.WriteString(res)
 
-	// os.Remove(localDir)
+	// os.Remove(fileDir)
 
 	return nil
 }

@@ -21,7 +21,10 @@ const (
 	BLOCK_SIZE   = 10 * 1024 * 1024
 	LINENUM      = 10
 	TempFile     = "temp"
-	CacheDir     = "cache"
+	CacheDir     = "SDFS/sdfsFile/cache"
+	ResultDir    = "SDFS/localFile/result"
+	Map          = "map"
+	Reduce       = "reduce"
 )
 
 const (
