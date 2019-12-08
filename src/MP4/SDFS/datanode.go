@@ -296,7 +296,7 @@ func (d *Datanode) SubmitTask(req string, res *string) error {
 	if err != nil {
 		log.Println("os.RemoveAll() Error!!")
 	}
-	
+
 	fmt.Println("*****Map Task Submit Done!!!!!")
 	return nil
 }
@@ -521,7 +521,7 @@ func FormatOutput(output []byte, key string) string {
 func CacheReduceOutput(res string, destFileName string) error {
 	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
 
-	localDir := Config.LocalfileDir + "/" + Config.CacheDir + destFileName
+	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + destFileName
 
 	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
