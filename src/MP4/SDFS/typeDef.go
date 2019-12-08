@@ -74,6 +74,11 @@ type AppendRequest struct {
 	Content  []byte
 }
 
+type SubmitIntermFileListRequest struct {
+	IntermFileList []string
+	NodeID string
+}
+
 type GetRequest struct {
 	Filename string
 	Offset   int64
@@ -92,4 +97,9 @@ type DeleteRequest struct {
 type DeleteResponse struct {
 	Err       error
 	Statement string
+}
+
+type WorkerInfo struct {
+	TaskList []*Task //All tasks received by a node(worker)
+	IntermediateFileList []string //All intermediate files stored in the node(worker)
 }
