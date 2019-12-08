@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	Config "../Config"
 	Mem "../Membership"
@@ -288,8 +289,10 @@ func (d *Datanode) SubmitTask(req string, res *string) error {
 
 	var cnt = 1
 	for _, file := range files {
+		start := time.Now()
 		fileName := file.Name()
 		PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
+		fmt.Printf("***Submit file %s takes %v!!!", fileName, time.Since(start))
 	}
 
 	err := os.RemoveAll(cacheDir)
@@ -371,7 +374,7 @@ func RunMapTask(req Task) error {
 		}
 
 		if lineCnt != 0 {
-			fmt.Println("Scanner exit")
+			// fmt.Println("Scanner exit")
 			temp, err := os.Create(tempFileDir)
 			if err != nil {
 				fmt.Println("os.Create() error")
