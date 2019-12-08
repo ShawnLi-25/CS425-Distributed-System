@@ -263,7 +263,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		log.Printf("There are %d file for this Map Task\n", fileNum)
 
 		//Call MapFunc for each file
-		err := RunMapTask(req)
+		err = RunMapTask(req)
 		if err != nil {
 			return err
 		}
@@ -281,7 +281,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Reduce Task\n", fileNum)
 
-		err := RunReduceTask(req)
+		err = RunReduceTask(req)
 		if err != nil {
 			return err
 		}
