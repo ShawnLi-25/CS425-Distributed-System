@@ -282,7 +282,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 func (d *Datanode) SubmitTask(req string, res *string) error {
 	//Append Map  result to per key Intermediate file
-	fmt.Println("*****Submit Map Task!!!!!")
+	fmt.Printf("*****Submit %s Task Started!!!!!\n", req)
 	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
 	files, _ := ioutil.ReadDir(cacheDir)
 
@@ -297,7 +297,7 @@ func (d *Datanode) SubmitTask(req string, res *string) error {
 		log.Println("os.RemoveAll() Error!!")
 	}
 
-	fmt.Println("*****Map Task Submit Done!!!!!")
+	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
 	return nil
 }
 
