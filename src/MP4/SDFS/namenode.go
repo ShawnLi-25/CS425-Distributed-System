@@ -354,7 +354,7 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 			client := NewClient(nodeAddr + "/" + Config.DatanodePort)
 			client.Dial()
 
-			if err := client.Delete("cache"); err {
+			if err := client.Delete("cache"); err=nil {
 				log.Println("Namenode.deleteInputFiles.client.Delete: error at node ", nodeID)
 			}
 
