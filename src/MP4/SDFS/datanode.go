@@ -210,19 +210,35 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 
-	encodedFileName := Config.EncodeFileName(req.Filename)
-
-	sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
-
-	if err := os.Remove(sdfsfilepath); err != nil {
+	fi, err := os.Stat(req.Filename)
+	if os.IsNotExist(err) {
+		fmt.Printf("===Error: %s does not exsit in local!\n", req.Filename)
+		log.Printf("===Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
 
-	//Assume deleted file can be found in FileList
-	for idx, filename := range d.FileList {
-		if filename == req.Filename {
-			d.FileList = append(d.FileList[:idx], d.FileList[idx+1:]...)
-			break
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		err := os.RemoveAll(req.Filename)
+		if err != nil {
+			return err
+		}
+
+	case mode.IsRegular():
+		encodedFileName := Config.EncodeFileName(req.Filename)
+
+		sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
+
+		if err := os.Remove(sdfsfilepath); err != nil {
+			return err
+		}
+
+		//Assume deleted file can be found in FileList
+		for idx, filename := range d.FileList {
+			if filename == req.Filename {
+				d.FileList = append(d.FileList[:idx], d.FileList[idx+1:]...)
+				break
+			}
 		}
 	}
 
@@ -316,7 +332,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 		resultDir := Config.ResultDir
 		files, _ := ioutil.ReadDir(resultDir)
-		
+
 		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
