@@ -254,6 +254,11 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
 
+		err := os.Chmod(Config.LocalfileDir+"/"+req.TaskExe, 0777)
+		if err != nil {
+			fmt.Println("os.Chmod() error")
+		}
+
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Map Task\n", fileNum)
 
@@ -267,6 +272,11 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		log.Printf("DataNode: Reduce Task %d Started!!\n", req.TaskID)
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
+
+		err := os.Chmod(Config.LocalfileDir+"/"+req.TaskExe, 0777)
+		if err != nil {
+			fmt.Println("os.Chmod() error")
+		}
 
 		fileNum := len(req.FileList)
 		log.Printf("There are %d file for this Reduce Task\n", fileNum)
