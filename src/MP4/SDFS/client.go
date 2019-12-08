@@ -161,7 +161,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	// fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
 
-	os.MkdirAll(names[0], 0666)
+	os.MkdirAll(names[0], 0777)
 
 	tempfile, err := os.OpenFile(names[0]+"/"+names[1], os.O_CREATE|os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
