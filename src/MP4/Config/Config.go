@@ -67,7 +67,7 @@ func GetSdfsfilePath(sdfsfilename string) string {
 
 func CreateDirIfNotExist(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0644)
+		err = os.MkdirAll(dir, 0755)
 		if err != nil {
 			log.Println(err)
 		}
