@@ -177,9 +177,13 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 //Send contents of "sdfsfile" to client
 func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 
-	encodedFileName := Config.EncodeFileName(req.Filename)
+	fileName := req.Filename
 
-	sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
+	if !strings.Contains(fileName, "cache") {
+		fileName = Config.EncodeFileName(req.Filename)
+	}
+
+	sdfsfilepath := Config.SdfsfileDir + "/" + fileName
 
 	//Open file
 	sdfsfile, err := os.Open(sdfsfilepath)
@@ -336,7 +340,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
-			PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
+			PutFile([]string{Config.ResultDir + "/" + fileName, fileName}, false, &cnt, 1, true)
 		}
 
 		err := os.RemoveAll(resultDir)
@@ -488,7 +492,7 @@ func RunReduceTask(req Task) error {
 
 		for _, nodeID := range cacheList {
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
-			go RpcOperationAt("get", Config.TempFile, fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			go RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
@@ -503,7 +507,7 @@ func RunReduceTask(req Task) error {
 		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
-		//fmt.Println("Src file name:", decodedFileName)
+		fmt.Println("Src file name:", decodedFileName)
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
