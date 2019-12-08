@@ -37,22 +37,25 @@ const (
 	IntroducerAddress = "fa19-cs425-g73-01.cs.illinois.edu"
 )
 
-func AppendFileToFile(src_file string, dest_file string) {
+func AppendFileToFile(src_file string, dest_file string) error {
 	dest_fd, err := os.OpenFile(dest_file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Println("AppendFileToFile: os.OpenFile() error")
+		return err
 	}
 	defer dest_fd.Close()
 
 	src_byte, err := ioutil.ReadFile(src_file)
 	if err != nil {
 		log.Println("AppendFileToFile: ioutil.ReadFile() error")
+		return err
 	}
 
 	if _, err := dest_fd.Write(src_byte); err != nil {
 		log.Println("AppendFileToFile: fd.Write() error")
+		return err
 	}
-
+	return nil
 }
 
 func ParseString(cmd string) []string {

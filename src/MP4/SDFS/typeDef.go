@@ -26,6 +26,7 @@ type Task struct {
 	TaskExe   string //"WordCountMap" or "WordCountReducer"
 	StartTime time.Time
 	FileList  []string //Note: filename is decoded, e.g. "MyDirName/MyFileName"
+	CacheMap  map[string][]string
 	Output    string
 }
 

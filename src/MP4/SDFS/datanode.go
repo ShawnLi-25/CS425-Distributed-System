@@ -210,19 +210,35 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 
-	encodedFileName := Config.EncodeFileName(req.Filename)
-
-	sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
-
-	if err := os.Remove(sdfsfilepath); err != nil {
+	fi, err := os.Stat(req.Filename)
+	if os.IsNotExist(err) {
+		fmt.Printf("===Error: %s does not exsit in local!\n", req.Filename)
+		log.Printf("===Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
 
-	//Assume deleted file can be found in FileList
-	for idx, filename := range d.FileList {
-		if filename == req.Filename {
-			d.FileList = append(d.FileList[:idx], d.FileList[idx+1:]...)
-			break
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		err := os.RemoveAll(req.Filename)
+		if err != nil {
+			return err
+		}
+
+	case mode.IsRegular():
+		encodedFileName := Config.EncodeFileName(req.Filename)
+
+		sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
+
+		if err := os.Remove(sdfsfilepath); err != nil {
+			return err
+		}
+
+		//Assume deleted file can be found in FileList
+		for idx, filename := range d.FileList {
+			if filename == req.Filename {
+				d.FileList = append(d.FileList[:idx], d.FileList[idx+1:]...)
+				break
+			}
 		}
 	}
 
@@ -316,7 +332,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 		resultDir := Config.ResultDir
 		files, _ := ioutil.ReadDir(resultDir)
-		
+
 		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
@@ -343,7 +359,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 //Scan the Map-Input Files, call Map.exe per 10-lines
 func RunMapTask(req Task) error {
-	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
+	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Map Task for File %s\n", fileName)
 
@@ -451,18 +467,39 @@ func RunMapTask(req Task) error {
 
 //Todo: Why not remove-all?
 func RunReduceTask(req Task) error {
+
+	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
+
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
-		//Fetch SDFSfile to local file system
-		GetFile([]string{fileName, fileName})
+		// temp, err := os.Create(tempFileDir)
+		// if err != nil {
+		// 	fmt.Println("Datanode.RunReduceTask: os.Create() error")
+		// 	return err
+		// }
+
+		//Stale way: Fetch SDFSfile to local file system
+		// GetFile([]string{fileName, fileName})
+
+		cacheList := req.CacheMap[fileName]
+
+		var respCount int = 0
+
+		for _, nodeID := range cacheList {
+			nodeAddr := Config.GetIPAddressFromID(nodeID)
+			go RpcOperationAt("get", Config.TempFile, fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"./"+fileName)
+			if err != nil {
+				fmt.Println(": Append temp to localFile error")
+			}
+		}
 
 		parseName := strings.Split(fileName, "_")
 		if len(parseName) != 2 {
 			log.Println("Parse Name Error!! Should be prefix_key")
 			return nil
 		}
-
 		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
@@ -476,13 +513,14 @@ func RunReduceTask(req Task) error {
 		res := FormatOutput(output, key)
 
 		err := os.Remove(Config.LocalfileDir + "/" + fileName)
-		//fmt.Println(fileName)
 		if err != nil {
 			fmt.Println("os.Remove error!")
 		}
 
 		CacheReduceOutput(res, req.Output)
 	}
+
+	os.Remove(tempFileDir)
 
 	return nil
 }
