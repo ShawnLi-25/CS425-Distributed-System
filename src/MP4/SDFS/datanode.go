@@ -358,7 +358,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 
 //Scan the Map-Input Files, call Map.exe per 10-lines
 func RunMapTask(req Task) error {
-	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
+	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Map Task for File %s\n", fileName)
 
@@ -467,7 +467,7 @@ func RunMapTask(req Task) error {
 //Todo: Why not remove-all?
 func RunReduceTask(req Task) error {
 
-	tempFileDir := Config.LocalfileDir + "./" + Config.TempFile
+	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 
 	for _, fileName := range req.FileList {
 		fmt.Printf("Start Reduce Task for File %s\n", fileName)
@@ -488,7 +488,7 @@ func RunReduceTask(req Task) error {
 		for _, nodeID := range cacheList {
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
 			go RpcOperationAt("get", Config.TempFile, fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
-			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"./"+fileName)
+			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
 			}
