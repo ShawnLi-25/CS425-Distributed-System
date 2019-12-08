@@ -229,12 +229,9 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 }
 
 //Inform namenode that a node contains a series of intermediate files
-func (n *Namenode) SubmitIntermediateFileList(req SubmitIntermFileListRequest, res *int) error {
-	intermFileList := req.IntermFileList
-	nodeID := req.NodeID
-
+func updateWorkingmap(nodeID string, intermFileList []string, Workingmap map[string]*WorkerInfo) {
 	//Update Workingmap
-	n.Workingmap[nodeID].IntermediateFileList = append(n.Workingmap[nodeID].IntermediateFileList, intermFileList...)
+	Workingmap[nodeID].IntermediateFileList = append(Workingmap[nodeID].IntermediateFileList, intermFileList...)
 
 	//Update Filemap
 	//for _, intermFile := range intermFileList {
@@ -246,7 +243,7 @@ func (n *Namenode) SubmitIntermediateFileList(req SubmitIntermFileListRequest, r
 	//	}
 	//}
 
-	return nil
+	return
 }
 
 //Namenode (master) splits all files into N Tasks.
@@ -300,6 +297,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 	var taskList []*Task
 	//Todo: Partition xiangl14
+	//TODO: get all files from workingmap
 	if partition_way == "hash" || strings.Contains(partition_way, "hash") {
 		taskList = hashPartition(fileList, N, "reduce", reducer, destfilename)
 	} else if partition_way == "range" || strings.Contains(partition_way, "range") {
@@ -338,6 +336,7 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 		for nodeID, _ := range Workingmap {
 			//RPC node to delete all intermediate files
 			//TODO
+			log.Println(nodeID)
 		}
 	}
 }
@@ -458,7 +457,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 
 				//Request submission
 				for nodeID,_ := range Workingmap {
-					requestTaskSubmission(nodeID, taskType)
+					requestTaskSubmission(nodeID, taskType, Workingmap)
 				}
 
 				switch taskType {
@@ -479,17 +478,19 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 }
 
 //RPC nodeID to submit a job
-func requestTaskSubmission(nodeID string, taskType string) {
+func requestTaskSubmission(nodeID string, taskType string, Workingmap map[string]*WorkerInfo) {
 	fmt.Println("Namenode.RequestTaskSubmission:", nodeID)
 	nodeAddr := Config.GetIPAddressFromID(nodeID)
 
 	client := NewClient(nodeAddr + ":" + Config.DatanodePort)
 	client.Dial()
 
-	var res string
-	if err := client.rpcClient.Call("Datanode.SubmitTask", taskType, &res); err != nil {
+	var intermediateFile []string
+	if err := client.rpcClient.Call("Datanode.SubmitTask", taskType, &intermediateFile); err != nil {
 		fmt.Println("Namenode.requestTaskSubmission().client.rpcClient.Call() fails!")
 	}
+
+	updateWorkingmap(nodeID, intermediateFile, Workingmap)
 
 	client.Close()
 }
