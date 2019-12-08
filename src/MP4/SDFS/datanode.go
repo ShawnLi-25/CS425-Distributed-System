@@ -124,7 +124,7 @@ func (d *Datanode) Put(req PutRequest, resp *PutResponse) error {
 	tempfilePath = Config.TempfileDir + "/" + encodedFileName + "." + req.Hostname
 
 	//Open and write
-	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0777)
+	tempfile, err := os.OpenFile(tempfilePath, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		log.Println("Datanode.Put: os.OpenFile() error")
 		return err

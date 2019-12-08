@@ -35,7 +35,7 @@ const (
 )
 
 func AppendFileToFile(src_file string, dest_file string) {
-	dest_fd, err := os.OpenFile(dest_file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
+	dest_fd, err := os.OpenFile(dest_file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Println("AppendFileToFile: os.OpenFile() error")
 	}
@@ -67,7 +67,7 @@ func GetSdfsfilePath(sdfsfilename string) string {
 
 func CreateDirIfNotExist(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0755)
+		err = os.MkdirAll(dir, 0644)
 		if err != nil {
 			log.Println(err)
 		}
