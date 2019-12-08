@@ -232,17 +232,6 @@ func (n *Namenode) GetWritePermission(req PermissionRequest, res *bool) error {
 func updateWorkingmap(nodeID string, intermFileList []string, Workingmap map[string]*WorkerInfo) {
 	//Update Workingmap
 	Workingmap[nodeID].IntermediateFileList = append(Workingmap[nodeID].IntermediateFileList, intermFileList...)
-
-	//Update Filemap
-	//for _, intermFile := range intermFileList {
-	//	if _, ok := n.Filemap[intermFile]; ok {
-	//		n.Filemap[intermFile].DatanodeList = append(n.Filemap[intermFile].DatanodeList, nodeID)
-	//	} else {
-	//		n.Filemap[intermFile].DatanodeList = []string{nodeID}
-	//		n.Filemap[intermFile].LastWrtTime = time.Now()
-	//	}
-	//}
-
 	return
 }
 
@@ -262,7 +251,7 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	}
 
 	//Split fileList into taskList, return a list of Task
-	taskList := rangePartition(fileList, N, "map", mapper, prefix)
+	taskList := rangePartition(fileList, N, "map", mapper, prefix, nil)
 
 	//taskKeeper, keep tracing each task and deal with node failure
 	go taskKeeper(N, n.Workingmap, "map", false)
@@ -283,25 +272,26 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	reducer := reducerArg.Juice_exe
 	N := reducerArg.Num_juices
-	prefix := reducerArg.Sdfs_intermediate_filename_prefix
+	//prefix := reducerArg.Sdfs_intermediate_filename_prefix
 	destfilename := reducerArg.Sdfs_dest_filename
 	delete_input := reducerArg.Delete_input
 	partition_way := reducerArg.Partition_way
 
 	//Find all sdfs_files with the prefix, returns a list of filename
-	fileList, ok := findFileWithPrefix(prefix, Config.SdfsfileDir)
-	if !ok || len(fileList) == 0 {
+	cacheMap := getCacheMapFromWorkingmap(n.Workingmap)
+	if len(cacheMap) == 0 {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
 
+	fileList := getFileListFromCacheMap(cacheMap)
+
 	var taskList []*Task
 	//Todo: Partition xiangl14
-	//TODO: get all files from workingmap
 	if partition_way == "hash" || strings.Contains(partition_way, "hash") {
-		taskList = hashPartition(fileList, N, "reduce", reducer, destfilename)
+		taskList = hashPartition(fileList, N, "reduce", reducer, destfilename, cacheMap)
 	} else if partition_way == "range" || strings.Contains(partition_way, "range") {
-		taskList = rangePartition(fileList, N, "reduce", reducer, destfilename)
+		taskList = rangePartition(fileList, N, "reduce", reducer, destfilename, cacheMap)
 	} else {
 		fmt.Println("Invalid partition way: only support hash or range partition")
 		return nil
@@ -319,29 +309,75 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 
 	go distributeAllTasks(taskList)
 
-
-
 	*res = 1
 	return nil
 }
 
 ///////////////////////////////////Helper functions////////////////////////////
+func getFileListFromCacheMap(cacheMap map[string][]string) []string {
+	res := []string{}
+	for cache, _ := range cacheMap {
+		res = append(res, cache)
+	}
+
+	return res
+}
+
+func getCacheMapFromWorkingmap(Workingmap map[string]*WorkerInfo) map[string][]string {
+	var res map[string][]string
+	res = make(map[string][]string)
+
+	for nodeID, wi := range Workingmap {
+		for _, cache := range wi.IntermediateFileList {
+			if _, ok := res[cache]; ok {
+				res[cache] = append(res[cache], nodeID)
+			} else {
+				res[cache] = []string{nodeID}
+			}
+		}
+	}
+
+	return res
+}
+
+
 func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 	fmt.Println("Waiting for deleteFilesRequest")
 	delete_input := <-deleteFilesRequest
 
-	fmt.Println("Get deleteFilesRequest")
-
 	if delete_input {
 		for nodeID, _ := range Workingmap {
 			//RPC node to delete all intermediate files
-			//TODO
-			log.Println(nodeID)
+			nodeAddr := Config.GetIPAddressFromID(nodeID)
+			client := NewClient(nodeAddr + "/" + Config.DatanodePort)
+			client.Dial()
+
+			client.Delete("cache")
+
+			client.Close()
 		}
+	fmt.Println("All Cache Deleted")
 	}
 }
 
-func rangePartition(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+func getSubCacheMap(fileListPerTask []string, cacheMap map[string][]string) map[string][]string {
+	var res map[string][]string
+	res = make(map[string][]string)
+
+	for _, filename := range fileListPerTask {
+		for key, value := range cacheMap {
+			if key == filename {
+				res[filename] = value
+				break
+			}
+		}
+	}
+
+	return res
+}
+
+
+func rangePartition(fileList []string, totalTask int, taskType string, exe_name string, output string, cacheMap map[string][]string) []*Task {
 	var taskList []*Task
 
 	fileListLen := len(fileList)
@@ -363,7 +399,14 @@ func rangePartition(fileList []string, totalTask int, taskType string, exe_name 
 			extra--
 		}
 
-		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask, output}
+		var task Task
+
+		if cacheMap == nil {
+			task = Task{i, taskType, exe_name, time.Now(), fileListPerTask, nil ,output}
+		} else {
+			subCacheMap := getSubCacheMap(fileListPerTask, cacheMap)
+			task = Task{i, taskType, exe_name, time.Now(), fileListPerTask, subCacheMap, output}
+		}
 
 		taskList = append(taskList, &task)
 	}
@@ -371,7 +414,7 @@ func rangePartition(fileList []string, totalTask int, taskType string, exe_name 
 	return taskList
 }
 
-func hashPartition(fileList []string, totalTask int, taskType string, exe_name string, output string) []*Task {
+func hashPartition(fileList []string, totalTask int, taskType string, exe_name string, output string, cacheMap map[string][]string) []*Task {
 	var taskList []*Task = make([]*Task, totalTask)
 
 	var fileListPerTask [][]string = make([][]string, totalTask)
@@ -390,7 +433,16 @@ func hashPartition(fileList []string, totalTask int, taskType string, exe_name s
 	}
 
 	for i := 0; i < totalTask; i++ {
-		task := Task{i, taskType, exe_name, time.Now(), fileListPerTask[i], output}
+
+		var task Task
+
+		if cacheMap == nil {
+			task = Task{i, taskType, exe_name, time.Now(), fileListPerTask[i], nil, output}
+		} else {
+			subCacheMap := getSubCacheMap(fileListPerTask[i], cacheMap)
+			task = Task{i, taskType, exe_name, time.Now(), fileListPerTask[i], subCacheMap, output}	
+		}
+
 
 		taskList = append(taskList, &task)
 	}
@@ -470,7 +522,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 				default:
 				}
 
-				fmt.Println("TaskKeeper: All tasks finished!")
+				fmt.Printf("TaskKeeper: All %s tasks finished!\n", taskType)
+
 				return
 			}
 		}

@@ -352,7 +352,8 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 		log.Println("Invalid Task Name!!")
 	}
 
-	fmt.Printf("***Submit %s task takes %v\n!!!", req, time.Since(start))
+	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
+	fmt.Printf("***Submit %s task takes %v!!!\n", req, time.Since(start))
 	return nil
 }
 
