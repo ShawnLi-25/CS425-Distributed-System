@@ -418,6 +418,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*Task, delete_input bool) 
 				} else {
 					deleteFilesRequest <- false
 				}
+
+				fmt.Println("TaskKeeper: All tasks finished!")
 				return
 			}
 		}
@@ -433,7 +435,7 @@ func requestTaskSubmission(nodeID string) {
 
 	var res string
 	if err := client.rpcClient.Call("Datanode.SubmitTask", "", &res); err != nil {
-		fmt.Println("requestTaskSubmission().client.rpcClient.Call() fails!")
+		fmt.Println("Namenode.requestTaskSubmission().client.rpcClient.Call() fails!")
 	}
 
 	client.Close()
