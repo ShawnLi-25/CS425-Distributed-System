@@ -337,7 +337,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 	}
 
 	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
-	fmt.Printf("***Submit %s task takes %v\n!!!", req, time.Since(start))
+	fmt.Printf("***Submit %s task takes %v!!!\n", req, time.Since(start))
 	return nil
 }
 
