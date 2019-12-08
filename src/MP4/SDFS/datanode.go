@@ -249,7 +249,7 @@ func (d *Datanode) PutSdfsfileToList(req ReReplicaRequest, res *bool) error {
 func (d *Datanode) RunMapReduce(req Task, res *int) error {
 	fmt.Printf("Datanode: Receive TaskID %d, TaskType %s, TaskExe %s\n", req.TaskID, req.TaskType, req.TaskExe)
 
-	if req.TaskType == "map" {
+	if req.TaskType == Config.Map {
 		log.Printf("DataNode: Map Task %d Started!!\n", req.TaskID)
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
@@ -268,7 +268,7 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 			return err
 		}
 
-	} else if req.TaskType == "reduce" {
+	} else if req.TaskType == Config.Reduce {
 		log.Printf("DataNode: Reduce Task %d Started!!\n", req.TaskID)
 
 		GetFile([]string{req.TaskExe, req.TaskExe})
@@ -285,32 +285,57 @@ func (d *Datanode) RunMapReduce(req Task, res *int) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		fmt.Println("Invalid Task Name!!")
+		log.Println("Invalid Task Name!!")
 	}
 
 	*res = 1
 	return nil
 }
 
-func (d *Datanode) SubmitTask(req string, res *string) error {
+func (d *Datanode) SubmitTask(req string, res *[]string) error {
 	//Append Map  result to per key Intermediate file
 	fmt.Printf("*****Submit %s Task Started!!!!!\n", req)
-	cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
-	files, _ := ioutil.ReadDir(cacheDir)
+	start := time.Now()
 
-	var cnt = 1
-	for _, file := range files {
-		start := time.Now()
-		fileName := file.Name()
-		PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
-		fmt.Printf("***Submit file %s takes %v\n!!!", fileName, time.Since(start))
-	}
+	if req.TaskType == Config.Map {
+		var cacheList []string
 
-	err := os.RemoveAll(cacheDir)
-	if err != nil {
-		log.Println("os.RemoveAll() Error!!")
+		cacheDir := Config.LocalfileDir + "/" + Config.CacheDir
+		files, _ := ioutil.ReadDir(cacheDir)
+
+		for _, file := range files {
+			fileName := file.Name()
+			cacheList = append(cacheList, fileName)
+		}
+
+		*res = cacheList
+
+	} else if req.TaskType == Config.Reduce {
+		resultDir := Config.LocalfileDir + "/" + Config.ResultDir
+		files, _ := ioutil.ReadDir(resultDir)
+
+		for _, file := range files {
+			fileName := file.Name()
+			PutFile([]string{Config.CacheDir + "/" + fileName, fileName}, false, &cnt, 1, true)
+		}
+
+		err := os.RemoveAll(resultDir)
+		if err != nil {
+			log.Println("os.RemoveAll() Error!!")
+			return err
+		}
+
+		*res = nil
+
+	} else {
+		fmt.Println("Invalid Task Name!!")
+		log.Println("Invalid Task Name!!")
 	}
 
 	fmt.Printf("*****Submit %s Task Done!!!!!\n", req)
+	fmt.Printf("***Submit file %s takes %v\n!!!", fileName, time.Since(start))
 	return nil
 }
 
@@ -519,7 +544,6 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 	defer file.Close()
 
 	n, err := file.Write(val)
-	// fmt.Printf(string(val))
 	if err != nil || n <= 0 {
 		return err
 	}
@@ -536,9 +560,9 @@ func FormatOutput(output []byte, key string) string {
 
 //xiangl14 Todo: How to keep sdfs_dest_filename always sorted by key?
 func CacheReduceOutput(res string, destFileName string) error {
-	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.CacheDir)
+	Config.CreateDirIfNotExist(Config.LocalfileDir + "/" + Config.ResultDir)
 
-	localDir := Config.LocalfileDir + "/" + Config.CacheDir + "/" + destFileName
+	localDir := Config.LocalfileDir + "/" + Config.ResultDir + "/" + destFileName
 
 	file, err := os.OpenFile(localDir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
