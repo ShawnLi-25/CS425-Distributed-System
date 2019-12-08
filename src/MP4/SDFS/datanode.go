@@ -296,6 +296,8 @@ func (d *Datanode) SubmitTask(req string, res *string) error {
 	if err != nil {
 		log.Println("os.RemoveAll() Error!!")
 	}
+	
+	fmt.Println("*****Map Task Submit Done!!!!!")
 	return nil
 }
 
@@ -500,6 +502,7 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 	defer file.Close()
 
 	n, err := file.Write(val)
+	fmt.Printf(string(val))
 	if err != nil || n <= 0 {
 		return err
 	}
