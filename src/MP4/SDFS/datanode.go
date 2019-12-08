@@ -488,7 +488,7 @@ func RunReduceTask(req Task) error {
 
 		for _, nodeID := range cacheList {
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
-			go RpcOperationAt("get", Config.TempFile, fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			go RpcOperationAt("get", Config.TempFile, "/" + fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
