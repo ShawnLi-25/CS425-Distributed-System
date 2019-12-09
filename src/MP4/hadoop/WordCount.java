@@ -29,7 +29,7 @@ public class WordCount {
         if (len == 0)
             continue;
         for(int i = 0; i < len; i++) {
-            if (Character.isLetterOrDigit(str.charAt(i))
+            if (Character.isLetterOrDigit(str.charAt(i)))
                 res += str.charAt(i);
         }
         word.set(res);
