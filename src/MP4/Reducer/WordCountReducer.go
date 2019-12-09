@@ -60,6 +60,7 @@ func main() {
 	for scanner.Scan() {
 		//Parse each line
 		totalCnt += wordCount(scanner.Text())
+		fmt.Printf("%d\n", totalCnt)
 	}
 
 	if err := scanner.Err(); err != nil {
