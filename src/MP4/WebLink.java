@@ -38,6 +38,7 @@ public class WebLink {
       String str = "";
       for (Text val : values) {
         str.concat(val.toString());
+        System.out.println(str);
       }
       result.set(str);
       context.write(key, result);
