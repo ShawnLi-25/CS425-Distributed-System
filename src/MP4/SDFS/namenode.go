@@ -496,6 +496,7 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*WorkerInfo) {
 //Check all tasks are done
 //If a node fail, give the task to another node
 func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType string, delete_input bool) {
+	defer Config.TimeCount()()
 	for {
 		NilorTask := <-TaskKeeperChan
 

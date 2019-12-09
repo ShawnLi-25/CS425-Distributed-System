@@ -121,7 +121,7 @@ func TimeCount() func() {
 
 	return func() {
 		cost := time.Since(start)
-		log.Printf("Time cost: %v\n", cost)
+		fmt.Printf("Time cost: %v\n", cost)
 	}
 }
 
