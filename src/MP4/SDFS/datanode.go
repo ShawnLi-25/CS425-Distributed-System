@@ -493,7 +493,7 @@ func RunReduceTask(req Task) error {
 		for _, nodeID := range cacheList {
 			fmt.Printf("%s has this file!!\n", nodeID)
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
-			go RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			go RpcOperationAt("get", fileName, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
 			<-GetFinishChan
 			fmt.Println("RPC Get return")
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
