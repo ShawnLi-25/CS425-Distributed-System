@@ -103,4 +103,5 @@ type DeleteResponse struct {
 type WorkerInfo struct {
 	TaskList []*Task //All tasks received by a node(worker)
 	IntermediateFileList []string //All intermediate files stored in the node(worker)
+	PrivateChan chan string 
 }

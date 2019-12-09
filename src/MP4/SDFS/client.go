@@ -108,8 +108,6 @@ func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool, ap
 	}
 
 	fileSize := fileInfo.Size()
-	//fmt.Printf("Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
-	log.Printf("====Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
 
 	//Open the file
 	localfile, err := os.Open(localfilepath)
@@ -149,17 +147,15 @@ func (c *Client) Put(localfilename string, sdfsfilename string, isLocal bool, ap
 		}
 	}
 
+	log.Printf("====Put: filename = %s, size = %d, destination = %s\n", localfilepath, int(fileSize), c.Addr)
+
 	return nil
 }
 
 func (c *Client) Get(sdfsfilename string, localfilename string, addr string) error {
-	// Config.CreateDirIfNotExist(Config.TempfileDir)
-
 	tempfilePath := Config.TempfileDir + "/" + localfilename + "." + addr
 
 	names := Config.ParseDir(tempfilePath)
-
-	// fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
 
 	os.MkdirAll(names[0], 0755)
 
@@ -190,30 +186,27 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	names = Config.ParseDir(filePath)
 
-	// fmt.Printf("filePath is %s, name is %s\n", names[0], names[1])
-
 	os.MkdirAll(names[0], 0755)
 
 	fi, _ := tempfile.Stat()
 	filesize := int(fi.Size())
 
-	// Config.CreateDirIfNotExist(Config.LocalfileDir)
-
 	os.Rename(tempfilePath, filePath)
 
-	//fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
-	log.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
+	log.Printf("====Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 
 	return nil
 }
 
 func (c *Client) Delete(sdfsfilename string) error {
 	req := DeleteRequest{sdfsfilename}
+
 	var res DeleteResponse
 
 	if err := c.rpcClient.Call("Datanode.Delete", req, &res); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -379,7 +372,6 @@ func GetFile(filenames []string) {
 
 	if n == 0 {
 		//No datanode store sdfsfile, return
-		fmt.Printf("Get error: no sdfsfile %s\n", sdfsfilename)
 		log.Printf("Get error: no sdfsfile %s\n", sdfsfilename)
 		return
 	}
@@ -403,9 +395,6 @@ func GetFile(filenames []string) {
 	if err != nil {
 		log.Println("RemoveAll() error: can't remove TempfileDir")
 	}
-
-	// fmt.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
-	log.Printf("GetFile %s from %s successfully return\n", localfilename, sdfsfilename)
 
 	return
 }
@@ -446,7 +435,6 @@ func DeleteFile(filenames []string) {
 	}
 
 	client.Close()
-	// fmt.Println("DeleteFile successfully return")
 	log.Println("DeleteFile successfully return")
 
 	return
