@@ -213,7 +213,7 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
-
+	fmt.Println("Enter Delete")
 	fi, err := os.Stat(Config.SdfsfileDir + "/" + req.Filename)
 	if os.IsNotExist(err) {
 		fmt.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
