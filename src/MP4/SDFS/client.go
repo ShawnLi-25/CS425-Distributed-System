@@ -476,7 +476,7 @@ func ShowDatanode(filenames []string) {
 	fmt.Printf("Datanodes who save the file %s:\n", sdfsfilename)
 	log.Printf("Datanodes who save the file %s:\n", sdfsfilename)
 	for _, datanodeID := range datanodeList {
-		//fmt.Println(datanodeID)
+		fmt.Println(datanodeID)
 	}
 
 	client.Close()
