@@ -368,7 +368,7 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
 
 			fmt.Printf("RPCing %s to delete cache\n", nodeID)
-			client := NewClient(nodeAddr + "/" + Config.DatanodePort)
+			client := NewClient(nodeAddr + ":" + Config.DatanodePort)
 			client.Dial()
 
 			if err := client.Delete("cache"); err != nil {

@@ -213,22 +213,24 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
-
+	fmt.Println("Enter Delete")
 	fi, err := os.Stat(Config.SdfsfileDir + "/" + req.Filename)
 	if os.IsNotExist(err) {
 		fmt.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		log.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
-
+	fmt.Println("Start Delete for"+req.Filename)
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
 		err := os.RemoveAll(Config.SdfsfileDir + "/" + req.Filename)
 		if err != nil {
+			fmt.Println("os.RemoveAll Error!")
 			return err
 		}
 
 	case mode.IsRegular():
+		fmt.Println("Is file???")
 		encodedFileName := Config.EncodeFileName(req.Filename)
 
 		sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
@@ -601,7 +603,6 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 
 func FormatOutput(output []byte, key string) string {
 	res := key + ": " + string(output) + "\n"
-	fmt.Println(res)
 	return res
 }
 
