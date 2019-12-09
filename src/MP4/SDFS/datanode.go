@@ -340,7 +340,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
-			PutFile([]string{Config.ResultDir + "/" + fileName, fileName}, false, &cnt, 1, true)
+			PutFile([]string{"result/" + fileName, fileName}, false, &cnt, 1, true)
 		}
 
 		err := os.RemoveAll(resultDir)
@@ -374,7 +374,7 @@ func RunMapTask(req Task) error {
 
 		//Scan file
 		decodedFileName := Config.DecodeFileName(fileName)
-		fmt.Println("Src file name:", decodedFileName)
+		//fmt.Println("Src file name:", decodedFileName)
 		data, err := os.Open(Config.LocalfileDir + "/" + decodedFileName)
 		if err != nil {
 			fmt.Printf("src_file %s os.Open() error\n", decodedFileName)
@@ -488,20 +488,19 @@ func RunReduceTask(req Task) error {
 
 		cacheList := req.CacheMap[fileName]
 
-		var respCount int = 0
 
 		for _, nodeID := range cacheList {
-			fmt.Printf("%s has this file!!\n", nodeID)
+			//fmt.Printf("%s has this file!!\n", nodeID)
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
+			var respCount int = 0
 			go RpcOperationAt("get", fileName, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
-			fmt.Println("RPC Get return")
-			<-PutFinishChan
+			<-GetFinishChan
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
 			}
 		}
-		fmt.Println("Getout of loop")
+		//fmt.Println("Getout of loop")
 		parseName := strings.Split(fileName, "_")
 		if len(parseName) != 2 {
 			log.Println("Parse Name Error!! Should be prefix_key")
@@ -510,7 +509,7 @@ func RunReduceTask(req Task) error {
 		key := parseName[1]
 
 		decodedFileName := Config.DecodeFileName(fileName)
-		fmt.Println("Src file name:", decodedFileName)
+		//fmt.Println("Src file name:", decodedFileName)
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
 
@@ -602,6 +601,7 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 
 func FormatOutput(output []byte, key string) string {
 	res := key + ": " + string(output) + "\n"
+	fmt.Println(res)
 	return res
 }
 
@@ -618,7 +618,7 @@ func CacheReduceOutput(res string, destFileName string) error {
 	}
 	defer file.Close()
 
-	fmt.Println("Write to:" + fileDir)
+	//fmt.Println("Write to:" + fileDir)
 	_, err = file.WriteString(res)
 
 	// os.Remove(fileDir)

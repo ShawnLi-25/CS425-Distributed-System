@@ -3,12 +3,12 @@ package sdfs
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
-	"os"
+	//"os"
 	"sort"
 	"strings"
 	"time"
@@ -244,8 +244,8 @@ func (n *Namenode) RunMapper(mapperArg MapperArg, res *int) error {
 	src_dir := mapperArg.Sdfs_src_directory
 
 	//Find all sdfs_files which come from src_dir, return a list of filename
-	fileList, ok := findFileWithPrefix(src_dir+"/", Config.SdfsfileDir)
-	if !ok || len(fileList) == 0 {
+	fileList := findFileWithPrefix(src_dir+"/", n.Filemap)
+	if len(fileList) == 0 {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
 	}
@@ -340,9 +340,26 @@ func getCacheMapFromWorkingmap(Workingmap map[string]*WorkerInfo) map[string][]s
 	return res
 }
 
+func getSubCacheMap(fileListPerTask []string, cacheMap map[string][]string) map[string][]string {
+	var res map[string][]string
+	res = make(map[string][]string)
 
+	for _, filename := range fileListPerTask {
+		for key, value := range cacheMap {
+			if key == filename {
+				res[filename] = value
+				break
+			}
+		}
+	}
+
+	return res
+}
+
+
+
+//TODO Test
 func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
-	fmt.Println("Waiting for deleteFilesRequest")
 	delete_input := <-deleteFilesRequest
 
 	if delete_input {
@@ -360,24 +377,8 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 
 			client.Close()
 		}
-	fmt.Println("All Cache Deleted")
+	fmt.Println("All Cache Cleared")
 	}
-}
-
-func getSubCacheMap(fileListPerTask []string, cacheMap map[string][]string) map[string][]string {
-	var res map[string][]string
-	res = make(map[string][]string)
-
-	for _, filename := range fileListPerTask {
-		for key, value := range cacheMap {
-			if key == filename {
-				res[filename] = value
-				break
-			}
-		}
-	}
-
-	return res
 }
 
 
@@ -431,7 +432,7 @@ func hashPartition(fileList []string, totalTask int, taskType string, exe_name s
 		key := parseName[1]
 
 		hashVal := int(Config.Hash(key)) % totalTask
-		fmt.Printf("Hash value for key %s is %d", key, hashVal)
+		//fmt.Printf("Hash value for key %s is %d", key, hashVal)
 
 		fileListPerTask[hashVal] = append(fileListPerTask[hashVal], fileName)
 	}
@@ -465,11 +466,6 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*WorkerInfo) {
 		task := <-TaskChan
 
 		if task != nil {
-			//receive a task
-			fmt.Printf("NodeID %s works on task{%d, %s, %s}", NodeID, task.TaskID, task.TaskType, task.TaskExe)
-			fmt.Println("The filelist is", task.FileList)
-			fmt.Println("The cacheMap is", task.CacheMap)
-
 			//change state in Workingmap
 			Workingmap[NodeID].TaskList = append(Workingmap[NodeID].TaskList, task)
 
@@ -529,11 +525,7 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 				default:
 				}
 
-				fmt.Printf("TaskKeeper: All %s tasks finished!\n", taskType)
-
-				for nodeID, wi := range Workingmap {
-					fmt.Println(nodeID, wi)
-				}
+				fmt.Printf("====TaskKeeper: All %s tasks finished!\n", taskType)
 
 				return
 			}
@@ -559,27 +551,16 @@ func requestTaskSubmission(nodeID string, taskType string, Workingmap map[string
 	client.Close()
 }
 
-func findFileWithPrefix(prefix string, dir string) ([]string, bool) {
-
-	//If dir doesn't exist, return []string{}, false
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		return []string{}, false
-	}
-
+func findFileWithPrefix(prefix string, Filemap map[string]*FileMetadata) []string {
 	var fileList []string
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return []string{}, false
-	}
 
-	for _, file := range files {
-		decodedFilename := Config.DecodeFileName(file.Name())
-		if strings.Contains(decodedFilename, prefix) {
-			fileList = append(fileList, decodedFilename)
+	for filename, _ := range Filemap {
+		if strings.Contains(Config.DecodeFileName(filename), prefix) {
+			fileList = append(fileList, Config.DecodeFileName(filename))
 		}
 	}
 
-	return fileList, true
+	return fileList
 }
 
 func insert(filemap map[string]*FileMetadata, sdfsfilename string, datanodeID string) {
