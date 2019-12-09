@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 )
 
 var MapperResult map[string][]string = make(map[string][]string)
@@ -15,13 +14,14 @@ const JsonFileName = "webMap.json"
 func parsePair(pair string) {
 	var res []string
 	cnt := 0
-	for i:= 0; i < len(pair); i++ {
-		if(cnt == 0 && pair[i] != ' ')
-			res[cnt] += pair[i]
-		if(pair[i] == ' ') {
-			cnt = 1;
+	for i := 0; i < len(pair); i++ {
+		if cnt == 0 && pair[i] != ' ' {
+			res[cnt] += string(pair[i])
 		}
-	} 
+		if pair[i] == ' ' {
+			cnt = 1
+		}
+	}
 	src := res[0]
 	tgt := res[1]
 
