@@ -340,7 +340,7 @@ func (d *Datanode) SubmitTask(req string, res *[]string) error {
 		var cnt = 0
 		for _, file := range files {
 			fileName := file.Name()
-			PutFile([]string{Config.SdfsfileDir + "/result/" + fileName, fileName}, false, &cnt, 1, true)
+			PutFile([]string{"result/" + fileName, fileName}, false, &cnt, 1, true)
 		}
 
 		err := os.RemoveAll(resultDir)
@@ -602,6 +602,7 @@ func CacheMapOutput(key []byte, val []byte, prefix string) error {
 
 func FormatOutput(output []byte, key string) string {
 	res := key + ": " + string(output) + "\n"
+	fmt.Println(res)
 	return res
 }
 
