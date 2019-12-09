@@ -459,7 +459,7 @@ func RunMapTask(req Task, namenodeID string) {
 
 func RunReduceTask(req Task, namenodeID string) {
 	for _, fileName := range req.FileList {
-
+		
 		//Create temp file
 		tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 		_, err := os.Create(tempFileDir)
@@ -497,7 +497,7 @@ func RunReduceTask(req Task, namenodeID string) {
 		}
 
 		key := parseName[1]
-
+		fmt.Println(key)
 		decodedFileName := Config.DecodeFileName(fileName)
 
 		ReduceInputDir := Config.LocalfileDir + "/" + decodedFileName
@@ -506,7 +506,7 @@ func RunReduceTask(req Task, namenodeID string) {
 		output, _ := cmd.Output()
 
 		res := FormatOutput(output, key)
-
+		fmt.Println(res)
 		err = os.Remove(localfilePath)
 		if err != nil {
 			fmt.Println("os.Remove error!")
