@@ -213,14 +213,14 @@ func (d *Datanode) Get(req GetRequest, resp *GetResponse) error {
 
 //Delete "sdfsfile"
 func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
-	fmt.Println("Enter Delete")
+	//fmt.Println("Enter Delete")
 	fi, err := os.Stat(Config.SdfsfileDir + "/" + req.Filename)
 	if os.IsNotExist(err) {
 		fmt.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		log.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
-	fmt.Println("Start Delete for"+req.Filename)
+	//fmt.Println("Start Delete for"+req.Filename)
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
 		err := os.RemoveAll(Config.SdfsfileDir + "/" + req.Filename)
@@ -230,7 +230,7 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 		}
 
 	case mode.IsRegular():
-		fmt.Println("Is file???")
+		//fmt.Println("Is file???")
 		encodedFileName := Config.EncodeFileName(req.Filename)
 
 		sdfsfilepath := Config.SdfsfileDir + "/" + encodedFileName
@@ -460,7 +460,7 @@ func RunMapTask(req Task) error {
 			parseMapRes(res, req.Output)
 		}
 
-		fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
+		//fmt.Printf("Map Task for fileName %s succeed!\n", fileName)
 
 	}
 
@@ -483,7 +483,7 @@ func RunReduceTask(req Task) error {
 	}
 
 	for _, fileName := range req.FileList {
-		fmt.Printf("Start Reduce Task for File %s\n", fileName)
+		//fmt.Printf("Start Reduce Task for File %s\n", fileName)
 
 		//Stale way: Fetch SDFSfile to local file system
 		// GetFile([]string{fileName, fileName})

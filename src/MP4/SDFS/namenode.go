@@ -368,7 +368,7 @@ func deleteInputFiles(Workingmap map[string]*WorkerInfo) {
 			//RPC node to delete all intermediate files
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
 
-			fmt.Printf("RPCing %s to delete cache\n", nodeID)
+			//fmt.Printf("RPCing %s to delete cache\n", nodeID)
 			client := NewClient(nodeAddr + ":" + Config.DatanodePort)
 			client.Dial()
 
@@ -592,7 +592,7 @@ func checkReplica(sdfsfilename string, meta *FileMetadata, nodemap map[string][]
 	} else {
 		//Not enough replicas
 		fmt.Println("Start re-replicating...")
-		defer Config.TimeCount()()
+		//defer Config.TimeCount()()
 
 		neededReReplicaNum := Config.ReplicaNum - n
 
