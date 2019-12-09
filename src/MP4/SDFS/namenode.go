@@ -22,6 +22,7 @@ var UpdateFilemapChan chan string = make(chan string) //Receive failedNodeID
 var TaskChan chan *Task = make(chan *Task)
 var TaskKeeperChan chan *Task = make(chan *Task)
 var deleteFilesRequest chan bool = make(chan bool)
+var cachemap map[string][]string
 
 type FileMetadata struct {
 	DatanodeList []string
@@ -278,7 +279,7 @@ func (n *Namenode) RunReducer(reducerArg ReducerArg, res *int) error {
 	partition_way := reducerArg.Partition_way
 
 	//Find all sdfs_files with the prefix, returns a list of filename
-	cacheMap := getCacheMapFromWorkingmap(n.Workingmap)
+	cacheMap := cachemap
 	if len(cacheMap) == 0 {
 		*res = 0
 		return errors.New("Namenode.RunMapper: cannot find files")
@@ -515,6 +516,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 					requestTaskSubmission(nodeID, taskType, Workingmap)
 				}
 
+
+
 				switch taskType {
 				case "reduce":
 					if delete_input {
@@ -522,7 +525,8 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 					} else {
 						deleteFilesRequest <- false
 					}
-				default:
+				case "map":
+					cachemap = getCacheMapFromWorkingmap(Workingmap)
 				}
 
 				fmt.Printf("====TaskKeeper: All %s tasks finished!\n", taskType)
