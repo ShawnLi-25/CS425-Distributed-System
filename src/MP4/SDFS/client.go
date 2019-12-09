@@ -201,7 +201,7 @@ func (c *Client) Get(sdfsfilename string, localfilename string, addr string) err
 
 	os.Rename(tempfilePath, filePath)
 
-	fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
+	//fmt.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 	log.Printf("Get file: filename = %s, size = %d, source = %s\n", filePath, filesize, addr)
 
 	return nil
@@ -285,7 +285,7 @@ func PutDir(filenames []string) {
 	}
 
 	//For each files in localdirPath, run PutFile()
-	defer Config.TimeCount()()
+	//defer Config.TimeCount()()
 	totalFiles := len(files)
 	var fileCount int
 
@@ -343,7 +343,7 @@ func PutFile(filenames []string, fromDir bool, fileCount *int, totalFiles int, a
 
 	//Shared Variable: Write Quorum for uploading localfile to datanodes
 	var respCount int = 0
-	defer Config.TimeCount()()
+	//defer Config.TimeCount()()
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
@@ -386,7 +386,7 @@ func GetFile(filenames []string) {
 
 	//Download sdfsfile from datanode
 	var respCount int = 0
-	defer Config.TimeCount()()
+	//defer Config.TimeCount()()
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
@@ -431,7 +431,7 @@ func DeleteFile(filenames []string) {
 
 	//Delete sdfsfile in each datanode
 	var respCount int = 0
-	defer Config.TimeCount()()
+	//defer Config.TimeCount()()
 
 	for _, datanodeID := range datanodeList {
 		datanodeAddr := Config.GetIPAddressFromID(datanodeID)
