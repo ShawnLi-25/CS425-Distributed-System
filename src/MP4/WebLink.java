@@ -23,7 +23,7 @@ public class WebLink {
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString());
       src.set(itr.nextToken());
-      dest.set(itr.nextToken());
+      dest.set("hhhh");
       context.write(src, dest);
     }
   }
@@ -38,7 +38,6 @@ public class WebLink {
       String str = "";
       for (Text val : values) {
         str.concat(val.toString());
-        System.out.println(str);
       }
       result.set(str);
       context.write(key, result);
