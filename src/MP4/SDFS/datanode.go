@@ -488,11 +488,11 @@ func RunReduceTask(req Task) error {
 
 		cacheList := req.CacheMap[fileName]
 
-		var respCount int = 0
 
 		for _, nodeID := range cacheList {
 			fmt.Printf("%s has this file!!\n", nodeID)
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
+			var respCount int = 0
 			go RpcOperationAt("get", fileName, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
 			<-GetFinishChan
 			fmt.Println("RPC Get return")

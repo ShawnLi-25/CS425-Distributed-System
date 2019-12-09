@@ -614,6 +614,7 @@ func RpcOperationAt(operation string, localfilename string, sdfsfilename string,
 		mutex.Unlock()
 
 		if *respCount == Config.Min(R, N) {
+			fmt.Println("Send to Chan")
 			GetFinishChan <- ""
 		}
 	case "delete":
