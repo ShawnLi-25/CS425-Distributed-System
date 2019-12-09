@@ -215,7 +215,7 @@ func (d *Datanode) Delete(req DeleteRequest, resp *DeleteResponse) error {
 	//fmt.Println("Enter Delete")
 	fi, err := os.Stat(Config.SdfsfileDir + "/" + req.Filename)
 	if os.IsNotExist(err) {
-		fmt.Printf("===Datanode.Delete.Error: %s does not exsit in local!\n", req.Filename)
+		//fmt.Printf("===Datanode.Delete.Error: %s does not exsit in local!\n", req.Filename)
 		log.Printf("===Delete Error: %s does not exsit in local!\n", req.Filename)
 		return err
 	}
@@ -516,7 +516,7 @@ func RunReduceTask(req Task, namenodeID string) {
 		CacheReduceOutput(res, req.Output)
 	}
 
-	fmt.Printf("Reduce task %d finish!", req.TaskID)
+	fmt.Printf("Reduce task %d finish!\n", req.TaskID)
 
 	//When finish work, RPC namanode
 	addr := Config.GetIPAddressFromID(namenodeID)
