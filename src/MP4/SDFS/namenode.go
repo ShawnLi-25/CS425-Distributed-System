@@ -466,6 +466,9 @@ func waitForTaskChan(NodeID string, Workingmap map[string]*WorkerInfo) {
 
 		if task != nil {
 			//receive a task
+			fmt.Printf("NodeID %s works on task{%d, %s, %s}", NodeID, task.TaskID, task.TaskType, task.TaskExe)
+			fmt.Println("The filelist is", task.FileList)
+			fmt.Println("The cacheMap is", task.CacheMap)
 
 			//change state in Workingmap
 			Workingmap[NodeID].TaskList = append(Workingmap[NodeID].TaskList, task)
@@ -527,6 +530,10 @@ func taskKeeper(remainTask int, Workingmap map[string]*WorkerInfo, taskType stri
 				}
 
 				fmt.Printf("TaskKeeper: All %s tasks finished!\n", taskType)
+
+				for nodeID, wi := range Workingmap {
+					fmt.Println(nodeID, wi)
+				}
 
 				return
 			}
