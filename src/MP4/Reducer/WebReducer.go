@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -28,15 +29,13 @@ func postProcess() string {
 	res := ""
 
 	for idx, val := range valueList {
-		if idx != len(valueList) - 1 {
+		if idx != len(valueList)-1 {
 			res += val + ","
 		} else {
 			res += val + "\n"
 		}
 	}
-	
 
-	fmt.Println(res)
 	return res
 }
 
@@ -48,7 +47,7 @@ func main() {
 
 	data, fileErr := os.Open(fileDir)
 	if fileErr != nil {
-		fmt.Printf("os.Open() error: Can't open file %s\n", fileDir)
+		log.Printf("os.Open() error: Can't open file %s\n", fileDir)
 		return
 	}
 	defer data.Close()

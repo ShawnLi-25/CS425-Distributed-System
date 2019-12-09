@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
@@ -14,7 +15,7 @@ const JsonFileName = "webMap.json"
 func parsePair(pair string) {
 	res := strings.Split(pair, " ")
 	if len(res) > 2 {
-		fmt.Println("Data Error!")
+		log.Println("Data Format Error!")
 		return
 	}
 	src := res[0]
@@ -47,7 +48,7 @@ func main() {
 
 	data, fileErr := os.Open(fileDir)
 	if fileErr != nil {
-		fmt.Printf("os.Open() error: Can't open file %s\n", fileDir)
+		log.Printf("os.Open() error: Can't open file %s\n", fileDir)
 		return
 	}
 	defer data.Close()
