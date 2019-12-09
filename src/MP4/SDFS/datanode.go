@@ -474,7 +474,7 @@ func RunReduceTask(req Task) error {
 
 	tempFileDir := Config.LocalfileDir + "/" + Config.TempFile
 
-	temp, err := os.Create(tempFileDir)
+	_, err := os.Create(tempFileDir)
 	if err != nil {
 		fmt.Println("Datanode.RunReduceTask: os.Create() error")
 		return err
@@ -491,14 +491,17 @@ func RunReduceTask(req Task) error {
 		var respCount int = 0
 
 		for _, nodeID := range cacheList {
+			fmt.Printf("%s has this file!!\n", nodeID)
 			nodeAddr := Config.GetIPAddressFromID(nodeID)
-			RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			go RpcOperationAt("get", Config.TempFile, "cache/"+fileName, nodeAddr, Config.DatanodePort, true, &respCount, 1, false)
+			fmt.Println("RPC Get return")
+			<-PutFinishChan
 			err := Config.AppendFileToFile(tempFileDir, Config.LocalfileDir+"/"+fileName)
 			if err != nil {
 				fmt.Println(": Append temp to localFile error")
 			}
 		}
-
+		fmt.Println("Getout of loop")
 		parseName := strings.Split(fileName, "_")
 		if len(parseName) != 2 {
 			log.Println("Parse Name Error!! Should be prefix_key")
