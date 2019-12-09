@@ -35,9 +35,11 @@ public class WebLink {
     public void reduce(Text key, Iterable<Text> values,
                        Context context
                        ) throws IOException, InterruptedException {
+      String str = "";
       for (Text val : values) {
-        result.appendData(val.get());
+        str.concat(val.toString());
       }
+      result.set(str);
       context.write(key, result);
     }
   }
