@@ -22,7 +22,7 @@ const (
 	LINENUM      = 10
 	TempFile     = "temp"
 	CacheDir     = "SDFS/sdfsFile/cache"
-	ResultDir    = "SDFS/localFile/result"
+	ResultDir    = "SDFS/sdfsFile/result"
 	Map          = "map"
 	Reduce       = "reduce"
 )
