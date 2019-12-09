@@ -12,7 +12,7 @@ var MapperResult map[string][]string = make(map[string][]string)
 const JsonFileName = "webMap.json"
 
 func parsePair(pair string) {
-	var res []string
+	var res []string = []string{"", ""}
 	cnt := 0
 	for i := 0; i < len(pair); i++ {
 		if cnt == 0 && pair[i] != ' ' {
